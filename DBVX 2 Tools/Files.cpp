@@ -62,7 +62,7 @@ void openFile(char szFileName[MAX_PATH], std::string &Output)
 	}
 }
 
-void saveFile(char szFileName[MAX_PATH], std::string Input)
+int saveFile(char szFileName[MAX_PATH], std::string Input)
 {
 	std::ofstream file(szFileName, std::ios::binary);
 
@@ -74,5 +74,10 @@ void saveFile(char szFileName[MAX_PATH], std::string Input)
 		std::cout << "File is save";
 #endif // _DEBUG
 	}
+	else
+	{
+		return -1; //fail to open
+	}
 	file.close();
+	return 0;
 }

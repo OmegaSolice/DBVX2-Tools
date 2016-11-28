@@ -1,0 +1,16 @@
+If the file exists and you don't have permission to write it.
+If the file doesn't exist, and you don't have permission (on the diretory) to create it.
+If you don't have search permission on some parent directory.
+If you pass in a bogus char* for the filename.
+If, while opening a device file, you press CTRL-C.
+If the kernel encountered too many symbolic links while resolving the name.
+If you try to open a directory for writing.
+If the pathname is too long.
+If your process has too many files open already.
+If the system has too many files open already.
+If the pathname refers to a device file, and there is no such device in the system.
+If the kernel has run out of memory.
+If the filesystem is full.
+If a component of the pathname is not a directory.
+If the file is on a read-only filesystem.
+If the file is an executable file which is currently being executed.

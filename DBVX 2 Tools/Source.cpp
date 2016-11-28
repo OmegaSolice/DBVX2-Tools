@@ -43,8 +43,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		MessageBox(NULL, L"Class failed to register", L"Error", MB_ICONERROR | MB_OK);
 	}
 	
-	HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV Tool", WS_CLIPSIBLINGS |WS_CAPTION | WS_POPUPWINDOW | WS_MINIMIZEBOX,
-								CW_USEDEFAULT, CW_USEDEFAULT, 550, 600, NULL, NULL, hInstance, NULL);
+	HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV Tool", WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU | WS_MINIMIZE,
+								CW_USEDEFAULT, CW_USEDEFAULT, 650, 700, NULL, NULL, hInstance, NULL);
 	if (hwnd == NULL)
 	{
 		MessageBox(NULL, L"Window Creation fail", L"Error", MB_ICONERROR | MB_OK);
@@ -259,7 +259,19 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		break;
 	case WM_SIZE:
-		//OnSize(hwndTab, lParam);
+	{
+		RECT rcClient;
+		GetClientRect(hwnd, &rcClient);
+		SetWindowPos(hwndTab, NULL, 0, 0, rcClient.right, rcClient.bottom, NULL);
+		int count = 0, numTab = 2;
+		while (count < numTab)
+		{
+			DialogResize(hwndTab, hwndDisplay[count]);
+			count++;
+			UpdateWindow(hwndDisplay[count]);
+		}
+		UpdateWindow(hwndTab);
+	}
 		break;
 	default:
 		return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -309,8 +321,18 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			break;
 		}
 		case ID_FILE_SAVE_AURA:
-			saveFile(AuraFile, AuraData);
-			break;
+			if (saveFile(CusFile, AuraData) == -1)
+			{
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
+				SetWindowText(EditError, L"Error Failed to Save");
+				SetFocus(EditError);
+			}
+			if (saveFile(CusFile, AuraData) == 0)
+			{
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
+				SetWindowText(EditError, L"Save Succcesful");
+				SetFocus(EditError);
+			}break;
 		case IDC_BUTTON2:
 		{
 			LRESULT Name, Costume;
@@ -330,7 +352,18 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			break;
 		}
 		case IDC_BUTTON4:
-			saveFile(CusFile, CusData);
+			if (saveFile(CusFile, CusData) == -1 )
+			{
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
+				SetWindowText(EditError, L"Error Failed to Save");
+				SetFocus(EditError);
+			}
+			if (saveFile(CusFile, CusData) == 0)
+			{
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
+				SetWindowText(EditError, L"Save Succcesful");
+				SetFocus(EditError);
+			}
 			break;
 		case IDC_BUTTON5:
 	
