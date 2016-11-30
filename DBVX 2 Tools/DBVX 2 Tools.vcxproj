@@ -147,8 +147,10 @@
     <ClCompile Include="Aura.cpp" />
     <ClCompile Include="Files.cpp" />
     <ClCompile Include="Global.cpp" />
+    <ClCompile Include="MSG.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="SuperSoul.cpp" />
     <ClCompile Include="Winapi.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +158,8 @@
     <ClInclude Include="Files.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="SuperSoul.h" />
+    <ClInclude Include="MSG.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="Winapi.h" />
     <ClInclude Include="resource.h" />

@@ -4,8 +4,6 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 #ifdef _DEBUG
@@ -36,15 +34,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wcex.lpfnWndProc = WndProc;
 	wcex.lpszClassName = L"Window";
 	wcex.lpszMenuName = NULL;// MAKEINTRESOURCE(IDR_MENU1);
-	wcex.style = 0;
+	wcex.style = CS_VREDRAW | CS_HREDRAW;
 
 	if (!RegisterClassEx(&wcex))
 	{
 		MessageBox(NULL, L"Class failed to register", L"Error", MB_ICONERROR | MB_OK);
 	}
 	
-	HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV Tool", WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU | WS_MINIMIZE,
-								CW_USEDEFAULT, CW_USEDEFAULT, 650, 700, NULL, NULL, hInstance, NULL);
+	HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV Tool", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+								CW_USEDEFAULT, CW_USEDEFAULT, 600, 700, NULL, NULL, hInstance, NULL);
 	if (hwnd == NULL)
 	{
 		MessageBox(NULL, L"Window Creation fail", L"Error", MB_ICONERROR | MB_OK);
@@ -64,7 +62,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	int ESkillCount = LoadSkill("Data/Evasive Skill ID.ini", ESkillSetting, ESkillID);
 
 	TCHAR *TabLabel[] = { L"Aura", L"Skill", L"Super Soul" };
-	int  count = 0, numTab = 2;
+	int  count = 0, numTab = 3;
 	DWORD Err = NULL;
 	WCHAR WERR[100] = L"";
 	hwndTab = CreateTabControl(hwnd, g_hInst, numTab, TabLabel);
@@ -72,8 +70,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (!hwndDisplay[0]) { Err = GetLastError();  swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 	hwndDisplay[1] = CreateDialog(g_hInst, MAKEINTRESOURCE(IDD_DIALOG2), hwndTab, MainDialogProc);
 	if (!hwndDisplay[1]) { Err = GetLastError();  swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
-	//hwndDisplay[2] = CreateDialog(g_hInst, MAKEINTRESOURCE(IDD_DIALOG3), hwndTab, MainDialogProc);
-	//if (!hwndDisplay[2]) { Err = GetLastError();  swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
+	hwndDisplay[2] = CreateDialog(g_hInst, MAKEINTRESOURCE(IDD_DIALOG3), hwndTab, MainDialogProc);
+	if (!hwndDisplay[2]) { Err = GetLastError();  swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 	while (count < numTab )
 	{
 		DialogResize(hwndTab, hwndDisplay[count]);
@@ -122,8 +120,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		count++;
 	}
 
-	hComboCheck[0] = GetDlgItem(hwndDisplay[0], IDC_COMBO3);; //Used to check combo box so when character change costume box can be set appropriatley  
+	hComboCheck[0] = GetDlgItem(hwndDisplay[0], IDC_COMBO3); //Used to check combo box so when character change costume box can be set appropriatley  
 	hComboCheck[1] = GetDlgItem(hwndDisplay[1], IDC_COMBO6);
+	hComboCheck[2] = GetDlgItem(hwndDisplay[2], IDC_COMBO1);
 	
 	count = 0;
 	//int maxCount = sizeof(SSkillID) / sizeof SKILL;
@@ -210,6 +209,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		count++;
 	}
 
+	ShowWindow(hwndTab, SW_SHOWNORMAL);
 	ShowWindow(hwndDisplay[0], SW_SHOWNORMAL);
 	UpdateWindow(hwndDisplay[0]);
 	ShowWindow(hwnd, nCmdShow);
@@ -240,10 +240,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		DestroyWindow(hwnd);
 		break;
 	case WM_COMMAND:
-		switch (wParam)
+		/*switch (wParam)
 		{
 
-		}
+		}*/
 	case WM_CREATE:
 	{
 		
@@ -256,22 +256,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		OnNotify(hwndTab, hwndDisplay, lParam, g_hInst);
 		break;
 	case WM_PAINT:
-
 		break;
 	case WM_SIZE:
-	{
-		RECT rcClient;
-		GetClientRect(hwnd, &rcClient);
-		SetWindowPos(hwndTab, NULL, 0, 0, rcClient.right, rcClient.bottom, NULL);
-		int count = 0, numTab = 2;
-		while (count < numTab)
-		{
-			DialogResize(hwndTab, hwndDisplay[count]);
-			count++;
-			UpdateWindow(hwndDisplay[count]);
-		}
-		UpdateWindow(hwndTab);
-	}
+
 		break;
 	default:
 		return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -321,18 +308,19 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			break;
 		}
 		case ID_FILE_SAVE_AURA:
-			if (saveFile(CusFile, AuraData) == -1)
-			{
-				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
-				SetWindowText(EditError, L"Error Failed to Save");
-				SetFocus(EditError);
-			}
-			if (saveFile(CusFile, AuraData) == 0)
+			if (saveFile(AuraFile, AuraData) == 0)
 			{
 				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
 				SetWindowText(EditError, L"Save Succcesful");
 				SetFocus(EditError);
-			}break;
+			}
+			else
+			{
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
+				SetWindowText(EditError, L"Error Failed to Save");
+				SetFocus(EditError);
+			}
+			break;
 		case IDC_BUTTON2:
 		{
 			LRESULT Name, Costume;
@@ -352,16 +340,16 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			break;
 		}
 		case IDC_BUTTON4:
-			if (saveFile(CusFile, CusData) == -1 )
-			{
-				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
-				SetWindowText(EditError, L"Error Failed to Save");
-				SetFocus(EditError);
-			}
 			if (saveFile(CusFile, CusData) == 0)
 			{
 				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
 				SetWindowText(EditError, L"Save Succcesful");
+				SetFocus(EditError);
+			}
+			else
+			{
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
+				SetWindowText(EditError, L"Error Failed to Save");
 				SetFocus(EditError);
 			}
 			break;
@@ -430,6 +418,47 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			SendMessage(hTemp, CB_SETCURSEL, EvasiveSkill, 0);
 		}
 			break;
+		case IDC_OPENNAMEMSG:
+		{
+			COMDLG_FILTERSPEC Filter[] = { { L"Xenoverse MSG file", L"*.msg" } };
+			HWND hTemp;
+			DWORD Err = NULL;
+			WCHAR WERR[100] = L"";
+			int count = 0;
+			getFileName(hwnd, NameMsgFile, Filter, 1);
+			openFile(NameMsgFile, NameMSGData);
+			if (NameMSGData.empty()) break;
+			LoadMSG(NameMSGData, NameMSGID, 0);
+
+			while (count < MSGCount)
+			{
+				size_t size = strlen(NameMSGID[count].NameID.c_str()) + 1;
+				wchar_t *ComboBoxItemMSGTemp = new wchar_t[size];
+
+				size_t outSize;
+				mbstowcs_s(&outSize, ComboBoxItemMSGTemp, size, NameMSGID[count].NameID.c_str(), size - 1);
+				const TCHAR *ComboBoxItemMSG = { ComboBoxItemMSGTemp };
+				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO1);
+				if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
+				SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)ComboBoxItemMSG));
+				if ((Err = GetLastError()) != 0) { swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
+				count++;
+			}
+		}
+			break;
+
+		case IDC_OPENDESCMSG:
+		{
+			COMDLG_FILTERSPEC Filter[] = { { L"Xenoverse MSG file", L"*.msg" } };
+			DWORD Err = NULL;
+			WCHAR WERR[100] = L"";
+			int count = 0;
+			getFileName(hwnd, DescMsgFile, Filter, 1);
+			openFile(DescMsgFile, DescMSGData);
+			if (DescMSGData.empty()) break;
+			LoadMSG(DescMSGData, DescMSGID, 1);
+		}
+			break;
 		}
 		switch (HIWORD(wParam))
 		{
@@ -463,8 +492,41 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					count++;
 				}
 			}
+			if ((HWND)lParam == hComboCheck[2])
+			{
+				int index, count = 0;
+				DWORD Err = NULL;
+				WCHAR WERR[100] = L"";
+				HWND hTemp = GetDlgItem(hDlg, IDC_EDIT3);
+				index = SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
+				SetWindowText(hTemp, (LPWSTR)NameMSGID[count].ID);
+				
+				size_t size = strlen(NameMSGID[index].Info.c_str()) + 1;
+				wchar_t *InfoTemp = new wchar_t[size];
+
+				size_t outSize;
+				mbstowcs_s(&outSize, InfoTemp, size, NameMSGID[index].Info.c_str(), size - 1);
+				const TCHAR *Info = { InfoTemp };
+				hTemp = GetDlgItem(hDlg, IDC_EDIT1);
+				SetWindowText(hTemp, Info);
+				hTemp = GetDlgItem(hDlg, IDC_EDIT2);
+				if (!DescMSGData.empty())
+				{
+					size_t size = strlen(DescMSGID[index].Info.c_str()) + 1;
+					wchar_t *InfoTemp = new wchar_t[size];
+
+					size_t outSize;
+					mbstowcs_s(&outSize, InfoTemp, size, DescMSGID[index].Info.c_str(), size - 1);
+					const TCHAR *Info = { InfoTemp };
+					SetWindowText(hTemp, Info);
+				}
+				else
+				{
+					SetWindowText(hTemp, L"Load Description MSG and reselect Name MSG ID");
+				}
+			}
 		}
-			
+		
 		}
 		return (INT_PTR)TRUE;
 
