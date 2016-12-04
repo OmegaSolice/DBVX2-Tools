@@ -158,18 +158,18 @@
     <ClInclude Include="Files.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SuperSoul.h" />
     <ClInclude Include="MSG.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="Winapi.h" />
-    <ClInclude Include="resource.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon.ico" />
     <Image Include="images.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

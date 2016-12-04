@@ -5,6 +5,8 @@ void LoadMSG(std::string MSGData, MSGDATA *MSGInfo, int mode)
 	int count = 0, DataCount1 = 0x2464, DataCount2 = 0x39D2, NameCount = 0, stop;
 	char TempName[300] = { NULL }, TempInfo[300] = { NULL };
 	if (mode == 0) stop = 0x39CF; else { stop = 0x4067; DataCount2 = 0x406A; }
+
+
 	while (DataCount1 <= stop)
 	{
 		MSGInfo[count].ID = count;
@@ -27,7 +29,6 @@ void LoadMSG(std::string MSGData, MSGDATA *MSGInfo, int mode)
 				DataCount2 += 2;
 				TempInfo[NameCount] = '\n';
 				NameCount++;
-				DataCount2 += 2;
 			}
 			if (MSGData[DataCount2] != '&')
 			{
@@ -54,4 +55,46 @@ void LoadMSG(std::string MSGData, MSGDATA *MSGInfo, int mode)
 		count++;
 	}
 	MSGCount = count;
+}
+
+void NormalizeMSG(std::string &NewString)
+{
+	int count = 0;
+	char Apos[] = { "&apos;" };
+	std::string NewTemp;
+	size_t size = strlen(NewString.c_str()) * 2 - 1;
+
+
+	while (count <= (int)NewString.size())
+	{
+		if (NewString[count] == '\r')
+		{
+			NewString.erase(count, 1);
+		}
+		if(NewString[count] == '\'')
+		{
+			NewString.insert(count,  Apos);
+			count += 6;
+			NewString.erase(count, 1);
+		}
+		else
+			count++;
+	}
+	NewTemp.resize(size);
+	count = 0;
+
+	while (count <= size)
+	{
+		if (count == 0)
+		{
+			NewTemp[count] = NewString[count];
+		}
+		else
+		{
+			NewTemp[count] = NewString[count - (count/2)];
+		}
+		count += 2;
+	}
+	NewString.erase();
+	NewString = NewTemp;
 }

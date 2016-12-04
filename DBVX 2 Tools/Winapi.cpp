@@ -92,7 +92,6 @@ BOOL OnNotify(HWND hwndTab, HWND *hwndDisplay, LPARAM lParam, HINSTANCE hInstanc
 		{
 		case 0:
 		{
-			//TabAuraUI();
 			ShowWindow(hwndDisplay[ActiveTab], SW_HIDE);
 			ShowWindow(hwndDisplay[0], SW_SHOWNORMAL);
 			UpdateWindow(hwndDisplay[0]);
@@ -111,11 +110,18 @@ BOOL OnNotify(HWND hwndTab, HWND *hwndDisplay, LPARAM lParam, HINSTANCE hInstanc
 		{
 			ShowWindow(hwndDisplay[ActiveTab], SW_HIDE);
 			ShowWindow(hwndDisplay[2], SW_SHOW);
-			UpdateWindow(hwndDisplay[1]);
+			UpdateWindow(hwndDisplay[2]);
 			ActiveTab = iPage;
-			
 		}
 			break;
+		case 3:
+		{
+			ShowWindow(hwndDisplay[ActiveTab], SW_HIDE);
+			ShowWindow(hwndDisplay[3], SW_SHOW);
+			UpdateWindow(hwndDisplay[3]);
+			ActiveTab = iPage;
+		}
+		break;
 		}
 	}
 	break;
