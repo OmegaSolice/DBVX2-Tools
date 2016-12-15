@@ -42,8 +42,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		MessageBox(NULL, L"Class failed to register", L"Error", MB_ICONERROR | MB_OK);
 	}
 
-	HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV Tool", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-		CW_USEDEFAULT, CW_USEDEFAULT, 700, 900, NULL, NULL, hInstance, NULL);
+	HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+		CW_USEDEFAULT, CW_USEDEFAULT, 700, 1000, NULL, NULL, hInstance, NULL);
+	/*HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+		CW_USEDEFAULT, CW_USEDEFAULT, 900, 1200, NULL, NULL, hInstance, NULL);*/
 	if (hwnd == NULL)
 	{
 		MessageBox(NULL, L"Window Creation fail", L"Error", MB_ICONERROR | MB_OK);
@@ -75,7 +77,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	TCHAR *TabLabel[] = { L"Aura", L"Skill", L"Super Soul", L"Fusion" };
 	count = 0;
-	int numTab = 4;
+	int numTab = 3;
 	HWND hTemp;
 	DWORD Err = NULL;
 	WCHAR WERR[100] = L"";
@@ -89,7 +91,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (!hwndDisplay[2]) { Err = GetLastError();  swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 	hwndDisplay[3] = CreateDialog(g_hInst, MAKEINTRESOURCE(IDD_DIALOG4), hwndTab, MainDialogProc);
 	if (!hwndDisplay[3]) { Err = GetLastError();  swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
-
+	
 	while (count < numTab )        //resizes dialog to window client
 	{
 		DialogResize(hwndTab, hwndDisplay[count]);
@@ -393,6 +395,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 		SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)ComboBoxItemTC));
 		if ((Err = GetLastError()) != 0) { swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
+		hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO30);
+		if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
+		SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)ComboBoxItemTC));
+		if ((Err = GetLastError()) != 0) { swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
+		hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO31);
+		if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
+		SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)ComboBoxItemTC));
+		if ((Err = GetLastError()) != 0) { swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 		count++;
 	}
 	count = 0;
@@ -430,8 +440,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	{
 		if (!IsDialogMessage(hwndDisplay[ActiveTab], &msg))
 		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
 		}
 	}
 
@@ -698,6 +708,90 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			openFile(SSIDBFile, SSIDBData);
 		}
 		break;
+		case IDOK:
+		{
+			if (GetFocus() == GetDlgItem(hDlg, IDC_EDIT5) || GetFocus() == GetDlgItem(hDlg, IDC_EDIT3))
+			{
+				char CInput[10];
+				std::stringstream HexNum;
+
+				if(GetFocus() == GetDlgItem(hDlg, IDC_EDIT3))
+				{ 
+					GetWindowTextA(GetDlgItem(hDlg, IDC_EDIT3), CInput, 4);
+					SetWindowTextA(GetDlgItem(hDlg, IDC_EDIT5), CInput);
+				}
+				else
+				{
+					GetWindowTextA(GetDlgItem(hDlg, IDC_EDIT5), CInput, 4);
+					SetWindowTextA(GetDlgItem(hDlg, IDC_EDIT3), CInput);
+				}
+
+				if (CInput[0] == ' ' || atoi(CInput) > 210) break;
+				int index = 0;
+				DWORD Err = NULL;
+				WCHAR WERR[100] = L"";
+				wchar_t Temp[10];
+				HWND hTemp = GetDlgItem(hDlg, IDC_EDIT3);
+				HexNum << std::hex << CInput;
+				HexNum >> index;
+				if (!NameMSGData.empty())
+				{
+					SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_SETCURSEL, index, 0);
+					wsprintfW(Temp, L"%x", NameMSGID[index].ID);
+					Err = SetWindowText(hTemp, Temp);
+
+					size_t size = strlen(NameMSGID[index].Info.c_str()) + 1;
+					wchar_t *InfoTemp = new wchar_t[size];
+
+					size_t outSize;
+					mbstowcs_s(&outSize, InfoTemp, size, NameMSGID[index].Info.c_str(), size - 1);
+					const TCHAR *Info = { InfoTemp };
+					hTemp = GetDlgItem(hDlg, IDC_EDIT1);
+					SetWindowText(hTemp, Info);
+				}
+
+				hTemp = GetDlgItem(hDlg, IDC_EDIT2);
+				if (!DescMSGData.empty())
+				{
+					size_t size = strlen(DescMSGID[index].Info.c_str()) + 1;
+					wchar_t *InfoTemp = new wchar_t[size];
+
+					size_t outSize;
+					mbstowcs_s(&outSize, InfoTemp, size, DescMSGID[index].Info.c_str(), size - 1);
+					const TCHAR *Info = { InfoTemp };
+					SetWindowText(hTemp, Info);
+				}
+				else
+				{
+					SetWindowText(hTemp, L"Load Description MSG and reselect Name MSG ID");
+				}
+
+				if (!SSIDBData.empty())
+				{
+					memset(&SSData, 0, sizeof(SUPERSOUL));
+					SSData = SearchSS(index);
+					int TabNum = TabCtrl_GetCurSel(GetDlgItem(hDlg, IDC_TAB1));
+					hTemp = GetDlgItem(hDlg, IDC_EDIT5);
+					wsprintfW(Temp, L"%x", SSIDBData[SSData.ID]);
+					SetWindowText(hTemp, Temp);
+					hTemp = GetDlgItem(hDlg, IDC_EDIT4);
+					wsprintfW(Temp, L"%d", SSIDBData[SSData.Rarity]);
+					SetWindowText(hTemp, Temp);
+					hTemp = GetDlgItem(hDlg, IDC_COMBO2);
+					SendMessage(hTemp, CB_SETCURSEL, SSIDBData[SSData.Ki_BlastType], 0);
+					hTemp = GetDlgItem(hDlg, IDC_EDIT6);
+					char CPrice[5];
+					int Price;
+					Price = ((uint8_t)SSIDBData[SSData.Price + 1] * 0x100) + (uint8_t)SSIDBData[SSData.Price];
+					sprintf(CPrice, "%d", Price);
+					SetWindowTextA(hTemp, CPrice);
+					SetAllCurEffect();
+					DisplayEffect(hDlg, TabNum);
+				}
+			}
+			break;
+		}
+
 		case IDC_SAVESOUL:
 		{
 			if (saveFile(NameMsgFile, NameMSGData) == 0)
@@ -708,239 +802,68 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			}
 			else
 			{
-				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
-				SetWindowText(EditError, L"Error Failed to Save Name Msg");
-				SetFocus(EditError);
+				if (!NameMSGData.empty())
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
+					SetWindowText(EditError, L"Error Failed to Save Name Msg");
+					SetFocus(EditError);
+				}
+				else
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
+					SetWindowText(EditError, L"No Name MSG Loaded");
+					SetFocus(EditError);
+				}
 			}
 			if (saveFile(DescMsgFile, DescMSGData) == 0)
 			{
-				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
 				SetWindowText(EditError, L"Description Msg Save Succcesful");
 				SetFocus(EditError);
 			}
 			else
 			{
-				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
-				SetWindowText(EditError, L"Error Failed to Save Description Msg");
-				SetFocus(EditError);
+				if (!DescMSGData.empty())
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
+					SetWindowText(EditError, L"Error Failed to Save Description Msg");
+					SetFocus(EditError);
+				}
+				else
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
+					SetWindowText(EditError, L"No Description MSG Loaded");
+					SetFocus(EditError);
+				}
 			}
 			if (saveFile(SSIDBFile, SSIDBData) == 0)
 			{
-				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR3);
 				SetWindowText(EditError, L"IDB Save Succcesful");
 				SetFocus(EditError);
 			}
 			else
 			{
-				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
-				SetWindowText(EditError, L"Error Failed to Save IDB");
-				SetFocus(EditError);
+				if (!SSIDBData.empty())
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR3);
+					SetWindowText(EditError, L"Error Failed to Save IDB");
+					SetFocus(EditError);
+				}
+				else
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR3);
+					SetWindowText(EditError, L"No IDB Loaded");
+					SetFocus(EditError);
+				}
 			}
 		}
 			break;
 		case IDC_SETSOUL:
 		{
-			int index, count = 0, size;
-			HWND hTemp;
-		    char CTemp[200];
-			std::string NTemp, OTemp;
-			hTemp = GetDlgItem(hDlg, IDC_EDIT1);
-			GetWindowTextA(hTemp, CTemp, GetWindowTextLength(hTemp) + 1);
-			NTemp = CTemp;
-			hTemp = GetDlgItem(hDlg, IDC_COMBO1);
-			index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-			if (index == -1) break;
-			OTemp = NameMSGID[index].Info;
-			NormalizeMSG(NTemp);
-			NormalizeMSG(OTemp);
-			size = OTemp.size();
-			count = NameMSGData.find(OTemp);
-			NameMSGData.erase(count, size);
-			NameMSGData.insert(count, NTemp);
-			LoadMSG(NameMSGData, NameMSGID, 0);
-			hTemp = GetDlgItem(hDlg, IDC_EDIT2);
-			GetWindowTextA(hTemp, CTemp, GetWindowTextLength(hTemp) + 1);
-			NTemp.clear();
-			OTemp.clear();
-			NTemp = CTemp;
-			OTemp = DescMSGID[index].Info;
-			NormalizeMSG(NTemp);
-			NormalizeMSG(OTemp);
-			size = OTemp.size();
-			count = DescMSGData.find(OTemp);
-			if (count == -1) { SetWindowText(GetDlgItem(hDlg, IDC_EDITERROR1), L"Error Desc saving String"); break; }
-			DescMSGData.erase(count, size);
-			DescMSGData.insert(count, NTemp);
-			LoadMSG(DescMSGData, DescMSGID, 1);
-			hTemp = GetDlgItem(hwndDisplay[2], IDC_EDIT4);
-			index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-			GetWindowTextA(hTemp, CTemp, 2);
-			SSIDBData[SSData.Rarity] = CTemp[0] - '0';
-			hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO2);
-			SSIDBData[SSData.Ki_BlastType] = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-			hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO3);
-			index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-			count = 0;
-			while (count < 3)
-			{
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO3);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Effect[count]] = SSEffectID[index].HexID;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO4);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.EffectAmount[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.EffectAmount[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.EffectAmount[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.EffectAmount[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO5);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Flag[count]] = SSSetting.Flag[index];
-				if (index == 0)
-				{
-					SSIDBData[SSData.Flag[count] + 1] = 0xff;
-					SSIDBData[SSData.Flag[count] + 2] = 0xff;
-					SSIDBData[SSData.Flag[count] + 3] = 0xff;
-				}
-				else
-				{
-					SSIDBData[SSData.Flag[count] + 1] = 0xff;
-					SSIDBData[SSData.Flag[count] + 2] = 0xff;
-					SSIDBData[SSData.Flag[count] + 3] = 0xff;
-				}
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO6);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Trigger[count]] = SSTriggerID[index].HexID;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO7);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Target[count]] = SSSetting.Target[index];
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO8);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.TriggerConditions1[count] + 2] = SSTCID[index].HexID1;
-				SSIDBData[SSData.TriggerConditions1[count] + 3] = SSTCID[index].HexID2;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO9);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.TriggerConditions2[count] + 2] = SSTCID[index].HexID1;
-				SSIDBData[SSData.TriggerConditions2[count] + 3] = SSTCID[index].HexID2;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO10);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.TriggerConditions3[count] + 2] = SSTCID[index].HexID1;
-				SSIDBData[SSData.TriggerConditions3[count] + 3] = SSTCID[index].HexID2;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO29);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Timer[count] + 2] = SSSetting.TimerID1[index];
-				SSIDBData[SSData.Timer[count] + 3] = SSSetting.TimerID2[index];
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO11);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Health[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Health[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Health[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Health[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO12);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Ki[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Ki[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Ki[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Ki[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO13);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Ki_RegenRate[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Ki_RegenRate[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Ki_RegenRate[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Ki_RegenRate[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO14);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Stamina[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Stamina[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Stamina[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Stamina[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO15);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Stamina_RegenRate[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Stamina_RegenRate[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Stamina_RegenRate[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Stamina_RegenRate[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO16);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Ground_Speed[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Ground_Speed[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Ground_Speed[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Ground_Speed[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO17);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Flight_Speed[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Flight_Speed[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Flight_Speed[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Flight_Speed[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO18);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Boost_Speed[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Boost_Speed[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Boost_Speed[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Boost_Speed[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO19);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Dash_Speed[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Dash_Speed[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Dash_Speed[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Dash_Speed[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO21);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Basic_Attack[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Basic_Attack[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Basic_Attack[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Basic_Attack[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO22);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Ki_Blast[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Ki_Blast[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Ki_Blast[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Ki_Blast[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO23);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Strike_Super[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Strike_Super[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Strike_Super[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Strike_Super[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO24);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Ki_Blast_Super[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Ki_Blast_Super[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Ki_Blast_Super[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Ki_Blast_Super[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO25);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Basic_Attack_Dmg[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Basic_Attack_Dmg[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Basic_Attack_Dmg[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Basic_Attack_Dmg[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO26);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Ki_Blast_Dmg[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Ki_Blast_Dmg[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Ki_Blast_Dmg[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Ki_Blast_Dmg[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO27);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Strike_Super_Dmg[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Strike_Super_Dmg[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Strike_Super_Dmg[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Strike_Super_Dmg[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO28);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Ki_Blast_Super_Dmg[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Ki_Blast_Super_Dmg[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Ki_Blast_Super_Dmg[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Ki_Blast_Super_Dmg[count] + 3] = SSEAID[index].HexID4;
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO20);
-				index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-				SSIDBData[SSData.Revive_Speed[count]] = SSEAID[index].HexID1;
-				SSIDBData[SSData.Ki_Blast_Super_Dmg[count] + 1] = SSEAID[index].HexID2;
-				SSIDBData[SSData.Ki_Blast_Super_Dmg[count] + 2] = SSEAID[index].HexID3;
-				SSIDBData[SSData.Ki_Blast_Super_Dmg[count] + 3] = SSEAID[index].HexID4;
-
-
-				count++;
-				}
+			int TabNum = TabCtrl_GetCurSel(GetDlgItem(hDlg, IDC_TAB1));
+			GetCurEffect(hDlg, TabNum);
+			SetSoul(hDlg);
 		}
 		break;
 		}
@@ -981,9 +904,12 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 				int index;
 				DWORD Err = NULL;
 				WCHAR WERR[100] = L"";
+				wchar_t Temp[10];
 				HWND hTemp = GetDlgItem(hDlg, IDC_EDIT3);
 				index = SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
-				SetWindowText(hTemp, (LPWSTR)NameMSGID[index].ID);
+				
+				wsprintfW(Temp, L"%x", NameMSGID[index].ID);
+				Err = SetWindowText(hTemp, Temp);
 				
 				size_t size = strlen(NameMSGID[index].Info.c_str()) + 1;
 				wchar_t *InfoTemp = new wchar_t[size];
@@ -1012,10 +938,9 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 				if (!SSIDBData.empty())
 				{
 					memset(&SSData, 0, sizeof(SUPERSOUL));
-					wchar_t Temp[10];
 					SSData = SearchSS(index);
 					int TabNum = TabCtrl_GetCurSel(GetDlgItem(hDlg, IDC_TAB1));
-					hTemp = GetDlgItem(hDlg, IDC_EDIT3);
+					hTemp = GetDlgItem(hDlg, IDC_EDIT5);
 					wsprintfW(Temp, L"%x", SSIDBData[SSData.ID]);
 					SetWindowText(hTemp, Temp);
 					hTemp = GetDlgItem(hDlg, IDC_EDIT4);
@@ -1023,67 +948,19 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					SetWindowText(hTemp, Temp);
 					hTemp = GetDlgItem(hDlg, IDC_COMBO2);
 					SendMessage(hTemp, CB_SETCURSEL, SSIDBData[SSData.Ki_BlastType], 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO3);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectID(SSData.Effect[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO4);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.EffectAmount[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO5);
-					SendMessage(hTemp, CB_SETCURSEL, SearchFlagID(SSData.Flag[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO6);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTriggerID(SSData.Trigger[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO7);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTargetID(SSData.Target[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO8);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTCID(SSData.TriggerConditions1[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO9);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTCID(SSData.TriggerConditions2[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO10);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTCID(SSData.TriggerConditions3[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO29);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTimerID(SSData.Timer[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO11);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Health[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO12);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO13);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_RegenRate[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO14);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Stamina[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO15);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Stamina_RegenRate[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO16);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ground_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO17);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Flight_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO18);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Boost_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO19);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Dash_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO28);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Basic_Attack[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO21);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO22);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Strike_Super[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO23);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast_Super[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO24);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Basic_Attack_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO25);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO26);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Strike_Super_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO27);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast_Super_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO20);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Revive_Speed[TabNum]), 0);
+					hTemp = GetDlgItem(hDlg, IDC_EDIT6);
+					char CPrice[5];
+					int Price;
+					Price = ((uint8_t)SSIDBData[SSData.Price + 1] * 0x100) + (uint8_t)SSIDBData[SSData.Price];
+					sprintf(CPrice, "%d", Price);
+					SetWindowTextA(hTemp, CPrice);
+					SetAllCurEffect();
+					DisplayEffect(hDlg, TabNum);
 				}
 			}
-		}
-		
+		}		
 		}
 		return (INT_PTR)TRUE;
-
 	case WM_NOTIFY:
 		switch (((LPNMHDR)lParam)->code)
 			//switch (lParam)
@@ -1096,8 +973,6 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 		break;
 		case TCN_SELCHANGE:
 		{
-			wchar_t Temp[10];
-			HWND hTemp;
 			int TabNum = TabCtrl_GetCurSel(GetDlgItem(hDlg, IDC_TAB1));
 			switch (TabNum)
 			{
@@ -1105,60 +980,9 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			{
 				if (!SSIDBData.empty())
 				{
-					hTemp = GetDlgItem(hDlg, IDC_COMBO3);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectID(SSData.Effect[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO4);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.EffectAmount[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO5);
-					SendMessage(hTemp, CB_SETCURSEL, SearchFlagID(SSData.Flag[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO6);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTriggerID(SSData.Trigger[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO7);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTargetID(SSData.Target[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO8);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTCID(SSData.TriggerConditions1[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO9);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTCID(SSData.TriggerConditions2[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO10);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTCID(SSData.TriggerConditions3[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO29);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTimerID(SSData.Timer[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO11);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Health[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO12);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO13);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_RegenRate[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO14);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Stamina[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO15);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Stamina_RegenRate[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO16);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ground_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO17);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Flight_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO18);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Boost_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO19);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Dash_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO28);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Basic_Attack[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO21);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO22);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Strike_Super[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO23);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast_Super[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO24);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Basic_Attack_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO25);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO26);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Strike_Super_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO27);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast_Super_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO20);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Revive_Speed[TabNum]), 0);
+					GetCurEffect(hDlg, PrevEffectTab);
+					PrevEffectTab = 0;
+					DisplayEffect(hDlg, TabNum);
 				}
 			}
 			break;
@@ -1166,60 +990,9 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			{
 				if (!SSIDBData.empty())
 				{
-					hTemp = GetDlgItem(hDlg, IDC_COMBO3);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectID(SSData.Effect[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO4);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.EffectAmount[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO5);
-					SendMessage(hTemp, CB_SETCURSEL, SearchFlagID(SSData.Flag[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO6);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTriggerID(SSData.Trigger[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO7);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTargetID(SSData.Target[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO8);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTCID(SSData.TriggerConditions1[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO9);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTCID(SSData.TriggerConditions2[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO10);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTCID(SSData.TriggerConditions3[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO29);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTimerID(SSData.Timer[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO11);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Health[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO12);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO13);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_RegenRate[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO14);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Stamina[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO15);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Stamina_RegenRate[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO16);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ground_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO17);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Flight_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO18);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Boost_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO19);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Dash_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO28);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Basic_Attack[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO21);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO22);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Strike_Super[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO23);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast_Super[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO24);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Basic_Attack_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO25);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO26);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Strike_Super_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO27);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast_Super_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO20);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Revive_Speed[TabNum]), 0);
+					GetCurEffect(hDlg, PrevEffectTab);
+					PrevEffectTab = 1;
+					DisplayEffect(hDlg, TabNum);
 				}
 			}
 			break;
@@ -1227,60 +1000,9 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			{
 				if (!SSIDBData.empty())
 				{
-					hTemp = GetDlgItem(hDlg, IDC_COMBO3);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectID(SSData.Effect[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO4);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.EffectAmount[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO5);
-					SendMessage(hTemp, CB_SETCURSEL, SearchFlagID(SSData.Flag[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO6);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTriggerID(SSData.Trigger[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO7);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTargetID(SSData.Target[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO8);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTCID(SSData.TriggerConditions1[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO9);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTCID(SSData.TriggerConditions2[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO10);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTCID(SSData.TriggerConditions3[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO29);
-					SendMessage(hTemp, CB_SETCURSEL, SearchTimerID(SSData.Timer[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO11);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Health[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO12);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO13);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_RegenRate[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO14);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Stamina[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO15);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Stamina_RegenRate[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO16);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ground_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO17);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Flight_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO18);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Boost_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO19);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Dash_Speed[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO28);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Basic_Attack[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO21);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO22);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Strike_Super[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO23);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast_Super[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO24);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Basic_Attack_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO25);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO26);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Strike_Super_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO27);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Ki_Blast_Super_Dmg[TabNum]), 0);
-					hTemp = GetDlgItem(hDlg, IDC_COMBO20);
-					SendMessage(hTemp, CB_SETCURSEL, SearchEffectAmountID(SSData.Revive_Speed[TabNum]), 0);
+					GetCurEffect(hDlg, PrevEffectTab);
+					PrevEffectTab = 2;
+					DisplayEffect(hDlg, TabNum);
 				}
 			}
 			break;

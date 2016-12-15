@@ -10,7 +10,7 @@ extern HINSTANCE g_hInst;
 extern HWND hwnd;
 extern HWND hwndTab ,hwndDisplay[5];
 extern HWND hComboCheck[3]; //Used to check combo box so when character change costime box can be set appropriatley
-extern int ActiveTab;
+extern int ActiveTab, PrevEffectTab;
 struct AURA
 {
 	int HexID;
@@ -40,17 +40,24 @@ struct MSGDATA
 	int ID;
 	std::string NameID;
 	std::string Info;
+	int startLength;
+	int endLength;
+	int stringStartID1;
+	int stringStartID2;
 };
 struct SUPERSOUL
 {
 	int ID;
 	int Rarity;
+	int Activate;
+	int Price;
 	int Ki_BlastType;
 	int Effect[3] = { 0 };
 	int Trigger[3] = { 0 };
 	int Flag[3] = { 0 };
 	int Timer[3] = { 0 };
-	int TriggerConditions1[3] = { 0 }, TriggerConditions2[3] = { 0 }, TriggerConditions3[3] = { 0 };
+	int TriggerConditions1[3] = { 0 }, TriggerConditions2[3] = { 0 }, TriggerConditions3[3] = { 0 }, TriggerConditions4[3] = { 0 };
+	int TriggerConditions5[3] = { 0 };
 	int EffectAmount[3] = { 0 };
 	int Target[3] = { 0 };
 	int Health[3] = { 0 }, Ki[3] = { 0 }, Ki_RegenRate[3] = { 0 }, Stamina[3] = { 0 }, Stamina_RegenRate[3] = { 0 }, Ground_Speed[3] = { 0 };
@@ -72,10 +79,10 @@ struct SSEFFECT
 };
 struct SSEFFECTAMOUNT
 {
-	int HexID1;
-	int HexID2;
-	int HexID3;
-	int HexID4;
+	uint8_t HexID1;
+	uint8_t HexID2;
+	uint8_t HexID3;
+	uint8_t HexID4;
 	std::string Amount;
 };
 struct SSTRIGGER
@@ -95,6 +102,7 @@ extern CHARACTER CharID[150];
 extern SKILL SSkillID[400], USkillID[400], ASkillID[50], ESkillID[200]; //Super, Ultimate, Awokenn Eavasive Skill variable made from skill struct
 extern MSGDATA NameMSGID[300], DescMSGID[300];
 extern SUPERSOUL SSData; //Stores offset of each elements first value
+extern SUPERSOUL SSCurEffect; // the index value from the list of each effect value
 extern SUPERSOULSETTING SSSetting;
 extern SSEFFECT SSEffectID[50];
 extern SSEFFECTAMOUNT SSEAID[50];

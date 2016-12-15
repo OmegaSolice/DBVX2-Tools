@@ -136,13 +136,5 @@ void DialogResize(HWND Rect, HWND hDlg)
 	SetWindowPos(hDlg, NULL, 0, 20, rcClient.right, rcClient.bottom - 20, NULL);
 }
 
-void hideWindow( HWND *hwndDisplay)
-{
-	int count = 0;
-	while (count <= sizeof(hwndDisplay) / sizeof(hwndDisplay[0]) )
-	{
-		ShowWindow(hwndDisplay[count], SW_HIDE);
-		count++;
-	}
-}
+
 
