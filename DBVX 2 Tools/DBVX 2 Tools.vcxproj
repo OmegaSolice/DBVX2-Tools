@@ -150,6 +150,7 @@
     <ClCompile Include="MSG.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Stat.cpp" />
     <ClCompile Include="SuperSoul.cpp" />
     <ClCompile Include="Winapi.cpp" />
   </ItemGroup>
@@ -159,6 +160,7 @@
     <ClInclude Include="Global.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Stat.h" />
     <ClInclude Include="SuperSoul.h" />
     <ClInclude Include="MSG.h" />
     <ClInclude Include="Skill.h" />

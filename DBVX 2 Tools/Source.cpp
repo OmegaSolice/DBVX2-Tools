@@ -74,10 +74,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	LoadEffectAmount();
 	LoadTrigger();
 	LoadTC();
+	LoadSoulList();
 
-	TCHAR *TabLabel[] = { L"Aura", L"Skill", L"Super Soul", L"Fusion" };
+	TCHAR *TabLabel[] = { L"Aura", L"Skill", L"Super Soul", L"Stat" };
 	count = 0;
-	int numTab = 3;
+	int numTab = 4;
 	HWND hTemp;
 	DWORD Err = NULL;
 	WCHAR WERR[100] = L"";
@@ -92,6 +93,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	hwndDisplay[3] = CreateDialog(g_hInst, MAKEINTRESOURCE(IDD_DIALOG4), hwndTab, MainDialogProc);
 	if (!hwndDisplay[3]) { Err = GetLastError();  swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 	
+	hComboCheck[0] = GetDlgItem(hwndDisplay[0], IDC_COMBO3); //Used to check combo box so when character change costume box can be set appropriatley  
+	hComboCheck[1] = GetDlgItem(hwndDisplay[1], IDC_COMBO6);
+	hComboCheck[2] = GetDlgItem(hwndDisplay[2], IDC_COMBO1);
+	hComboCheck[3] = GetDlgItem(hwndDisplay[3], IDC_COMBO1);
+
 	while (count < numTab )        //resizes dialog to window client
 	{
 		DialogResize(hwndTab, hwndDisplay[count]);
@@ -137,13 +143,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		hTemp = GetDlgItem(hwndDisplay[1], IDC_COMBO6);
 		Err = SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)ComboBoxItemChar));
 		if ((Err = GetLastError()) != 0) { swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
+		hTemp = GetDlgItem(hwndDisplay[3], IDC_COMBO1);
+		Err = SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)ComboBoxItemChar));
+		if ((Err = GetLastError()) != 0) { swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 		count++;
 	}
 
-	hComboCheck[0] = GetDlgItem(hwndDisplay[0], IDC_COMBO3); //Used to check combo box so when character change costume box can be set appropriatley  
-	hComboCheck[1] = GetDlgItem(hwndDisplay[1], IDC_COMBO6);
-	hComboCheck[2] = GetDlgItem(hwndDisplay[2], IDC_COMBO1);
-	
 	count = 0;
 	//int maxCount = sizeof(SSkillID) / sizeof SKILL;
 
@@ -427,12 +432,30 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		if ((Err = GetLastError()) != 0) { swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 		count++;
 	}
+	count = 0;
+	hTemp = GetDlgItem(hwndDisplay[3], IDC_COMBO3);
+
+	while (count < SoulCount)
+	{
+		std::cout << SuperSoulID[count].Name << "\n";
+		size_t size = strlen(SuperSoulID[count].Name.c_str()) + 1;
+		wchar_t *ComboBoxItemSuperSoulTemp = new wchar_t[size];
+
+		size_t outSize;
+		mbstowcs_s(&outSize, ComboBoxItemSuperSoulTemp, size, SuperSoulID[count].Name.c_str(), size - 1);
+		const TCHAR *ComboBoxItemSuperSoul = { ComboBoxItemSuperSoulTemp };
+		if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
+		SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)ComboBoxItemSuperSoul));
+		if ((Err = GetLastError()) != 0) { swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
+		count++;
+	}
 
 	ShowWindow(hwndTab, SW_SHOWNORMAL);
 	ShowWindow(hwndDisplay[0], SW_SHOWNORMAL);
 	UpdateWindow(hwndDisplay[0]);
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
+	ActiveTab = 0;
 	
 	MSG msg;
 	
@@ -866,12 +889,99 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			SetSoul(hDlg);
 		}
 		break;
+		case IDC_OPENPSC:
+		{
+			COMDLG_FILTERSPEC Filter[] = { { L"psc file", L"*.psc" } };
+			getFileName(hwnd, PscFile, Filter, 1);
+			openFile(PscFile, PSCData);
+			LoadPSC(HStat, Stats, PSCData);
 		}
+		break;
+		case IDC_GETSTAT:
+		{
+			HWND hTemp = GetDlgItem(hDlg, IDC_COMBO1);
+			int count = 0, TempIndex = 0, index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
+
+			while (CharID[index].HexID != HStat[count].CharHexID)
+			{
+				TempIndex += HStat[count].CostumeAmount;
+				count++;
+			}
+			index = TempIndex;
+			hTemp = GetDlgItem(hDlg, IDC_COMBO2);
+			index += SendMessage(hTemp, CB_GETCURSEL, 0, 0);
+
+			if (index > -1 && index < 500 &&!PSCData.empty())
+			{
+				DisplayStat(index, hDlg, Stats);
+			}
+			else
+			{
+				hTemp = GetDlgItem(hDlg, IDC_EDITERROR1);
+				SetWindowText(hTemp, L"Error PSC Not Loaded/ Character or Costume Not Selected");
+			}
+		}
+		break;
+		case IDC_SETSTAT:
+		{
+			HWND hTemp = GetDlgItem(hDlg, IDC_COMBO1);
+			int count = 0, TempIndex = 0, index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
+			
+			while (CharID[index].HexID != HStat[count].CharHexID)
+			{
+				TempIndex += HStat[count].CostumeAmount;
+				count++;
+			}
+			index = TempIndex;
+			hTemp = GetDlgItem(hDlg, IDC_COMBO2);
+			index += SendMessage(hTemp, CB_GETCURSEL, 0, 0);
+
+			if (index > -1 && index < 500 && !PSCData.empty())
+			{
+				SetStat(hDlg, index, Stats);
+			}
+			else
+			{
+				hTemp = GetDlgItem(hDlg, IDC_EDITERROR1);
+				SetWindowText(hTemp, L"Error PSC Not Loaded/ Character or Costume Not Selected");
+			}
+		}
+		break;
+		case IDC_SAVEPSC:
+		{
+			if (!PSCData.empty())
+			{
+				SetPSCData(Stats);
+				if (saveFile(PscFile, PSCData) == 0)
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
+					SetWindowText(EditError, L"PSC Save Succcesful");
+					SetFocus(EditError);
+				}
+				else
+				{
+					if (!PSCData.empty())
+					{
+						HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
+						SetWindowText(EditError, L"Error Failed to Save PSC");
+						SetFocus(EditError);
+					}
+					else
+					{
+						HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
+						SetWindowText(EditError, L"No PSC Loaded");
+						SetFocus(EditError);
+					}
+				}
+			}
+		}
+		break;
+		}		
 		switch (HIWORD(wParam))
 		{
 		case CBN_SELCHANGE:
 		{
-			if ((HWND)lParam == hComboCheck[0] || (HWND)lParam == hComboCheck[1])
+			if ((HWND)lParam == hComboCheck[0] || (HWND)lParam == hComboCheck[1] || (HWND)lParam == hComboCheck[3])
 			{
 				int index, count = 0;
 				DWORD Err = NULL;
@@ -880,7 +990,12 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 				if ((HWND)lParam == hComboCheck[0])
 					hTemp = GetDlgItem(hDlg, IDC_COMBO4);
 				else
-					hTemp = GetDlgItem(hDlg, IDC_COMBO7);
+				{
+					if ((HWND)lParam == hComboCheck[1])
+						hTemp = GetDlgItem(hDlg, IDC_COMBO7);
+					else
+						hTemp = GetDlgItem(hDlg, IDC_COMBO2);
+				}
 				index = SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
 				SendMessage(hTemp, CB_RESETCONTENT, 0, 0);
 				while (TRUE)

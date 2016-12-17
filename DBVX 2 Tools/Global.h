@@ -1,15 +1,16 @@
 #pragma once
 #include "Header.h"
 extern std::string AuraData, CusData, AuraSetting, CharSetting, CostumeSetting, SSkillSetting, USkillSetting, ASkillSetting, ESkillSetting;
-extern std::string NameMSGData, DescMSGData, SSIDBData, SSEffectSetting, SSEffectAmountSetting, SSTriggerSetting, SSTCSetting;
-extern char AuraFile[MAX_PATH], CusFile[MAX_PATH], NameMsgFile[MAX_PATH], DescMsgFile[MAX_PATH], SSIDBFile[MAX_PATH];
+extern std::string NameMSGData, DescMSGData, SSIDBData, PSCData, SSEffectSetting, SSEffectAmountSetting, SSTriggerSetting, SSTCSetting;
+extern std::string SoulSetting;
+extern char AuraFile[MAX_PATH], CusFile[MAX_PATH], NameMsgFile[MAX_PATH], DescMsgFile[MAX_PATH], SSIDBFile[MAX_PATH], PscFile[MAX_PATH];
 extern int AuraCount; //Use as counter for amount of Auras that are read in and to load in Combo box
 extern int CharCount; //Use as counter for amount of Characters read in
-extern int MSGCount, SSEffectCount, SSEffectAmountCount, SSTriggerCount, SSTCCount;
+extern int MSGCount, SSEffectCount, SSEffectAmountCount, SSTriggerCount, SSTCCount, SoulCount, PSCCosCount;
 extern HINSTANCE g_hInst;
 extern HWND hwnd;
 extern HWND hwndTab ,hwndDisplay[5];
-extern HWND hComboCheck[3]; //Used to check combo box so when character change costime box can be set appropriatley
+extern HWND hComboCheck[4]; //Used to check combo box so when character change costime box can be set appropriatley
 extern int ActiveTab, PrevEffectTab;
 struct AURA
 {
@@ -96,6 +97,26 @@ struct SSTC
 	int HexID2;
 	std::string TCName;
 };
+struct STATHEADER
+{
+	int CharHexID;
+	int CostumeAmount;
+};
+struct STAT
+{
+	int Offset;
+	int CostumeID;
+	int Camera_Position;
+	float Health, Ki, Ki_Recharge, Stamina, Stamina_RechargeM, Stamina_RechargeA, Stamina_RechargeG, Stamina_Drain1, Stamina_Drain2;
+	float Basic_Attack, Ki_Blast, Strike_Super, Ki_BlastSuper, Basic_Def, Ki_Blast_Def, Strike_Super_Def, Ki_BlastSuper_Def;
+	float Ground_Speed, Air_Speed, Boost_Speed, Dash_Distance, Reinforcement_Skill_Duration, RevivalHP, Reviving_Speed;
+	int Super_Soul;
+};
+struct SOULLIST
+{
+	int HexID;
+	std::string Name;
+};
 
 extern AURA AuraID[50];
 extern CHARACTER CharID[150];
@@ -108,3 +129,6 @@ extern SSEFFECT SSEffectID[50];
 extern SSEFFECTAMOUNT SSEAID[50];
 extern SSTRIGGER SSTriggerID[50];
 extern SSTC SSTCID[50];
+extern STATHEADER HStat[200];
+extern STAT Stats[500];
+extern SOULLIST SuperSoulID[215];

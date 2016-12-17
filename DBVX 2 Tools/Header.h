@@ -22,3 +22,4 @@
 #include "Skill.h"
 #include "MSG.h"
 #include "SuperSoul.h"
+#include "Stat.h"
