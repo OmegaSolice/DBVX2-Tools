@@ -14,6 +14,7 @@ void getFileName(HWND hwnd, char szFileName[MAX_PATH], COMDLG_FILTERSPEC *Filter
 
 		//COMDLG_FILTERSPEC filter[] = { {L"aur file", L"*.aur"} }; //array list for telling file extensions that can be opened
 		OpenFile->SetFileTypes(numFilter, Filter); //sets list of acceptable file by their extension
+		
 
 		if (SUCCEEDED(hr))
 		{
@@ -32,6 +33,47 @@ void getFileName(HWND hwnd, char szFileName[MAX_PATH], COMDLG_FILTERSPEC *Filter
 					wcstombs(szFileName, FileName, wcslen(FileName)); // wcstombs converts LPWSTR to Char array, 
 																	  //wcslen used to find length of wide characters
 					CoTaskMemFree(FileName);  //Frees FileName after finish using
+				}
+
+				Item->Release();
+			}
+
+		}
+		OpenFile->Release();
+		CoUninitialize();
+	}
+}
+
+void getFolderPath(HWND hwnd, char szFolderPath[MAX_PATH])
+{
+	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE); //Initialize COM library
+
+	if (SUCCEEDED(hr))
+	{
+		//Create FileOpenDialog Object
+		IFileOpenDialog *OpenFile;
+		//CocreateInstance creates Common Item dialog object and get pointer to IFileOpenDialog pointer
+		hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&OpenFile));
+
+		OpenFile->SetOptions(FOS_PICKFOLDERS);
+
+		if (SUCCEEDED(hr))
+		{
+			//Show the dialog box
+			hr = OpenFile->Show(hwnd);
+
+			//Get file name frpm dialog box
+			if (SUCCEEDED(hr))
+			{
+				IShellItem *Item;
+				hr = OpenFile->GetResult(&Item);
+				if (SUCCEEDED(hr))
+				{
+					LPWSTR FolderPath;
+					hr = Item->GetDisplayName(SIGDN_FILESYSPATH, &FolderPath);
+					wcstombs(szFolderPath, FolderPath, wcslen(FolderPath)); // wcstombs converts LPWSTR to Char array, 
+																	  //wcslen used to find length of wide characters
+					CoTaskMemFree(FolderPath);  //Frees FolderPath after finish using
 				}
 
 				Item->Release();
@@ -71,7 +113,7 @@ int saveFile(char szFileName[MAX_PATH], std::string Input)
 	{
 		file << Input;
 #ifdef _DEBUG
-		std::cout << "File is save";
+		std::cout << "File is save\n";
 #endif // _DEBUG
 	}
 	else

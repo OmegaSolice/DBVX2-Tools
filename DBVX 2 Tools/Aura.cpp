@@ -48,7 +48,7 @@ void ChangeCharAura(LRESULT Name, LRESULT Costume, LRESULT Color, LRESULT Infini
 	}
 	int TempName = 16 * Costume;
 	int TempColor = 0x20 + (16 * Color);
-	int count = 0xA20, check = CharID[Name].HexID;
+	int count = AuraData[0x1c] + (AuraData[0x1d] * 0x100), check = CharID[Name].HexID;
 	if (!AuraData.empty())
 	{
 
@@ -242,7 +242,7 @@ void LoadCostume()
 	{
 
 		int count = 0, posSet = 0, max = TempString.size();
-		int  CTempHexID, CTempCheck;
+		int  TempHexID, CTempCheck;
 		std::stringstream HexID, Check;
 		char CHexID [2];
 
@@ -286,8 +286,7 @@ void LoadCostume()
 			else
 			{
 				HexID << std::hex << CHexID;
-				HexID >> CTempHexID;
-				posSet = count;
+				HexID >> TempHexID;
 				count += 3;
 				posSet = count; 
 				break;
@@ -307,13 +306,139 @@ void LoadCostume()
 		}
 
 
-		CharID[CharCheck].List[CosCount].ID = CTempHexID;
+		CharID[CharCheck].List[CosCount].ID = TempHexID;
 		CharID[CharCheck].List[CosCount].Name = CTempName;
 #ifdef _DEBUG
 		std::cout << CharID[CharCheck].List[CosCount].ID << " - " << CharID[CharCheck].List[CosCount].Name << std::endl;
 #endif
-		memset(CTempName, 0, strlen(CTempName));//Used to clear CTempValue to ensure names dont have ectra characters from previous names 
+		memset(CTempName, 0, strlen(CTempName));//Used to clear CTempValue to ensure names dont have extra characters from previous names 
 		fCount++;
 	} 
+}
+
+void AuraSetup(HWND ErrorDisplay)
+{
+	std::string AuraSetupData, TempString;
+	openFile("Data/AuraSetup.ini", AuraSetupData);
+	std::istringstream Setup (AuraSetupData);
+
+	if (!AuraSetupData.empty() && !AuraData.empty())
+	{
+		std::stringstream HexID;
+		int count = AuraData[0x1c] + (AuraData[0x1d] * 0x100), CountID = 0, TempCharID = 0, TempCosID = 0, TempAuraColorID = 0;
+		int	CharacterID[50], CosID[50], AuraColorID[50], posSet, CharacterCount = 0;
+		char CHexID[2];
+
+		while (getline(Setup, TempString))
+		{
+			CountID = 0;
+			while (TRUE)
+			{
+				if (TempString[CountID] != ' ')
+				{
+					CHexID[CountID] = TempString[CountID];
+					CountID++;
+				}
+				else
+				{
+					HexID.str(std::string()); //clears string content both are needed
+					HexID.clear();          //clears error flags
+					HexID << std::hex << CHexID;
+					HexID >> TempCharID;
+					CountID += 3;
+					posSet = CountID;
+					break;
+				}
+			}
+			CountID = 0;
+			while (TRUE)
+			{
+				if (TempString[CountID + posSet] != ' ')
+				{
+					CHexID[CountID] = TempString[CountID + posSet];
+					CountID++;
+				}
+				else
+				{
+					HexID.str(std::string()); //clears string content both are needed
+					HexID.clear();          //clears error flags
+					HexID << std::hex << CHexID;
+					HexID >> TempCosID;
+					CountID += 3;
+					posSet += CountID;
+					break;
+				}
+			}
+			CountID = 0;
+			while (TRUE)
+			{
+				if (TempString[CountID + posSet] != ';')
+				{
+					CHexID[CountID] = TempString[CountID + posSet];
+					CountID++;
+				}
+				else
+				{
+					HexID.str(std::string()); //clears string content both are needed
+					HexID.clear();          //clears error flags
+					HexID << std::hex << CHexID;
+					HexID >> TempAuraColorID;
+					break;
+				}
+			}
+			CharacterID[CharacterCount] = TempCharID;
+			CosID[CharacterCount] = TempCosID;
+			AuraColorID[CharacterCount] = TempAuraColorID;
+			CharacterCount++;
+		}
+
+		std::string InsertValue;
+		int CharTotal = 0;
+		CountID = 0;
+
+		while (CountID < CharacterCount)
+		{
+			while ((uint8_t)AuraData[count] != CharacterID[CountID])
+			{
+				count += 0x10;
+			}
+			InsertValue.clear();
+			InsertValue.resize(16);
+			InsertValue[0] = CharacterID[CountID], InsertValue[4] = CosID[CountID], 
+				InsertValue[8] = AuraColorID[CountID];
+			if (AuraData[count] != CharacterID[CountID] && AuraData[count + (CosID[CountID] * 0x10)] != CosID[CountID])
+			{
+				AuraData.insert(count + (CosID[CountID] * 0x10) - 0x10, InsertValue);
+			}
+			else
+			{
+				CharTotal -= 1;
+			}
+			CountID++;
+		}
+		CharTotal += CharacterCount;
+		AuraData[0x18] += CharTotal; 
+		if (saveFile(AuraFile, AuraData) == 0)
+		{
+			SetWindowText(ErrorDisplay, L"Aura file Setup is Complete");;
+
+		}
+		else
+		{
+			SetWindowText(ErrorDisplay, L"Error Failed to Save");
+
+		}
+	}
+	else
+	{
+		if(AuraData.empty())
+		{
+		SetWindowText(ErrorDisplay, L"Error Aura file Setup is incomplete Due to no aur File Open");
+		}
+		else
+		{
+			SetWindowText(ErrorDisplay, L"Error Aura file Setup is incomplete Due to missing AuraSetup.ini");
+		}
+	}
 }
 

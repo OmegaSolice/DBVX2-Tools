@@ -21,6 +21,9 @@
     <ClCompile Include="..\DBVX 2 Tools\Files.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\DBVX 2 Tools\Winapi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -29,5 +32,16 @@
     <ClInclude Include="..\DBVX 2 Tools\Files.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\DBVX 2 Tools\Winapi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AllinShopPatch.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

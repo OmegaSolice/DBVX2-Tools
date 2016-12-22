@@ -1,5 +1,7 @@
 #include "Header.h"
 
+int ActiveTab = 0;
+
 HWND CreateTabControl(HWND hwndParent, HINSTANCE hInstance, int numTab, TCHAR** TabLabel)
 {
 	RECT rcClient;

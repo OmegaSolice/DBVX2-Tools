@@ -4,6 +4,7 @@
 
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -42,10 +43,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		MessageBox(NULL, L"Class failed to register", L"Error", MB_ICONERROR | MB_OK);
 	}
 
-	HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-		CW_USEDEFAULT, CW_USEDEFAULT, 700, 1000, NULL, NULL, hInstance, NULL);
 	/*HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-		CW_USEDEFAULT, CW_USEDEFAULT, 900, 1200, NULL, NULL, hInstance, NULL);*/
+		CW_USEDEFAULT, CW_USEDEFAULT, 700, 1000, NULL, NULL, hInstance, NULL);*/
+	HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+		CW_USEDEFAULT, CW_USEDEFAULT, 900, 1200, NULL, NULL, hInstance, NULL);
 	if (hwnd == NULL)
 	{
 		MessageBox(NULL, L"Window Creation fail", L"Error", MB_ICONERROR | MB_OK);
@@ -235,7 +236,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 
 	count = 0;
-	TCHAR *Ki_Blast[] = {L"Rush", L"Power", L"Paralyze", L"Bomb", L"Homing"};
+	TCHAR *Ki_Blast[] = {L"Paralyze", L"Power", L"Rush", L"Bomb", L"Homing"};
 	while (count < 5)
 	{
 		hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO2);
@@ -455,13 +456,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	UpdateWindow(hwndDisplay[0]);
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
-	ActiveTab = 0;
 	
 	MSG msg;
 	
 	while (GetMessage(&msg, NULL, 0, 0) > 0)
 	{
-		if (!IsDialogMessage(hwndDisplay[ActiveTab], &msg))
+		if (!IsDialogMessage(hwndDisplay[TabCtrl_GetCurSel(hwndTab)], &msg))
 		{
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
@@ -579,6 +579,9 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 				SetWindowText(EditError, L"Error Failed to Save");
 				SetFocus(EditError);
 			}
+			break;
+		case IDC_AURASETUP:
+			AuraSetup(GetDlgItem(hDlg, IDC_EDITERROR1));
 			break;
 		case IDC_BUTTON2:
 		{

@@ -5,5 +5,4 @@ int GetAura(LRESULT Name, LRESULT Costume, HWND EditError);
 void LoadAura();
 void LoadCharacter();
 void LoadCostume();
-
-
+void AuraSetup(HWND ErrorDisplay);

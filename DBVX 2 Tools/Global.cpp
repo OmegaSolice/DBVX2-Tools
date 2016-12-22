@@ -25,4 +25,4 @@ HINSTANCE g_hInst;
 HWND hwnd;
 HWND hwndTab, hwndDisplay[5];
 HWND hComboCheck[4] = { NULL };
-int ActiveTab = 0, PrevEffectTab = 0;
+int PrevEffectTab = 0;

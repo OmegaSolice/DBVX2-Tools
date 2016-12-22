@@ -11,7 +11,7 @@ extern HINSTANCE g_hInst;
 extern HWND hwnd;
 extern HWND hwndTab ,hwndDisplay[5];
 extern HWND hComboCheck[4]; //Used to check combo box so when character change costime box can be set appropriatley
-extern int ActiveTab, PrevEffectTab;
+extern int PrevEffectTab;
 struct AURA
 {
 	int HexID;

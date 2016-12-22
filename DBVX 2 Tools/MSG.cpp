@@ -133,6 +133,8 @@ int SetMSG(std::string OTemp, std::string NTemp, int index, std::string &MSGData
 	if (count == -1)  return -1; 
 	MSGData.erase(count, size);
 	MSGData.insert(count, NTemp);
+	std::string Filer; Filer.resize(4);
+	MSGData.insert(MSGData.size() - 1, Filer);
 	NewSize = NewSize - OldSize;
 	MSGData[0x1738 + (index * 16)] = MSGID[index].startLength + NewSize;
 	MSGData[0x173c + (index * 16)] = MSGID[index].endLength + (NewSize * 2);

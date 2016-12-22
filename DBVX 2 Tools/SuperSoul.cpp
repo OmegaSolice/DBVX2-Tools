@@ -24,6 +24,8 @@ SUPERSOUL SearchSS(int index)
 		Data.TriggerConditions1[Ecount] = count + 64 +(Ecount * 16 * 14);
 		Data.TriggerConditions2[Ecount] = count + 68 + (Ecount * 16 * 14);
 		Data.TriggerConditions3[Ecount] = count + 72 + (Ecount * 16 * 14);
+		Data.TriggerConditions4[Ecount] = count + 76 + (Ecount * 16 * 14);
+		Data.TriggerConditions5[Ecount] = count + 80 + (Ecount * 16 * 14);
 		Data.EffectAmount[Ecount] = count + 96 + (Ecount * 16 * 14);
 		Data.Target[Ecount] = count + 140 + (Ecount * 16 * 14);
 		Data.Flag[Ecount] = count + 56 + (Ecount * 16 * 14);
@@ -426,7 +428,7 @@ int SearchTCID(int index)
 
 	while (check1 != SSTCID[count].HexID1 || check2 != SSTCID[count].HexID2)
 	{
-		if (count > 0 && SSTCID[count].HexID1 == 0 && SSTCID[count].HexID2 == 0) return count;
+		if (count > 0 && SSTCID[count].HexID1 == 0x11 && SSTCID[count].HexID2 == 0x11) return count;
 		count++;
 	}
 	return count;
@@ -517,6 +519,7 @@ void SetSoul(HWND hDlg)
 
 		SSIDBData[SSData.Activate] = -1;
 		SSIDBData[SSData.Activate + 1] = -1;
+		SSIDBData[SSData.Activate + 14] = -1;
 
 		count = 0;
 
@@ -651,9 +654,9 @@ void SetSoul(HWND hDlg)
 			SSIDBData[SSData.Ki_Blast_Super_Dmg[count] + 3] = SSEAID[SSCurEffect.Ki_Blast_Super_Dmg[count]].HexID4;
 
 			SSIDBData[SSData.Revive_Speed[count]] = SSEAID[SSCurEffect.Revive_Speed[count]].HexID1;
-			SSIDBData[SSData.Ki_Blast_Super_Dmg[count] + 1] = SSEAID[SSCurEffect.Revive_Speed[count]].HexID2;
-			SSIDBData[SSData.Ki_Blast_Super_Dmg[count] + 2] = SSEAID[SSCurEffect.Revive_Speed[count]].HexID3;
-			SSIDBData[SSData.Ki_Blast_Super_Dmg[count] + 3] = SSEAID[SSCurEffect.Revive_Speed[count]].HexID4;
+			SSIDBData[SSData.Revive_Speed[count] + 1] = SSEAID[SSCurEffect.Revive_Speed[count]].HexID2;
+			SSIDBData[SSData.Revive_Speed[count] + 2] = SSEAID[SSCurEffect.Revive_Speed[count]].HexID3;
+			SSIDBData[SSData.Revive_Speed[count] + 3] = SSEAID[SSCurEffect.Revive_Speed[count]].HexID4;
 			count++;
 		}
 	}
@@ -780,7 +783,7 @@ void GetCurEffect(HWND hDlg, int TabNum)
 	hTemp = GetDlgItem(hDlg, IDC_COMBO24);
 	SSCurEffect.Ki_Blast_Super[TabNum] = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
 	hTemp = GetDlgItem(hDlg, IDC_COMBO25);
-	SSCurEffect.Basic_Attack_Dmg[TabNum] =- SendMessage(hTemp, CB_GETCURSEL, 0, 0);
+	SSCurEffect.Basic_Attack_Dmg[TabNum] = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
 	hTemp = GetDlgItem(hDlg, IDC_COMBO26);
 	SSCurEffect.Ki_Blast_Dmg[TabNum] = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
 	hTemp = GetDlgItem(hDlg, IDC_COMBO27);
@@ -805,6 +808,8 @@ void SetAllCurEffect()
 		SSCurEffect.TriggerConditions1[TabNum] = SearchTCID(SSData.TriggerConditions1[TabNum]);
 		SSCurEffect.TriggerConditions2[TabNum] = SearchTCID(SSData.TriggerConditions2[TabNum]);
 		SSCurEffect.TriggerConditions3[TabNum] = SearchTCID(SSData.TriggerConditions3[TabNum]);
+		SSCurEffect.TriggerConditions4[TabNum] = SearchTCID(SSData.TriggerConditions4[TabNum]);
+		SSCurEffect.TriggerConditions5[TabNum] = SearchTCID(SSData.TriggerConditions5[TabNum]);
 		SSCurEffect.Timer[TabNum] = SearchTimerID(SSData.Timer[TabNum]);
 		SSCurEffect.Health[TabNum] = SearchEffectAmountID(SSData.Health[TabNum]);
 		SSCurEffect.Ki[TabNum] = SearchEffectAmountID(SSData.Ki[TabNum]);
