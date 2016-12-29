@@ -43,10 +43,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		MessageBox(NULL, L"Class failed to register", L"Error", MB_ICONERROR | MB_OK);
 	}
 
-	/*HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-		CW_USEDEFAULT, CW_USEDEFAULT, 700, 1000, NULL, NULL, hInstance, NULL);*/
-	HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-		CW_USEDEFAULT, CW_USEDEFAULT, 900, 1200, NULL, NULL, hInstance, NULL);
+	HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, CW_USEDEFAULT, 700, 1000, NULL, NULL, hInstance, NULL);
+	/*HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, CW_USEDEFAULT, 900, 1200, NULL, NULL, hInstance, NULL);*/
 	if (hwnd == NULL)
 	{
 		MessageBox(NULL, L"Window Creation fail", L"Error", MB_ICONERROR | MB_OK);
@@ -497,7 +497,21 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		break;
 	case WM_SIZE:
+	{
+		int  count = 0;
+		RECT rcClient;
 
+		GetClientRect(hwnd, &rcClient);
+		SetWindowPos(hwndTab, NULL, rcClient.left, rcClient.top, rcClient.right, rcClient.bottom, NULL);
+
+		while (count < 4)        //resizes dialog to window client
+		{
+			DialogResize(hwndTab, hwndDisplay[count]);
+			count++;
+		}
+	}
+	UpdateWindow(hwnd);
+	UpdateWindow(hwndDisplay[TabCtrl_GetCurSel(hwndTab)]);
 		break;
 	default:
 		return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -732,6 +746,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			int count = 0;
 			getFileName(hwnd, SSIDBFile, Filter, 1);
 			openFile(SSIDBFile, SSIDBData);
+			IDBSetup();
 		}
 		break;
 		case IDOK:
@@ -1003,6 +1018,15 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 				SendMessage(hTemp, CB_RESETCONTENT, 0, 0);
 				while (TRUE)
 				{
+					 //if stat tab Custom Char skip first entry
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x64 ) count = 1;
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x65 ) count = 1;
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x66 ) count = 1;
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x67 ) count = 1;
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x68 ) count = 1;
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x69 ) count = 1;
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x6a ) count = 1;
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x6b ) count = 1;
 					std::cout << CharID[index].List[count].Name << "\n";
 					if (CharID[index].List[count].Name[0] == '\0') break;
 					size_t size = strlen(CharID[index].List[count].Name.c_str()) + 1;
@@ -1014,6 +1038,13 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 					SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)ComboBoxItemCostume));
 					if ((Err = GetLastError()) != 0) { swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }			
+					if ((HWND)lParam != hComboCheck[3])//skip if not stats tab
+					{
+						if (CharID[index].HexID == 0x64 || CharID[index].HexID == 0x65) break;//used to limit Custom character costume unless
+						if (CharID[index].HexID == 0x66 || CharID[index].HexID == 0x67) break;//its psc editor
+						if (CharID[index].HexID == 0x68 || CharID[index].HexID == 0x69) break;
+						if (CharID[index].HexID == 0x6a || CharID[index].HexID == 0x6b) break;
+					}
 					count++;
 				}
 			}

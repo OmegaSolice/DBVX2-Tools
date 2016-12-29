@@ -244,7 +244,7 @@ void LoadCostume()
 		int count = 0, posSet = 0, max = TempString.size();
 		int  TempHexID, CTempCheck;
 		std::stringstream HexID, Check;
-		char CHexID [2];
+		char CHexID [10];
 
 		while (count <= max)
 		{

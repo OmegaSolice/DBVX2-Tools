@@ -510,6 +510,7 @@ void SetSoul(HWND hDlg)
 
 		HexNum << std::hex << Temp1;
 		HexNum >> TempID1;
+		HexNum.str(std::string());
 		HexNum.clear();
 		HexNum << std::hex << Temp2;
 		HexNum >> TempID2;
@@ -526,6 +527,9 @@ void SetSoul(HWND hDlg)
 		while (count < 3)
 		{
 			SSIDBData[SSData.Effect[count]] = SSEffectID[SSCurEffect.Effect[count]].HexID;
+			SSIDBData[SSData.Effect[count ] + 1] = 0;
+			SSIDBData[SSData.Effect[count ] + 2] = 0;
+			SSIDBData[SSData.Effect[count ] + 3] = 0;
 
 			SSIDBData[SSData.EffectAmount[count]] = SSEAID[SSCurEffect.EffectAmount[count]].HexID1;
 			SSIDBData[SSData.EffectAmount[count] + 1] = SSEAID[SSCurEffect.EffectAmount[count]].HexID2;
@@ -533,7 +537,7 @@ void SetSoul(HWND hDlg)
 			SSIDBData[SSData.EffectAmount[count] + 3] = SSEAID[SSCurEffect.EffectAmount[count]].HexID4;
 
 			SSIDBData[SSData.Flag[count]] = SSSetting.Flag[SSCurEffect.Flag[count]];
-			if (index == 0)
+			if (SSSetting.Flag[SSCurEffect.Flag[count]] == 0xff)
 			{
 				SSIDBData[SSData.Flag[count] + 1] = 0xff;
 				SSIDBData[SSData.Flag[count] + 2] = 0xff;
@@ -547,6 +551,9 @@ void SetSoul(HWND hDlg)
 			}
 
 			SSIDBData[SSData.Trigger[count]] = SSTriggerID[SSCurEffect.Trigger[count]].HexID;
+			SSIDBData[SSData.Trigger[count] + 1] = 0;
+			SSIDBData[SSData.Trigger[count] + 2] = 0;
+			SSIDBData[SSData.Trigger[count] + 3] = 0;
 
 			SSIDBData[SSData.Target[count]] = SSSetting.Target[SSCurEffect.Target[count]];
 
@@ -628,10 +635,10 @@ void SetSoul(HWND hDlg)
 			SSIDBData[SSData.Strike_Super[count] + 2] = SSEAID[SSCurEffect.Strike_Super[count]].HexID3;
 			SSIDBData[SSData.Strike_Super[count] + 3] = SSEAID[SSCurEffect.Strike_Super[count]].HexID4;
 
-			SSIDBData[SSData.Ki_Blast_Super[count]] = SSEAID[SSCurEffect.Ki[count]].HexID1;
-			SSIDBData[SSData.Ki_Blast_Super[count] + 1] = SSEAID[SSCurEffect.Ki[count]].HexID2;
-			SSIDBData[SSData.Ki_Blast_Super[count] + 2] = SSEAID[SSCurEffect.Ki[count]].HexID3;
-			SSIDBData[SSData.Ki_Blast_Super[count] + 3] = SSEAID[SSCurEffect.Ki[count]].HexID4;
+			SSIDBData[SSData.Ki_Blast_Super[count]] = SSEAID[SSCurEffect.Ki_Blast_Super[count]].HexID1;
+			SSIDBData[SSData.Ki_Blast_Super[count] + 1] = SSEAID[SSCurEffect.Ki_Blast_Super[count]].HexID2;
+			SSIDBData[SSData.Ki_Blast_Super[count] + 2] = SSEAID[SSCurEffect.Ki_Blast_Super[count]].HexID3;
+			SSIDBData[SSData.Ki_Blast_Super[count] + 3] = SSEAID[SSCurEffect.Ki_Blast_Super[count]].HexID4;
 
 			SSIDBData[SSData.Basic_Attack_Dmg[count]] = SSEAID[SSCurEffect.Basic_Attack_Dmg[count]].HexID1;
 			SSIDBData[SSData.Basic_Attack_Dmg[count] + 1] = SSEAID[SSCurEffect.Basic_Attack_Dmg[count]].HexID2;
@@ -831,5 +838,64 @@ void SetAllCurEffect()
 		SSCurEffect.Revive_Speed[TabNum] = SearchEffectAmountID(SSData.Revive_Speed[TabNum]);
 
 		TabNum++;
+	}
+}
+
+void IDBSetup()
+{
+
+	if (!SSIDBData.empty())
+	{
+		int count = 0x15190, InsertTotal = 0, ID = 0x78;
+		std::string InsertValue;
+		InsertValue.resize(45 * 16);
+		InsertValue[8] = 9, InsertValue[0x0a] = 0xff, InsertValue[0x0b] = 0xff, InsertValue[0x0c] = 0xff, InsertValue[0x0d] = 0xf7, 
+        InsertValue[0x0e] = 0xff, InsertValue[0x0f] = 0xff,InsertValue[0x18] = 0xff, 
+			InsertValue[0x38] = 0x01, InsertValue[0x3e] = 0x80, InsertValue[0x3f] = 0xbf, InsertValue[0x42] = 0x80,
+			InsertValue[0x43] = 0xbf, InsertValue[0x46] = 0x80, InsertValue[0x47] = 0xbf, InsertValue[0x4a] = 0x80, InsertValue[0x4b] = 0xbf,
+			InsertValue[0x4e] = 0x80, InsertValue[0x4f] = 0xbf, InsertValue[0x52] = 0x80, InsertValue[0x53] = 0xbf, InsertValue[0x56] = 0x80,
+			InsertValue[0x57] = 0xbf, InsertValue[0x58] = 0xff, InsertValue[0x59] = 0xff, InsertValue[0x5a] = 0xff, InsertValue[0x5b] = 0xff,
+			InsertValue[0x5c] = 0xff, InsertValue[0x5d] = 0xff, InsertValue[0x5e] = 0xff, InsertValue[0x5f] = 0xff,
+			InsertValue[0x7c] = 0x46, InsertValue[0x84] = 0x47, InsertValue[0x88] = 0xff, InsertValue[0x89] = 0xff, InsertValue[0x8a] = 0xff,
+			InsertValue[0x8b] = 0xff;
+		InsertValue[(14 * 16) + 0x38] = 0x01, InsertValue[(14 * 16) + 0x3e] = 0x80, InsertValue[(14 * 16) + 0x3f] = 0xbf,
+			InsertValue[(14 * 16) + 0x42] = 0x80, InsertValue[(14 * 16) + 0x43] = 0xbf, InsertValue[(14 * 16) + 0x46] = 0x80,
+			InsertValue[(14 * 16) + 0x47] = 0xbf, InsertValue[(14 * 16) + 0x4a] = 0x80, InsertValue[(14 * 16) + 0x4b] = 0xbf,
+			InsertValue[(14 * 16) + 0x4e] = 0x80, InsertValue[(14 * 16) + 0x4f] = 0xbf, InsertValue[(14 * 16) + 0x52] = 0x80,
+			InsertValue[(14 * 16) + 0x53] = 0xbf, InsertValue[(14 * 16) + 0x56] = 0x80, InsertValue[(14 * 16) + 0x57] = 0xbf,
+			InsertValue[(14 * 16) + 0x58] = 0xff, InsertValue[(14 * 16) + 0x59] = 0xff, InsertValue[(14 * 16) + 0x5a] = 0xff,
+			InsertValue[(14 * 16) + 0x5b] = 0xff, InsertValue[(14 * 16) + 0x5c] = 0xff, InsertValue[(14 * 16) + 0x5d] = 0xff,
+			InsertValue[(14 * 16) + 0x5e] = 0xff, InsertValue[(14 * 16) + 0x5f] = 0xff, InsertValue[(14 * 16) + 0x7c] = 0x46,
+			InsertValue[(14 * 16) + 0x84] = 0x47, InsertValue[(14 * 16) + 0x88] = 0xff, InsertValue[(14 * 16) + 0x89] = 0xff,
+			InsertValue[(14 * 16) + 0x8a] = 0xff, InsertValue[(14 * 16) + 0x8b] = 0xff; InsertValue[(14 * 16) + 0x38] = 0x01,
+			InsertValue[(14 * 16) + 0x3e] = 0x80, InsertValue[(14 * 16) + 0x3f] = 0xbf;
+		InsertValue[(2 * 14 * 16) + 0x38] = 0x01, InsertValue[(2 * 14 * 16) + 0x3e] = 0x80, InsertValue[(2 * 14 * 16) + 0x3f] = 0xbf,
+			InsertValue[(2 * 14 * 16) + 0x42] = 0x80, InsertValue[(2 * 14 * 16) + 0x43] = 0xbf, InsertValue[(2 * 14 * 16) + 0x46] = 0x80,
+			InsertValue[(2 * 14 * 16) + 0x47] = 0xbf, InsertValue[(2 * 14 * 16) + 0x4a] = 0x80, InsertValue[(2 * 14 * 16) + 0x4b] = 0xbf,
+			InsertValue[(2 * 14 * 16) + 0x4e] = 0x80, InsertValue[(2 * 14 * 16) + 0x4f] = 0xbf, InsertValue[(2 * 14 * 16) + 0x52] = 0x80,
+			InsertValue[(2 * 14 * 16) + 0x53] = 0xbf, InsertValue[(2 * 14 * 16) + 0x56] = 0x80, InsertValue[(2 * 14 * 16) + 0x57] = 0xbf,
+			InsertValue[(2 * 14 * 16) + 0x58] = 0xff, InsertValue[(2 * 14 * 16) + 0x59] = 0xff, InsertValue[(2 * 14 * 16) + 0x5a] = 0xff,
+			InsertValue[(2 * 14 * 16) + 0x5b] = 0xff, InsertValue[(2 * 14 * 16) + 0x5c] = 0xff, InsertValue[(2 * 14 * 16) + 0x5d] = 0xff,
+			InsertValue[(2 * 14 * 16) + 0x5e] = 0xff, InsertValue[(2 * 14 * 16) + 0x5f] = 0xff,
+			InsertValue[(2 * 14 * 16) + 0x7c] = 0x46, InsertValue[(2 * 14 * 16) + 0x84] = 0x47, InsertValue[(2 * 14 * 16) + 0x88] = 0xff,
+			InsertValue[(2 * 14 * 16) + 0x89] = 0xff, InsertValue[(2 * 14 * 16) + 0x8a] = 0xff, InsertValue[(2 * 14 * 16) + 0x8b] = 0xff;
+
+			
+
+		 if ((uint8_t)SSIDBData[0x08] < 0xd2)
+		 {
+
+			 while (InsertTotal < 51)
+			 {
+				 InsertValue[0] = ID, InsertValue[2] = 1, InsertValue[4] = ID, InsertValue[6] = ID;
+				 SSIDBData.insert(count, InsertValue);
+				 ID += 1;
+				 InsertTotal += 1;
+				 count += 45 * 16;
+			 }
+
+			 SSIDBData[0x8] = (uint8_t)SSIDBData[0x8] + InsertTotal;
+			 saveFile(SSIDBFile, SSIDBData);
+		 }
 	}
 }
