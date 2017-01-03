@@ -1,15 +1,20 @@
 #include "Header.h"
 
-void LoadMSG(std::string MSGData, MSGDATA *MSGInfo, int mode)
+void LoadMSG(std::string MSGData, MSGDATA *MSGInfo)
 {
-	int count = 0, DataCount1 = 0x2464, DataCount2 = 0x39D2, NameCount = 0, stop, stringPosCount = 0x1734, LengthCount = 0x1738;
+	int count = 0, DataCount1, DataCount2, NameCount = 0, stop, stringPosCount, LengthCount, IDCount;
 	char TempName[300] = { NULL }, TempInfo[300] = { NULL };
-	if (mode == 0) stop = 0x39CF; else { stop = 0x4067; DataCount2 = 0x406A; }
 
+	DataCount1 = (uint8_t)MSGData[(uint8_t)MSGData[0x0c]] + ((uint8_t)MSGData[(uint8_t)MSGData[0x0c] + 1] * 0x100);
+	stringPosCount = (uint8_t)MSGData[0x1c] + ((uint8_t)MSGData[0x1d] * 0x100);
+	DataCount2 = (uint8_t)MSGData[stringPosCount] + ((uint8_t)MSGData[stringPosCount + 1] * 0x100);
+	LengthCount = stringPosCount + 4;
+	stop = DataCount2 - 2;
+	IDCount = (uint8_t)MSGData[0x10] + ((uint8_t)MSGData[0x11] * 0x100);
 
 	while (DataCount1 <= stop)
 	{
-		MSGInfo[count].ID = count;
+		MSGInfo[count].ID = (uint8_t)MSGData[IDCount];
 		while (MSGData[DataCount1] != 00)
 		{
 			TempName[NameCount] = MSGData[DataCount1];
@@ -61,6 +66,7 @@ void LoadMSG(std::string MSGData, MSGDATA *MSGInfo, int mode)
 #ifdef _DEBUG
 		std::cout << MSGInfo[count].ID << " - " << MSGInfo[count].NameID << " - " << MSGInfo[count].Info << "\n";
 #endif
+		IDCount+= 4;
 		count++;
 	}
 	MSGCount = count;
@@ -112,9 +118,10 @@ void NormalizeMSG(std::string &NewString)
 
 int SetMSG(std::string OTemp, std::string NTemp, int index, std::string &MSGData, MSGDATA* MSGID )
 {
-	int count = 0, size, NewSize, OldSize, HexNumTemp = 0;
+	int count = 0, size, NewSize, OldSize, HexNumTemp = 0, stringLengthPos;
 	char CTemp[10], Temp1[4], Temp2[4];
 	std::stringstream HexNum;
+	stringLengthPos = (uint8_t)MSGData[0x1c] + ((uint8_t)MSGData[0x1d] * 0x100);
 
 	NewSize = strlen(NTemp.c_str());
 	OldSize = strlen(OTemp.c_str());
@@ -136,8 +143,8 @@ int SetMSG(std::string OTemp, std::string NTemp, int index, std::string &MSGData
 	std::string Filer; Filer.resize(4);
 	MSGData.insert(MSGData.size() - 1, Filer);
 	NewSize = NewSize - OldSize;
-	MSGData[0x1738 + (index * 16)] = MSGID[index].startLength + NewSize;
-	MSGData[0x173c + (index * 16)] = MSGID[index].endLength + (NewSize * 2);
+	MSGData[(stringLengthPos + 4) + (index * 16)] = MSGID[index].startLength + NewSize;
+	MSGData[(stringLengthPos + 8) + (index * 16)] = MSGID[index].endLength + (NewSize * 2);
 
 	count = index + 1;
 	while (count < MSGCount)
@@ -164,9 +171,9 @@ int SetMSG(std::string OTemp, std::string NTemp, int index, std::string &MSGData
 		HexNum << std::hex << Temp2;
 		HexNum >> TempID2;
 
-		MSGData[0x1734 + (count * 16)] = TempID2;
+		MSGData[stringLengthPos + (count * 16)] = TempID2;
 
-		MSGData[0x1735 + (count * 16)] = TempID1;
+		MSGData[(stringLengthPos + 1) + (count * 16)] = TempID1;
 		count++;
 	}
 

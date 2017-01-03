@@ -2,15 +2,18 @@
 
 int main()
 {
-	char PrimaryFile[MAX_PATH], SecondaryFile[MAX_PATH];
-	std::string PrimaryData, SecondaryData;
+	char * PrimaryFile = new char [MAX_PATH], *SecondaryFile = new char [MAX_PATH];
+	std::string PrimaryData, SecondaryData, TempFile;
 	int Size = 0, count = 0;
 
+	TempFile.resize(MAX_PATH);
 	std::cout << "Enter Primary Path\n";
-	std::cin >> PrimaryFile;
+	getline(std::cin, TempFile);
+	std::copy(TempFile.begin(), TempFile.end(), PrimaryFile);
 
 	std::cout << "Enter Secondary Path\n";
-	std::cin >> SecondaryFile;
+	getline(std::cin, TempFile);
+	std::copy(TempFile.begin(), TempFile.end(), SecondaryFile);
 
 	openFile(PrimaryFile, PrimaryData);
 	openFile(SecondaryFile, SecondaryData);

@@ -704,7 +704,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			getFileName(hwnd, NameMsgFile, Filter, 1);
 			openFile(NameMsgFile, NameMSGData);
 			if (NameMSGData.empty()) break;
-			LoadMSG(NameMSGData, NameMSGID, 0);
+			LoadMSG(NameMSGData, NameMSGID);
 			hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO1);
 			if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 			SendMessage(hTemp, CB_RESETCONTENT, 0, 0);
@@ -735,7 +735,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			getFileName(hwnd, DescMsgFile, Filter, 1);
 			openFile(DescMsgFile, DescMSGData);
 			if (DescMSGData.empty()) break;
-			LoadMSG(DescMSGData, DescMSGID, 1);
+			LoadMSG(DescMSGData, DescMSGID);
 		}
 			break;
 		case IDC_OPENIDB:

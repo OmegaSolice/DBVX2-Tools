@@ -16,10 +16,10 @@
 #include <cstring>
 #include "resource.h"
 #include "Files.h"
-#include "Global.h"
 #include "Winapi.h"
 #include "Aura.h"
 #include "Skill.h"
 #include "MSG.h"
 #include "SuperSoul.h"
 #include "Stat.h"
+#include "Global.h"

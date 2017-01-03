@@ -450,7 +450,7 @@ void SetSoul(HWND hDlg)
 	{
 		OTemp = NameMSGID[index].Info;
 		SetMSG(OTemp, NTemp, index, NameMSGData, NameMSGID);
-		LoadMSG(NameMSGData, NameMSGID, 0);
+		LoadMSG(NameMSGData, NameMSGID);
 	}
 	else
 	{
@@ -477,7 +477,7 @@ void SetSoul(HWND hDlg)
 	{
 		OTemp = DescMSGID[index].Info;
 		SetMSG(OTemp, NTemp, index, DescMSGData, DescMSGID);
-		LoadMSG(DescMSGData, DescMSGID, 1);
+		LoadMSG(DescMSGData, DescMSGID);
 	}
 	else
 	{
