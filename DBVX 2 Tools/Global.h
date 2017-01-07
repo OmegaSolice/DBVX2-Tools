@@ -13,8 +13,8 @@ extern HWND hwndTab ,hwndDisplay[5];
 extern HWND hComboCheck[4]; //Used to check combo box so when character change costime box can be set appropriatley
 extern int PrevEffectTab;
 
-extern AURA AuraID[50];
-extern CHARACTER CharID[150];
+extern AURA AuraID[100];
+extern CHARACTER CharID[200];
 extern SKILL SSkillID[400], USkillID[400], ASkillID[50], ESkillID[200]; //Super, Ultimate, Awokenn Eavasive Skill variable made from skill struct
 extern MSGDATA NameMSGID[300], DescMSGID[300];
 extern SUPERSOUL SSData; //Stores offset of each elements first value

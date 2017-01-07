@@ -52,8 +52,8 @@ void ChangeSkill(LRESULT Name, LRESULT Costume, LRESULT SuperSkill[4], LRESULT U
 		CusData[TempName + 10] = SSkillID[SuperSkill[1]].HexID1, CusData[TempName + 11] = SSkillID[SuperSkill[1]].HexID2;
 		CusData[TempName + 12] = SSkillID[SuperSkill[2]].HexID1, CusData[TempName + 13] = SSkillID[SuperSkill[2]].HexID2;
 		CusData[TempName + 14] = SSkillID[SuperSkill[3]].HexID1, CusData[TempName + 15] = SSkillID[SuperSkill[3]].HexID2;
-		CusData[TempName + 16] = USkillID[UltimateSkill[0]].HexID1, CusData[TempName + 17] = USkillID[UltimateSkill[0]].HexID2;
-		CusData[TempName + 18] = USkillID[UltimateSkill[1]].HexID1, CusData[TempName + 19] = USkillID[UltimateSkill[1]].HexID2;
+		CusData[TempName + 16] = USkillID[UltimateSkill[1]].HexID1, CusData[TempName + 17] = USkillID[UltimateSkill[1]].HexID2;
+		CusData[TempName + 18] = USkillID[UltimateSkill[0]].HexID1, CusData[TempName + 19] = USkillID[UltimateSkill[0]].HexID2;
 		CusData[TempName + 20] = ESkillID[EvasiveSkill].HexID1, CusData[TempName + 21] = ESkillID[EvasiveSkill].HexID2;
 		CusData[TempName + 24] = ASkillID[AwokenSkill].HexID1, CusData[TempName + 25] = ASkillID[AwokenSkill].HexID2;
 	}

@@ -77,7 +77,7 @@ void NormalizeMSG(std::string &NewString)
 	int count = 0;
 	char Apos[] = { "&apos;" };
 	std::string NewTemp;
-	size_t size = strlen(NewString.c_str()) * 2 - 1;
+	size_t size = strlen(NewString.c_str()) * 2;
 
 	if (NewString.empty()) return;
 
@@ -140,8 +140,8 @@ int SetMSG(std::string OTemp, std::string NTemp, int index, std::string &MSGData
 	if (count == -1)  return -1; 
 	MSGData.erase(count, size);
 	MSGData.insert(count, NTemp);
-	std::string Filer; Filer.resize(4);
-	MSGData.insert(MSGData.size() - 1, Filer);
+	std::string Filler; Filler.resize(4);
+	MSGData.insert(MSGData.size() - 1, Filler);
 	NewSize = NewSize - OldSize;
 	MSGData[(stringLengthPos + 4) + (index * 16)] = MSGID[index].startLength + NewSize;
 	MSGData[(stringLengthPos + 8) + (index * 16)] = MSGID[index].endLength + (NewSize * 2);
@@ -172,7 +172,6 @@ int SetMSG(std::string OTemp, std::string NTemp, int index, std::string &MSGData
 		HexNum >> TempID2;
 
 		MSGData[stringLengthPos + (count * 16)] = TempID2;
-
 		MSGData[(stringLengthPos + 1) + (count * 16)] = TempID1;
 		count++;
 	}

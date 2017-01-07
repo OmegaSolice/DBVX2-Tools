@@ -325,8 +325,8 @@ void AuraSetup(HWND ErrorDisplay)
 	if (!AuraSetupData.empty() && !AuraData.empty())
 	{
 		std::stringstream HexID;
-		int count = AuraData[0x1c] + (AuraData[0x1d] * 0x100), CountID = 0, TempCharID = 0, TempCosID = 0, TempAuraColorID = 0;
-		int	CharacterID[50], CosID[50], AuraColorID[50], posSet, CharacterCount = 0;
+		int count = AuraData[0x1c] + (AuraData[0x1d] * 0x100), CountID = 0, TempCharID = 0, TempCosID = 0, TempAuraColorID = 0, TempIndex;
+		int	CharacterID[50], CosID[50], AuraColorID[50], IndexID[50], posSet, CharacterCount = 0;
 		char CHexID[2];
 
 		while (getline(Setup, TempString))
@@ -372,6 +372,25 @@ void AuraSetup(HWND ErrorDisplay)
 			CountID = 0;
 			while (TRUE)
 			{
+				if (TempString[CountID + posSet] != ' ')
+				{
+					CHexID[CountID] = TempString[CountID + posSet];
+					CountID++;
+				}
+				else
+				{
+					HexID.str(std::string()); //clears string content both are needed
+					HexID.clear();          //clears error flags
+					HexID << std::hex << CHexID;
+					HexID >> TempAuraColorID;;
+					CountID += 3;
+					posSet += CountID;
+					break;
+				}
+			}
+			CountID = 0;
+			while (TRUE)
+			{
 				if (TempString[CountID + posSet] != ';')
 				{
 					CHexID[CountID] = TempString[CountID + posSet];
@@ -382,13 +401,14 @@ void AuraSetup(HWND ErrorDisplay)
 					HexID.str(std::string()); //clears string content both are needed
 					HexID.clear();          //clears error flags
 					HexID << std::hex << CHexID;
-					HexID >> TempAuraColorID;
+					HexID >> TempIndex;
 					break;
 				}
 			}
 			CharacterID[CharacterCount] = TempCharID;
 			CosID[CharacterCount] = TempCosID;
 			AuraColorID[CharacterCount] = TempAuraColorID;
+			IndexID[CharacterCount] = TempIndex;
 			CharacterCount++;
 		}
 
@@ -406,9 +426,9 @@ void AuraSetup(HWND ErrorDisplay)
 			InsertValue.resize(16);
 			InsertValue[0] = CharacterID[CountID], InsertValue[4] = CosID[CountID], 
 				InsertValue[8] = AuraColorID[CountID];
-			if (AuraData[count] != CharacterID[CountID] && AuraData[count + (CosID[CountID] * 0x10)] != CosID[CountID])
+			if (AuraData[count] == CharacterID[CountID] && AuraData[count + 4 + (IndexID[CountID] * 0x10)] != CosID[CountID])
 			{
-				AuraData.insert(count + (CosID[CountID] * 0x10) - 0x10, InsertValue);
+				AuraData.insert(count + (IndexID[CountID] * 0x10), InsertValue);
 			}
 			else
 			{
@@ -420,8 +440,7 @@ void AuraSetup(HWND ErrorDisplay)
 		AuraData[0x18] += CharTotal; 
 		if (saveFile(AuraFile, AuraData) == 0)
 		{
-			SetWindowText(ErrorDisplay, L"Aura file Setup is Complete");;
-
+			SetWindowText(ErrorDisplay, L"Aura file Setup is Complete");
 		}
 		else
 		{
