@@ -77,7 +77,7 @@ void NormalizeMSG(std::string &NewString)
 	int count = 0;
 	char Apos[] = { "&apos;" };
 	std::string NewTemp;
-	size_t size = strlen(NewString.c_str()) * 2;
+	size_t size = strlen(NewString.c_str()) * 2 - 1;
 
 	if (NewString.empty()) return;
 

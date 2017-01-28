@@ -78,7 +78,7 @@ void ChangeCharAura(LRESULT Name, LRESULT Costume, LRESULT Color, LRESULT Infini
 int GetAura(LRESULT Name, LRESULT Costume, HWND EditError)
 {
 	int TempName = 16 * Costume;
-	int count = 0xA20, check = CharID[Name].HexID, Offset;
+	int count = 0xA20, check = CharID[Name].HexID, Offset, max;
 
 	if (Name < 0)
 	{
@@ -95,10 +95,11 @@ int GetAura(LRESULT Name, LRESULT Costume, HWND EditError)
 	}
 	if (!AuraData.empty())
 	{
-
-
+		max = ((uint8_t)AuraData[0x1c] + (0x100 * (uint8_t)AuraData[0x1d])) + (0x10 * (uint8_t)AuraData[0x18]);
 		while ((uint8_t)AuraData[count] != check)
 		{
+			if (count > max)
+			{ SetWindowText(EditError, L"Error Character Not Found"); return -2; }
 			count += 0x10;
 		}
 		TempName += count;

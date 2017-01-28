@@ -334,6 +334,117 @@ void SetStat(HWND hDlg, int index, STAT *Data)
 	Data[index].Super_Soul = SSIndex;
 }
 
+void SetAllStat(HWND hDlg, STAT *Data)
+{
+	HWND hTemp;
+	LRESULT IncludeCAC, IncludeSS;
+	char Text[10];
+	int SSIndex = 0, CACIndexCheck = 0, count = 0, index = 0, maxChar = 0;
+
+	while (HStat[count].CharHexID != 0x64) //find human male offset, to allow easy excemption of all CaC from set all  
+	{
+		CACIndexCheck += HStat[count].CostumeAmount;
+		count++;
+	}
+	count = 0;
+	while (count < CharCount) //calculate amount of char and costume; 
+	{
+		maxChar += HStat[count].CostumeAmount;
+		count++;
+	}
+	IncludeCAC = SendMessage(GetDlgItem(hDlg, IDC_CHECK1), BM_GETCHECK, 0, 0);
+	IncludeSS = SendMessage(GetDlgItem(hDlg, IDC_CHECK2), BM_GETCHECK, 0, 0);
+
+	while (index < maxChar)
+	{
+		if (index >= CACIndexCheck && index <= (CACIndexCheck + 96) && IncludeCAC == BST_UNCHECKED) { index++; continue; }
+
+		hTemp = GetDlgItem(hDlg, IDC_EDIT1);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Camera_Position = atoi(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT2);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Health = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT3);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Ki = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT4);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Ki_Recharge = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT5);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Stamina = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT6);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Stamina_RechargeM = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT7);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Stamina_RechargeA = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT8);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Stamina_RechargeG = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT9);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Stamina_Drain1 = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT10);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Stamina_Drain2 = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT11);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Basic_Attack = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT12);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Ki_Blast = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT13);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Strike_Super = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT14);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Ki_BlastSuper = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT15);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Basic_Def = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT16);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Ki_Blast_Def = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT17);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Strike_Super_Def = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT18);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Ki_BlastSuper_Def = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT19);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Ground_Speed = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT20);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Air_Speed = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT21);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Boost_Speed = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT22);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Dash_Distance = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT23);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Reinforcement_Skill_Duration = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT24);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].RevivalHP = atof(Text);
+		hTemp = GetDlgItem(hDlg, IDC_EDIT25);
+		GetWindowTextA(hTemp, Text, 10);
+		Data[index].Reviving_Speed = atof(Text);
+		if (IncludeSS == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_COMBO3);
+			SSIndex = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
+			Data[index].Super_Soul = SSIndex;
+		}
+		
+		index++;
+	}
+}
+
 void SetPSCData(STAT *Data)
 {
 	int index = 0, Offset = 0;

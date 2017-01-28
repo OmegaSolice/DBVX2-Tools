@@ -82,14 +82,15 @@ void GetSkill(LRESULT Name, LRESULT Costume, LRESULT SuperSkill[4], LRESULT Ulti
 	}
 
 	int TempName = 32 * Costume;
-	int count = 0x48;
+	int count = 0x48, max;
 	uint8_t	check1 = CharID[Name].HexID, check2;
 
 	if (!CusData.empty())
 	{
-
+		max = (uint8_t) CusData[0x0c] + (0x20 * (uint8_t) CusData[0x08]);
 		while ((uint8_t)CusData[count] != check1)
 		{
+			if (count > max) { SetWindowText(EditError, L"Error Character Not Found"); return; }
 			count += 0x20;
 		}
 		TempName += count;

@@ -965,6 +965,21 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			}
 		}
 		break;
+		case IDC_SETALL:
+		{
+			HWND hTemp;
+
+			if (!PSCData.empty())
+			{
+				SetAllStat(hDlg, Stats);
+			}
+			else
+			{
+				hTemp = GetDlgItem(hDlg, IDC_EDITERROR1);
+				SetWindowText(hTemp, L"Error PSC Not Loaded/ Character or Costume Not Selected");
+			}
+		}
+		break;
 		case IDC_SAVEPSC:
 		{
 			if (!PSCData.empty())
