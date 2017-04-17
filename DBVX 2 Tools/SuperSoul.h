@@ -50,13 +50,13 @@ struct SSTC
 	int HexID2;
 	std::string TCName;
 };
-SUPERSOUL SearchSS(int index);
+SUPERSOUL SearchIDB(int index, std::string IDBData);
 void LoadEffect();
 void LoadEffectAmount();
 void LoadTrigger();
 void LoadTC();
 int SearchEffectID(int index);
-int SearchEffectAmountID(int index);
+int SearchEffectAmountID(int index, std::string IDBData);
 int SearchFlagID(int index);
 int SearchTriggerID(int index);
 int SearchTimerID(int index);

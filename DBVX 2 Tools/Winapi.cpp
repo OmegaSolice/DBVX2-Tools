@@ -95,32 +95,40 @@ BOOL OnNotify(HWND hwndTab, HWND *hwndDisplay, LPARAM lParam, HINSTANCE hInstanc
 		case 0:
 		{
 			ShowWindow(hwndDisplay[ActiveTab], SW_HIDE);
-			ShowWindow(hwndDisplay[0], SW_SHOWNORMAL);
-			UpdateWindow(hwndDisplay[0]);
+			ShowWindow(hwndDisplay[iPage], SW_SHOWNORMAL);
+			UpdateWindow(hwndDisplay[iPage]);
 			ActiveTab = iPage;
 		}
 			break;
 		case 1:	
 		{
 			ShowWindow(hwndDisplay[ActiveTab], SW_HIDE);
-			ShowWindow(hwndDisplay[1], SW_SHOWNORMAL);
-			UpdateWindow(hwndDisplay[1]);
+			ShowWindow(hwndDisplay[iPage], SW_SHOWNORMAL);
+			UpdateWindow(hwndDisplay[iPage]);
 			ActiveTab = iPage;
 		}
 			break;
 		case 2:
 		{
 			ShowWindow(hwndDisplay[ActiveTab], SW_HIDE);
-			ShowWindow(hwndDisplay[2], SW_SHOW);
-			UpdateWindow(hwndDisplay[2]);
+			ShowWindow(hwndDisplay[iPage], SW_SHOW);
+			UpdateWindow(hwndDisplay[iPage]);
 			ActiveTab = iPage;
 		}
 			break;
 		case 3:
 		{
 			ShowWindow(hwndDisplay[ActiveTab], SW_HIDE);
-			ShowWindow(hwndDisplay[3], SW_SHOW);
-			UpdateWindow(hwndDisplay[3]);
+			ShowWindow(hwndDisplay[iPage], SW_SHOW);
+			UpdateWindow(hwndDisplay[iPage]);
+			ActiveTab = iPage;
+		}
+			break;
+		case 4:
+		{
+			ShowWindow(hwndDisplay[ActiveTab], SW_HIDE);
+			ShowWindow(hwndDisplay[iPage], SW_SHOW);
+			UpdateWindow(hwndDisplay[iPage]);
 			ActiveTab = iPage;
 		}
 		break;

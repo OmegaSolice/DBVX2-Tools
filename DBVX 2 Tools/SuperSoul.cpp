@@ -1,15 +1,16 @@
 #include "Header.h"
 
-SUPERSOUL SearchSS(int index)
+SUPERSOUL SearchIDB(int index, std::string IDBData)
 {
 	int count = 0x10, Ecount = 0;
 	SUPERSOUL Data;
-	uint8_t check = (uint8_t)SSIDBData[count];
+	uint8_t check = (uint8_t)IDBData[count];
 
 	while (check != index)
 	{
 		count += 45 * 0x10;
-		check = (uint8_t)SSIDBData[count];
+		if (IDBData.size() <= count) { memset(&Data, 0, sizeof SUPERSOUL); return Data; }
+		check = (uint8_t)IDBData[count];
 	}
 
 	Data.ID = count;
@@ -355,10 +356,10 @@ int SearchEffectID(int index)
 	return count;
 }
 
-int SearchEffectAmountID(int index)
+int SearchEffectAmountID(int index, std::string IDBData)
 {
 	int count = 0;
-	uint8_t check1 = SSIDBData[index], check2 = SSIDBData[index + 1], check3 = SSIDBData[index + 2], check4 = SSIDBData[index + 3];
+	uint8_t check1 = IDBData[index], check2 = IDBData[index + 1], check3 = IDBData[index + 2], check4 = IDBData[index + 3];
 
 	while (check1 != SSEAID[count].HexID1 || check2 != SSEAID[count].HexID2 || check3 != SSEAID[count].HexID3 || check4 != SSEAID[count].HexID4)
 	{
@@ -450,7 +451,7 @@ void SetSoul(HWND hDlg)
 	{
 		OTemp = NameMSGID[index].Info;
 		SetMSG(OTemp, NTemp, index, NameMSGData, NameMSGID);
-		LoadMSG(NameMSGData, NameMSGID);
+		LoadMSG(NameMSGData, NameMSGID, &MSGCount);
 	}
 	else
 	{
@@ -459,10 +460,10 @@ void SetSoul(HWND hDlg)
 
 	if (!DescMSGData.empty())
 	{
-		char CInput[10];
+		wchar_t CInput[10];
 		std::stringstream HexNum;
 
-		GetWindowTextA(GetDlgItem(hDlg, IDC_EDIT3), CInput, 4);
+		GetWindowText(GetDlgItem(hDlg, IDC_EDIT3), CInput, 4);
 		hTemp = GetDlgItem(hDlg, IDC_EDIT2);
 		HexNum << std::hex << CInput;
 		HexNum >> index;
@@ -477,7 +478,7 @@ void SetSoul(HWND hDlg)
 	{
 		OTemp = DescMSGID[index].Info;
 		SetMSG(OTemp, NTemp, index, DescMSGData, DescMSGID);
-		LoadMSG(DescMSGData, DescMSGID);
+		LoadMSG(DescMSGData, DescMSGID, &MSGCount);
 	}
 	else
 	{
@@ -499,11 +500,11 @@ void SetSoul(HWND hDlg)
 		char NumTemp[5], HexTemp[5];
 
 		GetWindowTextA(hTemp, NumTemp, 5);
-		sprintf(HexTemp, "%.4x", atoi(NumTemp));
+		sprintf(HexTemp, "%.8x", atoi(NumTemp));
 		
 		std::stringstream HexNum;
-		char Temp1[2], Temp2[2];
-		int TempID1, TempID2;
+		char Temp1[2], Temp2[2], Temp3[2], Temp4[2];
+		int TempID1, TempID2, TempID3, TempID4;
 
 		Temp1[0] = HexTemp[0], Temp1[1] = HexTemp[1];
 		Temp2[0] = HexTemp[2], Temp2[1] = HexTemp[3];
@@ -514,6 +515,14 @@ void SetSoul(HWND hDlg)
 		HexNum.clear();
 		HexNum << std::hex << Temp2;
 		HexNum >> TempID2;
+		HexNum.str(std::string());
+		HexNum.clear();
+		HexNum << std::hex << Temp3;
+		HexNum >> TempID3;
+		HexNum.str(std::string());
+		HexNum.clear();
+		HexNum << std::hex << Temp4;
+		HexNum >> TempID4;
 
 		SSIDBData[SSData.Price + 1] = TempID1;
 		SSIDBData[SSData.Price] = TempID2;
@@ -808,7 +817,7 @@ void SetAllCurEffect()
 	while (TabNum < 3)
 	{
 		SSCurEffect.Effect[TabNum] = SearchEffectID(SSData.Effect[TabNum]);
-		SSCurEffect.EffectAmount[TabNum] = SearchEffectAmountID(SSData.EffectAmount[TabNum]);
+		SSCurEffect.EffectAmount[TabNum] = SearchEffectAmountID(SSData.EffectAmount[TabNum], SSIDBData);
 		SSCurEffect.Flag[TabNum] = SearchFlagID(SSData.Flag[TabNum]);
 		SSCurEffect.Trigger[TabNum] = SearchTriggerID(SSData.Trigger[TabNum]);
 		SSCurEffect.Target[TabNum] = SearchTargetID(SSData.Target[TabNum]);
@@ -818,24 +827,24 @@ void SetAllCurEffect()
 		SSCurEffect.TriggerConditions4[TabNum] = SearchTCID(SSData.TriggerConditions4[TabNum]);
 		SSCurEffect.TriggerConditions5[TabNum] = SearchTCID(SSData.TriggerConditions5[TabNum]);
 		SSCurEffect.Timer[TabNum] = SearchTimerID(SSData.Timer[TabNum]);
-		SSCurEffect.Health[TabNum] = SearchEffectAmountID(SSData.Health[TabNum]);
-		SSCurEffect.Ki[TabNum] = SearchEffectAmountID(SSData.Ki[TabNum]);
-		SSCurEffect.Ki_RegenRate[TabNum] = SearchEffectAmountID(SSData.Ki_RegenRate[TabNum]);
-		SSCurEffect.Stamina[TabNum] = SearchEffectAmountID(SSData.Stamina[TabNum]);
-		SSCurEffect.Stamina_RegenRate[TabNum] = SearchEffectAmountID(SSData.Stamina_RegenRate[TabNum]);
-		SSCurEffect.Ground_Speed[TabNum] = SearchEffectAmountID(SSData.Ground_Speed[TabNum]);
-		SSCurEffect.Flight_Speed[TabNum] = SearchEffectAmountID(SSData.Flight_Speed[TabNum]);
-		SSCurEffect.Boost_Speed[TabNum] = SearchEffectAmountID(SSData.Boost_Speed[TabNum]);
-		SSCurEffect.Dash_Speed[TabNum] = SearchEffectAmountID(SSData.Dash_Speed[TabNum]);
-		SSCurEffect.Basic_Attack[TabNum] = SearchEffectAmountID(SSData.Basic_Attack[TabNum]);
-		SSCurEffect.Ki_Blast[TabNum] = SearchEffectAmountID(SSData.Ki_Blast[TabNum]);
-		SSCurEffect.Strike_Super[TabNum] = SearchEffectAmountID(SSData.Strike_Super[TabNum]);
-		SSCurEffect.Ki_Blast_Super[TabNum] = SearchEffectAmountID(SSData.Ki_Blast_Super[TabNum]);
-		SSCurEffect.Basic_Attack_Dmg[TabNum] = SearchEffectAmountID(SSData.Basic_Attack_Dmg[TabNum]);
-		SSCurEffect.Ki_Blast_Dmg[TabNum] = SearchEffectAmountID(SSData.Ki_Blast_Dmg[TabNum]);
-		SSCurEffect.Strike_Super_Dmg[TabNum] = SearchEffectAmountID(SSData.Strike_Super_Dmg[TabNum]);
-		SSCurEffect.Ki_Blast_Super_Dmg[TabNum] = SearchEffectAmountID(SSData.Ki_Blast_Super_Dmg[TabNum]);
-		SSCurEffect.Revive_Speed[TabNum] = SearchEffectAmountID(SSData.Revive_Speed[TabNum]);
+		SSCurEffect.Health[TabNum] = SearchEffectAmountID(SSData.Health[TabNum], SSIDBData);
+		SSCurEffect.Ki[TabNum] = SearchEffectAmountID(SSData.Ki[TabNum], SSIDBData);
+		SSCurEffect.Ki_RegenRate[TabNum] = SearchEffectAmountID(SSData.Ki_RegenRate[TabNum], SSIDBData);
+		SSCurEffect.Stamina[TabNum] = SearchEffectAmountID(SSData.Stamina[TabNum], SSIDBData);
+		SSCurEffect.Stamina_RegenRate[TabNum] = SearchEffectAmountID(SSData.Stamina_RegenRate[TabNum], SSIDBData);
+		SSCurEffect.Ground_Speed[TabNum] = SearchEffectAmountID(SSData.Ground_Speed[TabNum], SSIDBData);
+		SSCurEffect.Flight_Speed[TabNum] = SearchEffectAmountID(SSData.Flight_Speed[TabNum], SSIDBData);
+		SSCurEffect.Boost_Speed[TabNum] = SearchEffectAmountID(SSData.Boost_Speed[TabNum], SSIDBData);
+		SSCurEffect.Dash_Speed[TabNum] = SearchEffectAmountID(SSData.Dash_Speed[TabNum], SSIDBData);
+		SSCurEffect.Basic_Attack[TabNum] = SearchEffectAmountID(SSData.Basic_Attack[TabNum], SSIDBData);
+		SSCurEffect.Ki_Blast[TabNum] = SearchEffectAmountID(SSData.Ki_Blast[TabNum], SSIDBData);
+		SSCurEffect.Strike_Super[TabNum] = SearchEffectAmountID(SSData.Strike_Super[TabNum], SSIDBData);
+		SSCurEffect.Ki_Blast_Super[TabNum] = SearchEffectAmountID(SSData.Ki_Blast_Super[TabNum], SSIDBData);
+		SSCurEffect.Basic_Attack_Dmg[TabNum] = SearchEffectAmountID(SSData.Basic_Attack_Dmg[TabNum], SSIDBData);
+		SSCurEffect.Ki_Blast_Dmg[TabNum] = SearchEffectAmountID(SSData.Ki_Blast_Dmg[TabNum], SSIDBData);
+		SSCurEffect.Strike_Super_Dmg[TabNum] = SearchEffectAmountID(SSData.Strike_Super_Dmg[TabNum], SSIDBData);
+		SSCurEffect.Ki_Blast_Super_Dmg[TabNum] = SearchEffectAmountID(SSData.Ki_Blast_Super_Dmg[TabNum], SSIDBData);
+		SSCurEffect.Revive_Speed[TabNum] = SearchEffectAmountID(SSData.Revive_Speed[TabNum], SSIDBData);
 
 		TabNum++;
 	}

@@ -380,6 +380,7 @@ void SetAllStat(HWND hDlg, STAT *Data)
 		hTemp = GetDlgItem(hDlg, IDC_EDIT7);
 		GetWindowTextA(hTemp, Text, 10);
 		Data[index].Stamina_RechargeA = atof(Text);
+
 		hTemp = GetDlgItem(hDlg, IDC_EDIT8);
 		GetWindowTextA(hTemp, Text, 10);
 		Data[index].Stamina_RechargeG = atof(Text);

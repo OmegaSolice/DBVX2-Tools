@@ -21,5 +21,6 @@
 #include "Skill.h"
 #include "MSG.h"
 #include "SuperSoul.h"
+#include "Costume.h"
 #include "Stat.h"
 #include "Global.h"

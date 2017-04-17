@@ -1,6 +1,6 @@
 #include "Header.h"
 
-void LoadMSG(std::string MSGData, MSGDATA *MSGInfo)
+void LoadMSG(std::string MSGData, MSGDATA *MSGInfo, int *MSGAmount)
 {
 	int count = 0, DataCount1, DataCount2, NameCount = 0, stop, stringPosCount, LengthCount, IDCount;
 	char TempName[300] = { NULL }, TempInfo[300] = { NULL };
@@ -69,8 +69,9 @@ void LoadMSG(std::string MSGData, MSGDATA *MSGInfo)
 		IDCount+= 4;
 		count++;
 	}
-	MSGCount = count;
+	*MSGAmount = count;
 }
+
 
 void NormalizeMSG(std::string &NewString)
 {

@@ -104,11 +104,51 @@ void openFile(char szFileName[MAX_PATH], std::string &Output)
 	}
 }
 
+void openFileW(char szFileName[MAX_PATH], std::wstring &Output)
+{
+	std::wifstream file(szFileName, std::ios::binary);       //opens file input stream
+	std::wstring Line;
+	Line.clear();
+	if (file.is_open())
+	{
+#ifdef _DEBUG
+		std::cout << "File is Open\n";
+#endif // _DEBUG
+
+		while (getline(file, Line))
+		{
+			Output += Line + L'\n';
+		}
+		file.close();
+		if (!Output.empty()) Output.erase(std::prev(Output.end())); //Erases last '\n' which will be added as it is a excess
+	}
+}
+
 int saveFile(char szFileName[MAX_PATH], std::string Input)
 {
 	std::ofstream file(szFileName, std::ios::binary);
 
 	
+	if (file.is_open())
+	{
+		file << Input;
+#ifdef _DEBUG
+		std::cout << "File is save\n";
+#endif // _DEBUG
+	}
+	else
+	{
+		return -1; //fail to open
+	}
+	file.close();
+	return 0;
+}
+
+int saveFileW(char szFileName[MAX_PATH], std::wstring Input)
+{
+	std::wofstream file(szFileName, std::ios::binary);
+
+
 	if (file.is_open())
 	{
 		file << Input;

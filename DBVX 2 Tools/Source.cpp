@@ -1,7 +1,12 @@
 #include "Header.h"
+#include "MSGCS.h"
+//#include <vcclr.h>  
 
+//using namespace System;
+//#using <XV2Lib.dll>
 //#pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version = '6.0.0.0' processorArchitecture = '*' publicKeyToken = '6595b64144ccf1df' language = '*'\"")
 
+//gcroot <XV2Lib::MSG> NameMSGDataCS;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
@@ -77,9 +82,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	LoadTC();
 	LoadSoulList();
 
-	TCHAR *TabLabel[] = { L"Aura", L"Skill", L"Super Soul", L"Stat" };
+	TCHAR *TabLabel[] = { L"Aura", L"Skill", L"Super Soul", L"Stat", L"Costume" };
 	count = 0;
-	int numTab = 4;
+	int numTab = 5;
 	HWND hTemp;
 	DWORD Err = NULL;
 	WCHAR WERR[100] = L"";
@@ -93,11 +98,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (!hwndDisplay[2]) { Err = GetLastError();  swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 	hwndDisplay[3] = CreateDialog(g_hInst, MAKEINTRESOURCE(IDD_DIALOG4), hwndTab, MainDialogProc);
 	if (!hwndDisplay[3]) { Err = GetLastError();  swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
+	hwndDisplay[4] = CreateDialog(g_hInst, MAKEINTRESOURCE(IDD_DIALOG5), hwndTab, MainDialogProc);
+	if (!hwndDisplay[4]) { Err = GetLastError();  swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 	
 	hComboCheck[0] = GetDlgItem(hwndDisplay[0], IDC_COMBO3); //Used to check combo box so when character change costume box can be set appropriatley  
 	hComboCheck[1] = GetDlgItem(hwndDisplay[1], IDC_COMBO6);
 	hComboCheck[2] = GetDlgItem(hwndDisplay[2], IDC_COMBO1);
 	hComboCheck[3] = GetDlgItem(hwndDisplay[3], IDC_COMBO1);
+	hComboCheck[4] = GetDlgItem(hwndDisplay[4], IDC_COMBO1);
 
 	while (count < numTab )        //resizes dialog to window client
 	{
@@ -504,7 +512,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		GetClientRect(hwnd, &rcClient);
 		SetWindowPos(hwndTab, NULL, rcClient.left, rcClient.top, rcClient.right, rcClient.bottom, NULL);
 
-		while (count < 4)        //resizes dialog to window client
+		while (count < 5)        //resizes dialog to window client
 		{
 			DialogResize(hwndTab, hwndDisplay[count]);
 			count++;
@@ -531,14 +539,29 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			WCHAR WERR[100] = L"";
 			HWND hTemp;
 			TC_ITEMHEADER tabInfo;
-			TCHAR* TabLabel2[] = { L"Intial Effect", L"Effect 1", L"Effect 2" };
+			TCHAR* TabLabel1[] = { L"Intial Effect", L"Effect 1", L"Effect 2" };
 			hTemp = GetDlgItem(hwndDisplay[2], IDC_TAB1);
-			//TabCtrl_DeleteAllItems(hTemp);
+			TabCtrl_DeleteAllItems(hTemp);
+			
+			tabInfo.mask = TCIF_TEXT;
+			tabInfo.iImage = -1;
+
 			while (count < 3) //set super soul tab effects tabs name
 			{
 				//mbtowc(WTemp, Temp, strlen(Temp));// +1 is to include null character
-				tabInfo.mask = TCIF_TEXT;
-				tabInfo.iImage = -1;
+				tabInfo.pszText = TabLabel1[count];
+				SendMessage(hTemp, TCM_INSERTITEM, count, (LPARAM)&tabInfo);
+				count++;
+			}
+
+			count = 0;
+
+			TCHAR* TabLabel2[] = { L"Top", L"Bottom", L"Gloves", L"Shoes" };
+			hTemp = GetDlgItem(hDlg, IDC_TAB1);
+			TabCtrl_DeleteAllItems(hTemp);
+			while (count < 4) //set super soul tab effects tabs name
+			{
+				//mbtowc(WTemp, Temp, strlen(Temp));// +1 is to include null character
 				tabInfo.pszText = TabLabel2[count];
 				SendMessage(hTemp, TCM_INSERTITEM, count, (LPARAM)&tabInfo);
 				count++;
@@ -704,7 +727,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			getFileName(hwnd, NameMsgFile, Filter, 1);
 			openFile(NameMsgFile, NameMSGData);
 			if (NameMSGData.empty()) break;
-			LoadMSG(NameMSGData, NameMSGID);
+			LoadMSG(NameMSGData, NameMSGID, &MSGCount);
 			hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO1);
 			if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 			SendMessage(hTemp, CB_RESETCONTENT, 0, 0);
@@ -735,7 +758,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			getFileName(hwnd, DescMsgFile, Filter, 1);
 			openFile(DescMsgFile, DescMSGData);
 			if (DescMSGData.empty()) break;
-			LoadMSG(DescMSGData, DescMSGID);
+			LoadMSG(DescMSGData, DescMSGID, &MSGCount);
 		}
 			break;
 		case IDC_OPENIDB:
@@ -749,9 +772,9 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			IDBSetup();
 		}
 		break;
-		case IDOK:
+		case IDOK: //this for when enter is pressed any of ID# edit control
 		{
-			if (GetFocus() == GetDlgItem(hDlg, IDC_EDIT5) || GetFocus() == GetDlgItem(hDlg, IDC_EDIT3))
+			if ((GetFocus() == GetDlgItem(hDlg, IDC_EDIT5) || GetFocus() == GetDlgItem(hDlg, IDC_EDIT3)) && hDlg == hwndDisplay[2])
 			{
 				char CInput[10];
 				std::stringstream HexNum;
@@ -810,7 +833,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 				if (!SSIDBData.empty())
 				{
 					memset(&SSData, 0, sizeof(SUPERSOUL));
-					SSData = SearchSS(index);
+					SSData = SearchIDB(index, SSIDBData);
 					int TabNum = TabCtrl_GetCurSel(GetDlgItem(hDlg, IDC_TAB1));
 					hTemp = GetDlgItem(hDlg, IDC_EDIT5);
 					wsprintfW(Temp, L"%x", SSIDBData[SSData.ID]);
@@ -828,6 +851,85 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					SetWindowTextA(hTemp, CPrice);
 					SetAllCurEffect();
 					DisplayEffect(hDlg, TabNum);
+				}
+			}
+
+			if ((GetFocus() == GetDlgItem(hDlg, IDC_EDIT5) || GetFocus() == GetDlgItem(hDlg, IDC_EDIT3)) && hDlg == hwndDisplay[4])
+			{
+
+				char CInput[10];
+				std::stringstream HexNum;
+
+				if (GetFocus() == GetDlgItem(hDlg, IDC_EDIT3))
+				{
+					GetWindowTextA(GetDlgItem(hDlg, IDC_EDIT3), CInput, 4);
+					SetWindowTextA(GetDlgItem(hDlg, IDC_EDIT5), CInput);
+				}
+				else
+				{
+					GetWindowTextA(GetDlgItem(hDlg, IDC_EDIT5), CInput, 4);
+					SetWindowTextA(GetDlgItem(hDlg, IDC_EDIT3), CInput);
+				}
+
+				int index;
+				HexNum.str(std::string());
+				HexNum.clear();
+				HexNum << std::hex << CInput;
+				HexNum >> index;
+				DWORD Err = NULL;
+				WCHAR WERR[100] = L"";
+				wchar_t Temp[10];
+				HWND hTemp = GetDlgItem(hDlg, IDC_EDIT3);;
+
+				if (!NameMSGData1.empty())
+				{
+					SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_SETCURSEL, index, 0);
+					wsprintfW(Temp, L"%x", NameMSGID1[index].ID);
+					Err = SetWindowText(hTemp, Temp);
+
+					wsprintfW(Temp, L"%x", NameMSGID1[index].ID);
+					Err = SetWindowText(hTemp, Temp);
+
+					size_t size = strlen(NameMSGID1[index].Info.c_str()) + 1;
+					wchar_t *InfoTemp = new wchar_t[size];
+
+					size_t outSize;
+					mbstowcs_s(&outSize, InfoTemp, size, NameMSGID1[index].Info.c_str(), size - 1);
+					const TCHAR *Info = { InfoTemp };
+					hTemp = GetDlgItem(hDlg, IDC_EDIT1);
+					SetWindowText(hTemp, Info);
+				}
+
+				hTemp = GetDlgItem(hDlg, IDC_EDIT2);
+				if (!DescMSGData1.empty())
+				{
+					size_t size = strlen(DescMSGID1[index].Info.c_str()) + 1;
+					wchar_t *InfoTemp = new wchar_t[size];
+
+					size_t outSize;
+					mbstowcs_s(&outSize, InfoTemp, size, DescMSGID1[index].Info.c_str(), size - 1);
+					const TCHAR *Info = { InfoTemp };
+					SetWindowText(hTemp, Info);
+				}
+				else
+				{
+					SetWindowText(hTemp, L"Load Description MSG and reselect Name MSG ID");
+				}
+
+
+				if (!CSIDBData[0].empty() || !CSIDBData[1].empty() || !CSIDBData[2].empty() || !CSIDBData[3].empty())
+				{
+					memset(&CSData, 0, sizeof(SUPERSOUL));
+					for (int i = 0; i < 4; i++)
+					{
+						if(!CSIDBData[i].empty())
+						CSData[i] = SearchIDB(index, CSIDBData[i]);
+					}
+					int TabNum = TabCtrl_GetCurSel(GetDlgItem(hDlg, IDC_TAB1));
+					hTemp = GetDlgItem(hDlg, IDC_EDIT5);
+
+					if (!CSIDBData[TabNum].empty())
+						DisplayCostumeStat(hDlg, TabNum);
 				}
 			}
 			break;
@@ -1009,6 +1111,205 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			}
 		}
 		break;
+		case IDC_OPENNAMEMSG1:
+		{
+			COMDLG_FILTERSPEC Filter[] = { { L"Xenoverse MSG file", L"*.msg" } };
+			HWND hTemp;
+			DWORD Err = NULL;
+			WCHAR WERR[100] = L"";
+			int count = 0;
+			getFileName(hwnd, NameMsgFile1, Filter, 1);
+			openFile(NameMsgFile1, NameMSGData1);
+			if (NameMSGData1.empty()) break;
+			LoadMSG(NameMSGData1, NameMSGID1, &MSGCount1);
+			hTemp = GetDlgItem(hwndDisplay[4], IDC_COMBO1);
+			if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
+			SendMessage(hTemp, CB_RESETCONTENT, 0, 0);
+
+			while (count < MSGCount1)
+			{
+				size_t size = strlen(NameMSGID1[count].NameID.c_str()) + 1;
+				wchar_t *ComboBoxItemMSGTemp = new wchar_t[size];
+
+				size_t outSize;
+				mbstowcs_s(&outSize, ComboBoxItemMSGTemp, size, NameMSGID1[count].NameID.c_str(), size - 1);
+				const TCHAR *ComboBoxItemMSG = { ComboBoxItemMSGTemp };
+				hTemp = GetDlgItem(hwndDisplay[4], IDC_COMBO1);
+				if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
+				SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)ComboBoxItemMSG));
+				if ((Err = GetLastError()) != 0) { swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
+				count++;
+			}
+		}
+		break;
+
+		case IDC_OPENDESCMSG1:
+		{
+			COMDLG_FILTERSPEC Filter[] = { { L"Xenoverse MSG file", L"*.msg" } };
+			DWORD Err = NULL;
+			WCHAR WERR[100] = L"";
+			int count = 0;
+			getFileName(hwnd, DescMsgFile1, Filter, 1);
+			openFile(DescMsgFile1, DescMSGData1);
+			if (DescMSGData1.empty()) break;
+			LoadMSG(DescMSGData1, DescMSGID1, &MSGCount1);
+		}
+		break;
+		case IDC_IDBFOLDER:
+		{
+			DWORD Err = NULL;
+			WCHAR WERR[100] = L"";
+			int count = 0;
+			getFolderPath(hwnd, CSIDBFile[0]);
+			for (int i = 0; i < 4; i++)
+				strcpy(CSIDBFile[i], CSIDBFile[0]);
+			strcat(CSIDBFile[0], "\\costume_top_item.idb");
+			strcat(CSIDBFile[1], "\\costume_bottom_item.idb");
+			strcat(CSIDBFile[2], "\\costume_gloves_item.idb");
+			strcat(CSIDBFile[3], "\\costume_shoes_item.idb");
+			for ( int i = 0; i < 4; i++)
+				openFile(CSIDBFile[i], CSIDBData[i]);
+		}
+		break;
+		case IDC_SETCOSTUME:
+		{
+			SetCurCostumeStat(hDlg, PrevCostumeTab, CSIDBData);
+		}
+		break;
+		case IDC_SAVECOSTUME:
+		{
+			if (saveFile(NameMsgFile1, NameMSGData1) == 0)
+			{
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
+				SetWindowText(EditError, L"Name Msg Save Succcesful");
+				SetFocus(EditError);
+			}
+			else
+			{
+				if (!NameMSGData1.empty())
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
+					SetWindowText(EditError, L"Error Failed to Save Name Msg");
+					SetFocus(EditError);
+				}
+				else
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
+					SetWindowText(EditError, L"No Name MSG Loaded");
+					SetFocus(EditError);
+				}
+			}
+			if (saveFile(DescMsgFile1, DescMSGData1) == 0)
+			{
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
+				SetWindowText(EditError, L"Description Msg Save Succcesful");
+				SetFocus(EditError);
+			}
+			else
+			{
+				if (!DescMSGData1.empty())
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
+					SetWindowText(EditError, L"Error Failed to Save Description Msg");
+					SetFocus(EditError);
+				}
+				else
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
+					SetWindowText(EditError, L"No Description MSG Loaded");
+					SetFocus(EditError);
+				}
+			}
+			if (saveFile(CSIDBFile[0], CSIDBData[0]) == 0)
+			{
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR3);
+				SetWindowText(EditError, L"Costume top Save Succcesful");
+				SetFocus(EditError);
+			}
+			else
+			{
+				if (!CSIDBData[0].empty())
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR3);
+					SetWindowText(EditError, L"Error Failed to Save Costume top");
+					SetFocus(EditError);
+				}
+				else
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR3);
+					SetWindowText(EditError, L"No Costume top IDB Loaded");
+					SetFocus(EditError);
+				}
+			}
+
+			if (saveFile(CSIDBFile[1], CSIDBData[1]) == 0)
+			{
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR4);
+				SetWindowText(EditError, L"Costume bottom Save Succcesful");
+				SetFocus(EditError);
+			}
+			else
+			{
+				if (!CSIDBData[1].empty())
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR4);
+					SetWindowText(EditError, L"Error Failed to Save Costume bottom");
+					SetFocus(EditError);
+				}
+				else
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR4);
+					SetWindowText(EditError, L"No Costume bottom IDB Loaded");
+					SetFocus(EditError);
+				}
+			}
+
+			if (saveFile(CSIDBFile[2], CSIDBData[2]) == 0)
+			{
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR5);
+				SetWindowText(EditError, L"Costume gloves Save Succcesful");
+				SetFocus(EditError);
+			}
+			else
+			{
+				if (!CSIDBData[2].empty())
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR5);
+					SetWindowText(EditError, L"Error Failed to Save Costume gloves");
+					SetFocus(EditError);
+				}
+				else
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR5);
+					SetWindowText(EditError, L"No Costume gloves IDB Loaded");
+					SetFocus(EditError);
+				}
+			}
+
+			if (saveFile(CSIDBFile[3], CSIDBData[3]) == 0)
+			{
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR6);
+				SetWindowText(EditError, L"Costume shoes Save Succcesful");
+				SetFocus(EditError);
+			}
+			else
+			{
+				if (!CSIDBData[3].empty())
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR6);
+					SetWindowText(EditError, L"Error Failed to Save Costume shoes");
+					SetFocus(EditError);
+				}
+				else
+				{
+					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR6);
+					SetWindowText(EditError, L"No Costume shoes IDB Loaded");
+					SetFocus(EditError);
+				}
+			}
+			
+		}
+		break;
 		}		
 		switch (HIWORD(wParam))
 		{
@@ -1102,7 +1403,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 				if (!SSIDBData.empty())
 				{
 					memset(&SSData, 0, sizeof(SUPERSOUL));
-					SSData = SearchSS(index);
+					SSData = SearchIDB(index, SSIDBData);
 					int TabNum = TabCtrl_GetCurSel(GetDlgItem(hDlg, IDC_TAB1));
 					hTemp = GetDlgItem(hDlg, IDC_EDIT5);
 					wsprintfW(Temp, L"%x", SSIDBData[SSData.ID]);
@@ -1115,11 +1416,72 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					hTemp = GetDlgItem(hDlg, IDC_EDIT6);
 					char CPrice[5];
 					int Price;
-					Price = ((uint8_t)SSIDBData[SSData.Price + 1] * 0x100) + (uint8_t)SSIDBData[SSData.Price];
+					Price = ((uint8_t)SSIDBData[SSData.Price + 3] * 0x10000) + ((uint8_t)SSIDBData[SSData.Price + 2] * 0x1000)
+					+ ((uint8_t)SSIDBData[SSData.Price + 1] * 0x100) + (uint8_t)SSIDBData[SSData.Price];
 					sprintf(CPrice, "%d", Price);
 					SetWindowTextA(hTemp, CPrice);
 					SetAllCurEffect();
 					DisplayEffect(hDlg, TabNum);
+				}
+			}
+			if ((HWND)lParam == hComboCheck[4])
+			{
+				int index;
+				DWORD Err = NULL;
+				WCHAR WERR[100] = L"";
+				wchar_t Temp[10];
+				HWND hTemp = GetDlgItem(hDlg, IDC_EDIT3);
+				index = SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
+
+				if (!NameMSGData1.empty())
+				{
+					SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_SETCURSEL, index, 0);
+					wsprintfW(Temp, L"%x", NameMSGID1[index].ID);
+					Err = SetWindowText(hTemp, Temp);
+
+					wsprintfW(Temp, L"%x", NameMSGID1[index].ID);
+					Err = SetWindowText(hTemp, Temp);
+
+					size_t size = strlen(NameMSGID1[index].Info.c_str()) + 1;
+					wchar_t *InfoTemp = new wchar_t[size];
+
+					size_t outSize;
+					mbstowcs_s(&outSize, InfoTemp, size, NameMSGID1[index].Info.c_str(), size - 1);
+					const TCHAR *Info = { InfoTemp };
+					hTemp = GetDlgItem(hDlg, IDC_EDIT1);
+					SetWindowText(hTemp, Info);
+				}
+
+				hTemp = GetDlgItem(hDlg, IDC_EDIT2);
+				if (!DescMSGData1.empty())
+				{
+					size_t size = strlen(DescMSGID1[index].Info.c_str()) + 1;
+					wchar_t *InfoTemp = new wchar_t[size];
+
+					size_t outSize;
+					mbstowcs_s(&outSize, InfoTemp, size, DescMSGID1[index].Info.c_str(), size - 1);
+					const TCHAR *Info = { InfoTemp };
+					SetWindowText(hTemp, Info);
+				}
+				else
+				{
+					SetWindowText(hTemp, L"Load Description MSG and reselect Name MSG ID");
+				}
+
+
+				if (!CSIDBData[0].empty() || !CSIDBData[1].empty() || !CSIDBData[2].empty() || !CSIDBData[3].empty())
+				{
+					memset(&CSData, 0, sizeof(SUPERSOUL));
+					for (int i = 0; i < 4; i++)
+					{
+						if (!CSIDBData[i].empty())
+							CSData[i] = SearchIDB(index, CSIDBData[i]);
+					}
+					int TabNum = TabCtrl_GetCurSel(GetDlgItem(hDlg, IDC_TAB1));
+					hTemp = GetDlgItem(hDlg, IDC_EDIT5);
+
+					if (!CSIDBData[TabNum].empty())
+						DisplayCostumeStat(hDlg, TabNum);
 				}
 			}
 		}		
@@ -1148,6 +1510,15 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					PrevEffectTab = 0;
 					DisplayEffect(hDlg, TabNum);
 				}
+				if (!CSIDBData[0].empty() || !CSIDBData[1].empty() || !CSIDBData[2].empty() || !CSIDBData[3].empty())
+				{
+					if (!CSIDBData[PrevCostumeTab].empty())
+					{
+						SetCurCostumeStat(hDlg, PrevCostumeTab, CSIDBData);
+					}
+					PrevCostumeTab = 0;
+					DisplayCostumeStat(hDlg, TabNum);
+				}
 			}
 			break;
 			case 1:
@@ -1158,6 +1529,15 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					PrevEffectTab = 1;
 					DisplayEffect(hDlg, TabNum);
 				}
+				if (!CSIDBData[0].empty() || !CSIDBData[1].empty() || !CSIDBData[2].empty() || !CSIDBData[3].empty())
+				{
+					if (!CSIDBData[PrevCostumeTab].empty())
+					{
+						SetCurCostumeStat(hDlg, PrevCostumeTab, CSIDBData);
+					}
+					PrevCostumeTab = 1;
+					DisplayCostumeStat(hDlg, TabNum);
+				}
 			}
 			break;
 			case 2:
@@ -1167,6 +1547,28 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					GetCurEffect(hDlg, PrevEffectTab);
 					PrevEffectTab = 2;
 					DisplayEffect(hDlg, TabNum);
+				}
+				if (!CSIDBData[0].empty() || !CSIDBData[1].empty() || !CSIDBData[2].empty() || !CSIDBData[3].empty())
+				{
+					if (!CSIDBData[PrevCostumeTab].empty())
+					{
+						SetCurCostumeStat(hDlg, PrevCostumeTab, CSIDBData);
+					}
+					PrevCostumeTab = 2;
+					DisplayCostumeStat(hDlg, TabNum);
+				}
+			}
+			break;
+			case 3:
+			{
+				if (!CSIDBData[0].empty() || !CSIDBData[1].empty() || !CSIDBData[2].empty() || !CSIDBData[3].empty())
+				{
+					if (!CSIDBData[PrevCostumeTab].empty())
+					{
+						SetCurCostumeStat(hDlg, PrevCostumeTab, CSIDBData);
+					}
+					PrevCostumeTab = 3;
+					DisplayCostumeStat(hDlg, TabNum);
 				}
 			}
 			break;
