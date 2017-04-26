@@ -143,10 +143,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\DBVX 2 Tools\Files.cpp" />
+    <ClCompile Include="..\DBVX 2 Tools\Global.cpp" />
+    <ClCompile Include="..\DBVX 2 Tools\Stat.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\DBVX 2 Tools\Files.h" />
+    <ClInclude Include="..\DBVX 2 Tools\Global.h" />
+    <ClInclude Include="..\DBVX 2 Tools\Stat.h" />
     <ClInclude Include="Header.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

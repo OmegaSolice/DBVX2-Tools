@@ -21,12 +21,24 @@
     <ClCompile Include="..\DBVX 2 Tools\Files.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\DBVX 2 Tools\Stat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DBVX 2 Tools\Global.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\DBVX 2 Tools\Files.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DBVX 2 Tools\Stat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DBVX 2 Tools\Global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

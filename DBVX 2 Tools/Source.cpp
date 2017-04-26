@@ -754,7 +754,6 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			COMDLG_FILTERSPEC Filter[] = { { L"Xenoverse MSG file", L"*.msg" } };
 			DWORD Err = NULL;
 			WCHAR WERR[100] = L"";
-			int count = 0;
 			getFileName(hwnd, DescMsgFile, Filter, 1);
 			openFile(DescMsgFile, DescMSGData);
 			if (DescMSGData.empty()) break;
@@ -846,7 +845,8 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					hTemp = GetDlgItem(hDlg, IDC_EDIT6);
 					char CPrice[5];
 					int Price;
-					Price = ((uint8_t)SSIDBData[SSData.Price + 1] * 0x100) + (uint8_t)SSIDBData[SSData.Price];
+					Price = ((uint8_t)SSIDBData[SSData.Price + 3] * 0x1000000) + ((uint8_t)SSIDBData[SSData.Price + 2] * 0x10000) +
+					((uint8_t)SSIDBData[SSData.Price + 1] * 0x100) + (uint8_t)SSIDBData[SSData.Price];
 					sprintf(CPrice, "%d", Price);
 					SetWindowTextA(hTemp, CPrice);
 					SetAllCurEffect();
@@ -1159,7 +1159,6 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 		{
 			DWORD Err = NULL;
 			WCHAR WERR[100] = L"";
-			int count = 0;
 			getFolderPath(hwnd, CSIDBFile[0]);
 			for (int i = 0; i < 4; i++)
 				strcpy(CSIDBFile[i], CSIDBFile[0]);
@@ -1387,12 +1386,12 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 				hTemp = GetDlgItem(hDlg, IDC_EDIT2);
 				if (!DescMSGData.empty())
 				{
-					size_t size = strlen(DescMSGID[index].Info.c_str()) + 1;
-					wchar_t *InfoTemp = new wchar_t[size];
+					size_t sizeD = strlen(DescMSGID[index].Info.c_str()) + 1;
+					wchar_t *InfoTempD = new wchar_t[size];
 
-					size_t outSize;
+					size_t outSizeD;
 					mbstowcs_s(&outSize, InfoTemp, size, DescMSGID[index].Info.c_str(), size - 1);
-					const TCHAR *Info = { InfoTemp };
+					const TCHAR *InfoD = { InfoTemp };
 					SetWindowText(hTemp, Info);
 				}
 				else
@@ -1416,7 +1415,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					hTemp = GetDlgItem(hDlg, IDC_EDIT6);
 					char CPrice[5];
 					int Price;
-					Price = ((uint8_t)SSIDBData[SSData.Price + 3] * 0x10000) + ((uint8_t)SSIDBData[SSData.Price + 2] * 0x1000)
+					Price = ((uint8_t)SSIDBData[SSData.Price + 3] * 0x1000000) + ((uint8_t)SSIDBData[SSData.Price + 2] * 0x10000)
 					+ ((uint8_t)SSIDBData[SSData.Price + 1] * 0x100) + (uint8_t)SSIDBData[SSData.Price];
 					sprintf(CPrice, "%d", Price);
 					SetWindowTextA(hTemp, CPrice);

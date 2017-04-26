@@ -497,9 +497,9 @@ void SetSoul(HWND hDlg)
 		index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
 		hTemp = GetDlgItem(hwndDisplay[2], IDC_EDIT6);
 
-		char NumTemp[5], HexTemp[5];
+		char NumTemp[10], HexTemp[10];
 
-		GetWindowTextA(hTemp, NumTemp, 5);
+		GetWindowTextA(hTemp, NumTemp, 10);
 		sprintf(HexTemp, "%.8x", atoi(NumTemp));
 		
 		std::stringstream HexNum;
@@ -508,6 +508,8 @@ void SetSoul(HWND hDlg)
 
 		Temp1[0] = HexTemp[0], Temp1[1] = HexTemp[1];
 		Temp2[0] = HexTemp[2], Temp2[1] = HexTemp[3];
+		Temp3[0] = HexTemp[4], Temp3[1] = HexTemp[5];
+		Temp4[0] = HexTemp[6], Temp4[1] = HexTemp[7];
 
 		HexNum << std::hex << Temp1;
 		HexNum >> TempID1;
@@ -524,8 +526,10 @@ void SetSoul(HWND hDlg)
 		HexNum << std::hex << Temp4;
 		HexNum >> TempID4;
 
-		SSIDBData[SSData.Price + 1] = TempID1;
-		SSIDBData[SSData.Price] = TempID2;
+		SSIDBData[SSData.Price + 3] = TempID1;
+		SSIDBData[SSData.Price + 2] = TempID2;
+		SSIDBData[SSData.Price + 1] = TempID3;
+		SSIDBData[SSData.Price] = TempID4;
 
 		SSIDBData[SSData.Activate] = -1;
 		SSIDBData[SSData.Activate + 1] = -1;

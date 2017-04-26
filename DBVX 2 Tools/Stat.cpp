@@ -159,7 +159,7 @@ std::string FloattoHex(float floatNum)
 	}u;
 	
 	u.f = floatNum;
-	std::string Output(u.c);
+	std::string Output(u.c, 4);
 	Output.resize(4);
 	return Output;
 }

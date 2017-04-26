@@ -7,3 +7,4 @@
 #include <windows.h>
 #include <shobjidl.h>
 #include "../DBVX 2 Tools/Files.h"
+#include "../DBVX 2 Tools/Stat.h"
