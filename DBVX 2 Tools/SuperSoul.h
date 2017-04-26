@@ -66,4 +66,4 @@ void SetSoul(HWND hDlg);
 void DisplayEffect(HWND hDlg, int TabNum);
 void GetCurEffect(HWND hDlg, int TabNum);
 void SetAllCurEffect();
-void IDBSetup();
+//void IDBSetup();

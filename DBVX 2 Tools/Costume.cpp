@@ -11,10 +11,10 @@ void DisplayCostumeStat(HWND hDlg, int TabNum)
 
 	if (CSData[TabNum].Rarity == 0)
 	{
-		sprintf(Text, "%f", 0);
+		sprintf(Text, "%d", CSData[TabNum].Rarity);
 		hTemp = GetDlgItem(hDlg, IDC_EDIT4);
 		SetWindowTextA(hTemp, Text);
-		for (int i; i < 18; i++)
+		for (int i = 0; i < 18; i++)
 		{
 			hTemp = GetDlgItem(hDlg, IDC_EDIT6 + i);
 			SetWindowTextA(hTemp, Text);
@@ -28,7 +28,7 @@ void DisplayCostumeStat(HWND hDlg, int TabNum)
 	hTemp = GetDlgItem(hDlg, IDC_EDIT6);
 	char CPrice[5];
 	int Price;
-	Price = ((uint8_t)CSIDBData[TabNum][CSData[TabNum].Price + 3] * 0x10000) + ((uint8_t)CSIDBData[TabNum][CSData[TabNum].Price + 2] * 0x1000)
+	Price = ((uint8_t)CSIDBData[TabNum][CSData[TabNum].Price + 3] * 0x1000000) + ((uint8_t)CSIDBData[TabNum][CSData[TabNum].Price + 2] * 0x10000)
 		+ ((uint8_t)CSIDBData[TabNum][CSData[TabNum].Price + 1] * 0x100) + (uint8_t)CSIDBData[TabNum][CSData[TabNum].Price];
 	sprintf(CPrice, "%d", Price);
 	SetWindowTextA(hTemp, CPrice);
@@ -143,40 +143,54 @@ void DisplayCostumeStat(HWND hDlg, int TabNum)
 	SetWindowTextA(hTemp, Text);
 }
 
-void SetAllCurCostumeStat()
-{
-	int TabNum = 0;
-
-	while (TabNum < 4)
-	{
-		CSCurEffect[TabNum].Health[0] = SearchEffectAmountID(CSData[TabNum].Health[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Ki[0] = SearchEffectAmountID(CSData[TabNum].Ki[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Ki_RegenRate[0] = SearchEffectAmountID(CSData[TabNum].Ki_RegenRate[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Stamina[0] = SearchEffectAmountID(SSData.Stamina[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Stamina_RegenRate[0] = SearchEffectAmountID(CSData[TabNum].Stamina_RegenRate[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Ground_Speed[0] = SearchEffectAmountID(CSData[TabNum].Ground_Speed[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Flight_Speed[0] = SearchEffectAmountID(CSData[TabNum].Flight_Speed[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Boost_Speed[0] = SearchEffectAmountID(CSData[TabNum].Boost_Speed[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Dash_Speed[0] = SearchEffectAmountID(CSData[TabNum].Dash_Speed[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Basic_Attack[0] = SearchEffectAmountID(CSData[TabNum].Basic_Attack[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Ki_Blast[0] = SearchEffectAmountID(CSData[TabNum].Ki_Blast[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Strike_Super[0] = SearchEffectAmountID(CSData[TabNum].Strike_Super[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Ki_Blast_Super[0] = SearchEffectAmountID(CSData[TabNum].Ki_Blast_Super[TabNum], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Basic_Attack_Dmg[0] = SearchEffectAmountID(CSData[TabNum].Basic_Attack_Dmg[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Ki_Blast_Dmg[0] = SearchEffectAmountID(CSData[TabNum].Ki_Blast_Dmg[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Strike_Super_Dmg[0] = SearchEffectAmountID(CSData[TabNum].Strike_Super_Dmg[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Ki_Blast_Super_Dmg[0] = SearchEffectAmountID(CSData[TabNum].Ki_Blast_Super_Dmg[0], CSIDBData[TabNum]);
-		CSCurEffect[TabNum].Revive_Speed[0] = SearchEffectAmountID(CSData[TabNum].Revive_Speed[0], CSIDBData[TabNum]);
-
-		TabNum++;
-	}
-}
-
 void SetCurCostumeStat(HWND hDlg, int TabNum, std::string *IDBData )
 {
 	HWND hTemp;
 	char Text[10];
-	int SSIndex = 0;
+	//int SSIndex = 0;
+
+	hTemp = GetDlgItem(hDlg, IDC_EDIT4);
+	GetWindowTextA(hTemp, Text, 10);
+	IDBData[TabNum][CSData[TabNum].Rarity] = atoi(Text);
+	
+	char NumTemp[10], HexTemp[10];
+
+	hTemp = GetDlgItem(hDlg, IDC_EDIT6);
+	GetWindowTextA(hTemp, NumTemp, 10);
+	sprintf(HexTemp, "%.8x", atoi(NumTemp));
+
+	std::stringstream HexNum;
+	char Temp1[2], Temp2[2], Temp3[2], Temp4[2];
+	int TempID1, TempID2, TempID3, TempID4;
+
+	Temp1[0] = HexTemp[0], Temp1[1] = HexTemp[1];
+	Temp2[0] = HexTemp[2], Temp2[1] = HexTemp[3];
+	Temp3[0] = HexTemp[4], Temp3[1] = HexTemp[5];
+	Temp4[0] = HexTemp[6], Temp4[1] = HexTemp[7];
+
+	HexNum << std::hex << Temp1;
+	HexNum >> TempID1;
+	HexNum.str(std::string());
+	HexNum.clear();
+	HexNum << std::hex << Temp2;
+	HexNum >> TempID2;
+	HexNum.str(std::string());
+	HexNum.clear();
+	HexNum << std::hex << Temp3;
+	HexNum >> TempID3;
+	HexNum.str(std::string());
+	HexNum.clear();
+	HexNum << std::hex << Temp4;
+	HexNum >> TempID4;
+
+	IDBData[TabNum][CSData[TabNum].Price + 3] = TempID1;
+	IDBData[TabNum][CSData[TabNum].Price + 2] = TempID2;
+	IDBData[TabNum][CSData[TabNum].Price + 1] = TempID3;
+	IDBData[TabNum][CSData[TabNum].Price] = TempID4;
+
+	IDBData[TabNum][CSData[TabNum].Activate] = -1;
+	IDBData[TabNum][CSData[TabNum].Activate + 1] = -1;
+	IDBData[TabNum][CSData[TabNum].Activate + 14] = -1;
 
 	hTemp = GetDlgItem(hDlg, IDC_EDIT7);
 	GetWindowTextA(hTemp, Text, 10);

@@ -24,3 +24,4 @@
 #include "Costume.h"
 #include "Stat.h"
 #include "Global.h"
+#include "Hex.h"

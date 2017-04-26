@@ -2,10 +2,14 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+WNDPROC WndProcEditDefault = 0;
 void SetIDBPrice(std::string &IDBData);
 HWND hwndDisplay;
-char FileName[MAX_PATH], FolderPath[MAX_PATH];
+char FileName[20][MAX_PATH], FolderPath[MAX_PATH];
 std::string IDBData[20];
+
+//tell it to accept files
+//DragAcceptFiles(hwndedit, true);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
 {
@@ -63,13 +67,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 
 void SetIDBPrice(std::string &IDBData)
 {
-	int count = 0x20, size = IDBData.size();
+	int count = IDBData[0x0c] + 0x10, size = IDBData.size();
 
 	while (count < size)
 	{
-		if (IDBData[count] == 00 && IDBData[count + 1] == 00)
+		if (IDBData[count] == 00 && IDBData[count + 1] == 00 && IDBData[count + 2] == 00 && IDBData[count + 3] == 00)
 		{
 			IDBData[count] = 01;
+			IDBData[count - 6] = -1, IDBData[count - 5] = -1, IDBData[count + 8] = -1;
 		}
 		count += 720;
 	}
@@ -114,6 +119,10 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 	switch (message)
 	{
 	case WM_INITDIALOG:
+	{
+		//store the original window's procedure
+		WndProcEditDefault = (WNDPROC)GetWindowLongPtr(GetDlgItem(hDlg, IDC_EDIT1), GWLP_WNDPROC);
+	}
 		return (INT_PTR)TRUE;
 
 	case WM_COMMAND:
@@ -122,44 +131,82 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 		case IDC_BUTTON1:
 		{
 			COMDLG_FILTERSPEC Filter[] = { { L"IDB file", L"*.idb" } };
-			getFileName(hDlg, FileName, Filter, 1);
-			IDBData[0].clear();
-			openFile(FileName, IDBData[0]);
-			SetWindowTextA(GetDlgItem(hDlg, IDC_EDIT1), FileName);
+			memset(FileName[0], 0, MAX_PATH);
+			getFileName(hDlg, FileName[0], Filter, 1);
+			if (FileName[0][0] == '0') break;
+			SetWindowTextA(GetDlgItem(hDlg, IDC_EDIT1), FileName[0]);
 		}
 		break;
 		case IDC_BUTTON2:
 		{
-			char TempName[MAX_PATH];
-			GetWindowTextA(GetDlgItem(hDlg, IDC_EDIT1), TempName, MAX_PATH);
-			if (strcmp(FileName, TempName)) //
+			GetWindowTextA(GetDlgItem(hDlg, IDC_EDIT1), FileName[0], MAX_PATH);
+			IDBData[0].clear();
+			openFile(FileName[0], IDBData[0]);
+			if (!IDBData[0].empty()) //
 			{
 				SetIDBPrice(IDBData[0]);
-				saveFile(FileName, IDBData[0]);
+				if (saveFile(FileName[0], IDBData[0]) == 0)
+				{
+					SetWindowTextA(GetDlgItem(hDlg, IDC_EDITERR1), "Price Set Sucessfull");
+				}
+				else
+				{
+					SetWindowTextA(GetDlgItem(hDlg, IDC_EDITERR1), "Failed to Set Price");
+				}
 			}
 			else
 			{
-				*FileName = *TempName;
-				SetIDBPrice(IDBData[0]);
-				saveFile(FileName, IDBData[0]);
+				SetWindowTextA(GetDlgItem(hDlg, IDC_EDITERR1), "File Path not found");
 			}
 		}
 		break;
 		case IDC_BUTTON3:
 		{
+			memset(FolderPath, 0, MAX_PATH);
 			getFolderPath(hDlg, FolderPath);
-			IDBData[0].clear();
-			openFile(FolderPath, IDBData[0]);
-			SetWindowTextA(GetDlgItem(hDlg, IDC_EDIT1), FolderPath);
+			SetWindowTextA(GetDlgItem(hDlg, IDC_EDIT2), FolderPath);
 		}
 		break;
 		case IDC_BUTTON4:
 		{
-
+			char IDBName[10][100] = {"accessory_item.idb", "battle_item.idb", "costume_bottom_item.idb", "costume_gloves_item.idb"
+				"costume_shoes_item.idb", "costume_top_item.idb", "extra_item.idb", "material_item.idb", "skill_item.idb", "talisman_item.idb"};
+			memset(FileName, 0, sizeof(FileName[0][0]) * 20 * MAX_PATH);
+			for (int i = 0; i < 10; i++)
+			{
+				IDBData[i].clear();
+				GetWindowTextA(GetDlgItem(hDlg, IDC_EDIT2), FileName[i], MAX_PATH);
+				strcat_s(FileName[i], "\\");
+				strcat_s(FileName[i], IDBName[i]);
+				openFile(FileName[i], IDBData[i]);
+				SetIDBPrice(IDBData[i]);
+				saveFile(FileName[i], IDBData[i]);
+			}
+			SetWindowTextA(GetDlgItem(hDlg, IDC_EDITERR2), "Finish Setting Prices");
+			
 		}
 		break;
 		}
 		return (INT_PTR)TRUE;
 	}
 	return (INT_PTR)FALSE;
+}
+
+LRESULT CALLBACK WndProcEditControl(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	switch (msg)
+	{
+	case WM_DROPFILES:
+	{
+		GetWindowTextA(GetDlgItem(hDlg, IDC_EDIT1), FileName[0], MAX_PATH);
+		SetWindowTextA(GetDlgItem(hDlg, IDC_EDIT1), FileName[0]);
+	}
+	break;
+	default:
+		//here we route non drag & drop messages to the original procedure
+		return CallWindowProc(WndProcEditDefault, hDlg, msg, wParam, lParam);
+		break;
+	}
+	//return fodder
+	return DefWindowProc(hDlg, msg, wParam, lParam);
 }

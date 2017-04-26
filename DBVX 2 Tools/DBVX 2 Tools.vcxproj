@@ -223,6 +223,7 @@
   <ItemGroup>
     <ClCompile Include="Aura.cpp" />
     <ClCompile Include="Costume.cpp" />
+    <ClCompile Include="Hex.cpp" />
     <ClCompile Include="MSGCS.cpp">
       <AdditionalUsingDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Justin\Documents\Visual Studio 2015\Projects\DBVX 2 Tools\DBVX 2 Tools\DBXV2-Tool;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
@@ -241,6 +242,7 @@
   <ItemGroup>
     <ClInclude Include="Aura.h" />
     <ClInclude Include="Costume.h" />
+    <ClInclude Include="Hex.h" />
     <ClInclude Include="MSGCS.h" />
     <ClInclude Include="Files.h" />
     <ClInclude Include="Global.h" />

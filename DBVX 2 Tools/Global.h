@@ -20,7 +20,7 @@ extern SKILL SSkillID[400], USkillID[400], ASkillID[50], ESkillID[200]; //Super,
 extern MSGDATA NameMSGID[300], DescMSGID[300];
 extern MSGDATA NameMSGID1[300], DescMSGID1[300];
 extern SUPERSOUL SSData, CSData[4]; //Stores offset of each elements first value
-extern SUPERSOUL SSCurEffect, CSCurEffect[4]; // the index value from the list of each effect value
+extern SUPERSOUL SSCurEffect; // the index value from the list of each effect value
 extern SUPERSOULSETTING SSSetting;
 extern SSEFFECT SSEffectID[50];
 extern SSEFFECTAMOUNT SSEAID[50];
