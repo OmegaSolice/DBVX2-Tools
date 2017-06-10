@@ -85,7 +85,7 @@ void getFolderPath(HWND hwnd, char szFolderPath[MAX_PATH])
 	}
 }
 
-void openFile(char szFileName[MAX_PATH], std::string &Output)
+int openFile(char szFileName[MAX_PATH], std::string &Output)
 {
 	std::ifstream file(szFileName, std::ios::binary);       //opens file input stream
 	std::string Line = "";                                
@@ -102,6 +102,11 @@ void openFile(char szFileName[MAX_PATH], std::string &Output)
 		file.close();
 		if (!Output.empty()) Output.erase(std::prev(Output.end())); //Erases last '\n' which will be added as it is a excess
 	}
+	else
+	{
+		return 1;
+	}
+	return 1;
 }
 
 void openFileW(char szFileName[MAX_PATH], std::wstring &Output)

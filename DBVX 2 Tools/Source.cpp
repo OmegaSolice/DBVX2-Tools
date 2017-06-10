@@ -835,7 +835,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					SSData = SearchIDB(index, SSIDBData);
 					int TabNum = TabCtrl_GetCurSel(GetDlgItem(hDlg, IDC_TAB1));
 					hTemp = GetDlgItem(hDlg, IDC_EDIT5);
-					wsprintfW(Temp, L"%x", SSIDBData[SSData.ID]);
+					wsprintfW(Temp, L"%x", (uint8_t)SSIDBData[SSData.ID]);
 					SetWindowText(hTemp, Temp);
 					hTemp = GetDlgItem(hDlg, IDC_EDIT4);
 					wsprintfW(Temp, L"%d", SSIDBData[SSData.Rarity]);
