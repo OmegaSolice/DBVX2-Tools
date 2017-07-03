@@ -59,15 +59,15 @@ void LoadPSC(STATHEADER *HData, STAT *Data, std::string PSCData)
 	std::string CHex;
 	CHex.resize(10);
 
-	HData[count].CharHexID = PSCData[offset];
-	HData[count].CostumeAmount = PSCData[offset + 4];
+	HData[count].CharHexID = (uint8_t)PSCData[offset];
+	HData[count].CostumeAmount = (uint8_t)PSCData[offset + 4];
 	count += 1, offset += 12;
 
 	while (PSCData[offset] != 00)
 	{
 		HData[count].CharHexID = (uint8_t)PSCData[offset];
-		HData[count].CostumeAmount = PSCData[offset + 4];
-		PSCCosCount += PSCData[offset + 4];
+		HData[count].CostumeAmount = (uint8_t)PSCData[offset + 4];
+		PSCCosCount += (uint8_t)PSCData[offset + 4];
 
 		count += 1, offset += 12;
 	}
@@ -415,6 +415,198 @@ void SetAllStat(HWND hDlg, STAT *Data)
 		index++;
 	}
 }
+
+void SetAllCheckStat(HWND hDlg, STAT *Data)
+{
+	HWND hTemp;
+	LRESULT IncludeCAC, IncludeSS;
+	char Text[10];
+	int SSIndex = 0, CACIndexCheck = 0, count = 0, index = 0, StatCheck[25], maxChar = 0;
+
+	while (HStat[count].CharHexID != 0x64) //find human male offset, to allow easy excemption of all CaC from set all  
+	{
+		CACIndexCheck += HStat[count].CostumeAmount;
+		count++;
+	}
+	count = 0;
+	while (count < CharCount) //calculate amount of char and costume; 
+	{
+		maxChar += HStat[count].CostumeAmount;
+		count++;
+	}
+	IncludeCAC = SendMessage(GetDlgItem(hDlg, IDC_CHECK1), BM_GETCHECK, 0, 0);
+	IncludeSS = SendMessage(GetDlgItem(hDlg, IDC_CHECK2), BM_GETCHECK, 0, 0);
+
+	for (int i = 0; i < 25; i++)
+	{
+		StatCheck[i] = SendMessage(GetDlgItem(hDlg, IDC_CHECK3 + i), BM_GETCHECK, 0, 0);
+	}
+
+	while (index < maxChar)
+	{
+		if (index >= CACIndexCheck && index <= (CACIndexCheck + 96) && IncludeCAC == BST_UNCHECKED) { index++; continue; }
+
+		if (StatCheck[0] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT1);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Camera_Position = atoi(Text);
+		}
+		if (StatCheck[1] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT2);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Health = atof(Text);
+		}
+		if (StatCheck[2] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT3);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Ki = atof(Text);
+		}
+		if (StatCheck[3] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT4);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Ki_Recharge = atof(Text);
+		}
+		if (StatCheck[4] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT5);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Stamina = atof(Text);
+		}
+		if (StatCheck[5] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT6);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Stamina_RechargeM = atof(Text);
+		}
+		if (StatCheck[6] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT7);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Stamina_RechargeA = atof(Text);
+		}
+		if (StatCheck[7] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT8);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Stamina_RechargeG = atof(Text);
+		}
+		if (StatCheck[8] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT9);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Stamina_Drain1 = atof(Text);
+		}
+		if (StatCheck[9] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT10);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Stamina_Drain2 = atof(Text);
+		}
+		if (StatCheck[10] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT11);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Basic_Attack = atof(Text);
+		}
+		if (StatCheck[11] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT12);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Ki_Blast = atof(Text);
+		}
+		if (StatCheck[12] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT13);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Strike_Super = atof(Text);
+		}
+		if (StatCheck[13] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT14);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Ki_BlastSuper = atof(Text);
+		}
+		if (StatCheck[14] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT15);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Basic_Def = atof(Text);
+		}
+		if (StatCheck[15] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT16);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Ki_Blast_Def = atof(Text);
+		}
+		if (StatCheck[16] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT17);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Strike_Super_Def = atof(Text);
+		}
+		if (StatCheck[17] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT18);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Ki_BlastSuper_Def = atof(Text);
+		}
+		if (StatCheck[18] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT19);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Ground_Speed = atof(Text);
+		}
+		if (StatCheck[19] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT20);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Air_Speed = atof(Text);
+		}
+		if (StatCheck[20] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT21);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Boost_Speed = atof(Text);
+		}
+		if (StatCheck[21] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT22);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Dash_Distance = atof(Text);
+		}
+		if (StatCheck[22] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT23);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Reinforcement_Skill_Duration = atof(Text);
+		}
+		if (StatCheck[23] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT24);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].RevivalHP = atof(Text);
+		}
+		if (StatCheck[24] == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_EDIT25);
+			GetWindowTextA(hTemp, Text, 10);
+			Data[index].Reviving_Speed = atof(Text);
+		}
+		if (IncludeSS == BST_CHECKED)
+		{
+			hTemp = GetDlgItem(hDlg, IDC_COMBO3);
+			SSIndex = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
+			Data[index].Super_Soul = SSIndex;
+		}
+
+		index++;
+	}
+}
+
 
 void SetPSCData(STAT *Data)
 {

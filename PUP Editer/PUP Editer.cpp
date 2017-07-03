@@ -114,7 +114,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Store instance handle in our global variable
 
-   g_hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, szWindowClass, szTitle, WS_SYSMENU,
+   g_hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
 	   CW_USEDEFAULT, CW_USEDEFAULT, screenWidth, screenHeight, nullptr, nullptr, hInstance, nullptr);
 
    if (!g_hwnd)
@@ -382,7 +382,7 @@ void GetStat(int ID)
 
 void SetStat(int ID)
 {
-	int index = 0x10, tempNum;
+	int index = 0x10;
 	char tempInfo[100], NumTemp[20], HexTemp[10];
 	std::string CHex;
 	CHex.resize(4);

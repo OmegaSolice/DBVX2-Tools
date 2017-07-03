@@ -87,7 +87,7 @@ void GetSkill(LRESULT Name, LRESULT Costume, LRESULT SuperSkill[4], LRESULT Ulti
 
 	if (!CusData.empty())
 	{
-		max = (uint8_t) CusData[0x0c] + (0x20 * (uint8_t) CusData[0x08]);
+		max = (uint8_t) CusData[0x29] + (0x100 * (uint8_t) CusData[0x28]);
 		while ((uint8_t)CusData[count] != check1)
 		{
 			if (count > max) { SetWindowText(EditError, L"Error Character Not Found"); return; }
@@ -197,7 +197,7 @@ int LoadSkill(char File[MAX_PATH], std::string &SkillSetting, SKILL *SkillID)
 		char CTempRefID[100] = { NULL }, CTempRefCode[10] = { NULL }, CTempName[50] = { NULL };
 		char CHexID1[2] = { NULL }, CHexID2[2] = { NULL };
 		std::stringstream HexID1, HexID2;
-		int count = 0, countHex = 0, posSet = 0,max = TempString.size(), CTempHexID1, CTempHexID2;
+		int count = 0, countHex = 0, posSet = 0,max = TempString.size(), CTempHexID1 = 0, CTempHexID2 = 0;
 		while (count <= max)
 		{
 			if (TempString[count] != ' ')

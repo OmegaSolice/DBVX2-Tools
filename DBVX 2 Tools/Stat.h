@@ -24,4 +24,5 @@ void LoadPSC(STATHEADER *HData, STAT *Data, std::string PSCData);
 void DisplayStat(int index, HWND hDlg, STAT *Data);
 void SetStat(HWND hDlg, int index, STAT *Data);
 void SetAllStat(HWND hDlg, STAT *Data);
+void SetAllCheckStat(HWND hDlg, STAT *Data);
 void SetPSCData(STAT *Data);

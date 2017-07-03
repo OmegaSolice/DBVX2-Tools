@@ -13,8 +13,8 @@ void ChangeAuraColor(LRESULT Name, LRESULT Color, HWND EditError)
 	}
 	if (!AuraData.empty())
 	{
-		int TempName = AuraData[0x0c] + (16 * Name);
-		int TempColor = AuraData[0x0c] + (16 * Color);
+		int TempName = (uint8_t)AuraData[0x0c] + (16 * Name);
+		int TempColor = (uint8_t)AuraData[0x0c] + (16 * Color);
 		AuraData[TempName + 12] = AuraData[TempColor + 12];
 		AuraData[TempName + 13] = AuraData[TempColor + 13];
 	}
@@ -47,8 +47,8 @@ void ChangeCharAura(LRESULT Name, LRESULT Costume, LRESULT Color, LRESULT Infini
 		return ;
 	}
 	int TempName = 16 * Costume;
-	int TempColor = AuraData[0x0c] + (16 * Color);
-	int count = AuraData[0x1c] + (AuraData[0x1d] * 0x100), check = CharID[Name].HexID;
+	int TempColor = (uint8_t)AuraData[0x0c] + (16 * Color);
+	int count = (uint8_t)AuraData[0x1c] + ((uint8_t)AuraData[0x1d] * 0x100), check = CharID[Name].HexID;
 	if (!AuraData.empty())
 	{
 
@@ -78,7 +78,7 @@ void ChangeCharAura(LRESULT Name, LRESULT Costume, LRESULT Color, LRESULT Infini
 int GetAura(LRESULT Name, LRESULT Costume, HWND EditError)
 {
 	int TempName = 16 * Costume;
-	int count = AuraData[0x1c] + (AuraData[0x1d] * 0x100), check = CharID[Name].HexID, Offset, max;
+	int count = (uint8_t)AuraData[0x1c] + ((uint8_t)AuraData[0x1d] * 0x100), check = CharID[Name].HexID, Offset, max;
 
 	if (Name < 0)
 	{

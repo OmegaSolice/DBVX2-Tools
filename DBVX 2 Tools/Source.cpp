@@ -28,6 +28,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	std::cout << "Console Initialzed" << std::endl;
 #endif // _DEBUG
 
+	UNREFERENCED_PARAMETER(hPrevInstance);
+	UNREFERENCED_PARAMETER(lpCmdLine);
+
+
 	WNDCLASSEX wcex;
 	ZeroMemory(&wcex, sizeof(WNDCLASSEX));
 	wcex.cbClsExtra = 0;
@@ -48,9 +52,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		MessageBox(NULL, L"Class failed to register", L"Error", MB_ICONERROR | MB_OK);
 	}
 
-	HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPEDWINDOW,
+	 hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, 700, 1000, NULL, NULL, hInstance, NULL);
-	/*HWND hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPEDWINDOW,
+	/*hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, 900, 1200, NULL, NULL, hInstance, NULL);*/
 	if (hwnd == NULL)
 	{
@@ -535,7 +539,6 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 	case WM_INITDIALOG:
 	{
 			int count = 0;
-			DWORD Err = NULL;
 			WCHAR WERR[100] = L"";
 			HWND hTemp;
 			TC_ITEMHEADER tabInfo;
@@ -752,7 +755,6 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 		case IDC_OPENDESCMSG:
 		{
 			COMDLG_FILTERSPEC Filter[] = { { L"Xenoverse MSG file", L"*.msg" } };
-			DWORD Err = NULL;
 			WCHAR WERR[100] = L"";
 			getFileName(hwnd, DescMsgFile, Filter, 1);
 			openFile(DescMsgFile, DescMSGData);
@@ -763,9 +765,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 		case IDC_OPENIDB:
 		{
 			COMDLG_FILTERSPEC Filter[] = { { L"Tailsman idb file", L"*.idb" } };
-			DWORD Err = NULL;
 			WCHAR WERR[100] = L"";
-			int count = 0;
 			getFileName(hwnd, SSIDBFile, Filter, 1);
 			openFile(SSIDBFile, SSIDBData);
 			//IDBSetup();
@@ -1073,7 +1073,22 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 
 			if (!PSCData.empty())
 			{
-				SetAllStat(hDlg, Stats);
+				SetAllStat(hDlg, Stats); 
+			}
+			else
+			{
+				hTemp = GetDlgItem(hDlg, IDC_EDITERROR1);
+				SetWindowText(hTemp, L"Error PSC Not Loaded/ Character or Costume Not Selected");
+			}
+		}
+		break;
+		case IDC_SETALLCHECKED:
+		{
+			HWND hTemp;
+
+			if (!PSCData.empty())
+			{
+				SetAllCheckStat(hDlg, Stats);
 			}
 			else
 			{
@@ -1146,7 +1161,6 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 		case IDC_OPENDESCMSG1:
 		{
 			COMDLG_FILTERSPEC Filter[] = { { L"Xenoverse MSG file", L"*.msg" } };
-			DWORD Err = NULL;
 			WCHAR WERR[100] = L"";
 			int count = 0;
 			getFileName(hwnd, DescMsgFile1, Filter, 1);
@@ -1390,9 +1404,9 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					wchar_t *InfoTempD = new wchar_t[size];
 
 					size_t outSizeD;
-					mbstowcs_s(&outSize, InfoTemp, size, DescMSGID[index].Info.c_str(), size - 1);
-					const TCHAR *InfoD = { InfoTemp };
-					SetWindowText(hTemp, Info);
+					mbstowcs_s(&outSizeD, InfoTemp, sizeD, DescMSGID[index].Info.c_str(), size - 1);
+					const TCHAR *InfoD = { InfoTempD };
+					SetWindowText(hTemp, InfoD);
 				}
 				else
 				{
