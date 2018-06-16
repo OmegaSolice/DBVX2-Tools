@@ -19,7 +19,6 @@
 #include "Winapi.h"
 #include "Aura.h"
 #include "Skill.h"
-#include "MSG.h"
 #include "SuperSoul.h"
 #include "Costume.h"
 #include "Stat.h"

@@ -58,22 +58,23 @@ void LoadPSC(STATHEADER *HData, STAT *Data, std::string PSCData)
 	int count = 0, offset = 0x10;
 	std::string CHex;
 	CHex.resize(10);
+	PSCCosCount = 0;
 
 	HData[count].CharHexID = (uint8_t)PSCData[offset];
 	HData[count].CostumeAmount = (uint8_t)PSCData[offset + 4];
 	count += 1, offset += 12;
 
-	while (PSCData[offset] != 00)
+	while (count < (uint8_t)PSCData[0x08])
 	{
 		HData[count].CharHexID = (uint8_t)PSCData[offset];
 		HData[count].CostumeAmount = (uint8_t)PSCData[offset + 4];
-		PSCCosCount += (uint8_t)PSCData[offset + 4];
+		PSCCosCount += HData[count].CostumeAmount;//(uint8_t)PSCData[offset + 4];
 
 		count += 1, offset += 12;
 	}
 	count = 0;
 
-	while (count < PSCCosCount)
+	while (count <= PSCCosCount + 0x11)
 	{
 		Data[count].Offset = offset;
 		Data[count].CostumeID = PSCData[offset];

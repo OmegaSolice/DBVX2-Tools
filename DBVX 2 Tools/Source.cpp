@@ -2,8 +2,7 @@
 #include "MSGCS.h"
 //#include <vcclr.h>  
 
-//using namespace System;
-//#using <XV2Lib.dll>
+
 //#pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version = '6.0.0.0' processorArchitecture = '*' publicKeyToken = '6595b64144ccf1df' language = '*'\"")
 
 //gcroot <XV2Lib::MSG> NameMSGDataCS;
@@ -52,7 +51,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		MessageBox(NULL, L"Class failed to register", L"Error", MB_ICONERROR | MB_OK);
 	}
 
-	 hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPEDWINDOW,
+	hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, 700, 1000, NULL, NULL, hInstance, NULL);
 	/*hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, L"Window", L"DBXV2 Tool", WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, 900, 1200, NULL, NULL, hInstance, NULL);*/
@@ -63,10 +62,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	g_hInst = hInstance;
 	int  count = 0;
-	SSkillID[0].RefID = -1, SSkillID[0].HexID1 = 0xff, SSkillID[0].HexID2 = 0xff, SSkillID[0].RefCode = 'BLK', SSkillID[0].Name = '----';
-	USkillID[0].RefID = -1, USkillID[0].HexID1 = 0xff, USkillID[0].HexID2 = 0xff, USkillID[0].RefCode = 'BLK', USkillID[0].Name = '----';
-	ASkillID[0].RefID = -1, ASkillID[0].HexID1 = 0xff, ASkillID[0].HexID2 = 0xff, ASkillID[0].RefCode = 'BLK', ASkillID[0].Name = '----';
-	ESkillID[0].RefID = -1, ESkillID[0].HexID1 = 0xff, ESkillID[0].HexID2 = 0xff, ESkillID[0].RefCode = 'BLK', ESkillID[0].Name = '----';
+	SSkillID[0].RefID = -1, SSkillID[0].HexID1 = 0xff, SSkillID[0].HexID2 = 0xff, SSkillID[0].RefCode = "BLK", SSkillID[0].Name = "---";
+	USkillID[0].RefID = -1, USkillID[0].HexID1 = 0xff, USkillID[0].HexID2 = 0xff, USkillID[0].RefCode = "BLK", USkillID[0].Name = "---";
+	ASkillID[0].RefID = -1, ASkillID[0].HexID1 = 0xff, ASkillID[0].HexID2 = 0xff, ASkillID[0].RefCode = "BLK", ASkillID[0].Name = "---";
+	ESkillID[0].RefID = -1, ESkillID[0].HexID1 = 0xff, ESkillID[0].HexID2 = 0xff, ESkillID[0].RefCode = "BLK", ESkillID[0].Name = "---";
 	SSSetting.Flag[0] = 0xff, SSSetting.Flag[1] = 0x01, SSSetting.Flag[2] = 0x0A, SSSetting.Flag[3] = 0x0A, SSSetting.Flag[4] = 0x00;
 	SSSetting.TimerID1[0] = 0x80, SSSetting.TimerID2[0] = 0xBF, SSSetting.TimerID1[1] = 0x70, SSSetting.TimerID2[1] = 0x41;
 	SSSetting.TimerID1[2] = 0xF0, SSSetting.TimerID2[2] = 0x41, SSSetting.TimerID1[3] = 0x70, SSSetting.TimerID2[3] = 0x42;
@@ -104,20 +103,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (!hwndDisplay[3]) { Err = GetLastError();  swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 	hwndDisplay[4] = CreateDialog(g_hInst, MAKEINTRESOURCE(IDD_DIALOG5), hwndTab, MainDialogProc);
 	if (!hwndDisplay[4]) { Err = GetLastError();  swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
-	
+
 	hComboCheck[0] = GetDlgItem(hwndDisplay[0], IDC_COMBO3); //Used to check combo box so when character change costume box can be set appropriatley  
 	hComboCheck[1] = GetDlgItem(hwndDisplay[1], IDC_COMBO6);
 	hComboCheck[2] = GetDlgItem(hwndDisplay[2], IDC_COMBO1);
 	hComboCheck[3] = GetDlgItem(hwndDisplay[3], IDC_COMBO1);
 	hComboCheck[4] = GetDlgItem(hwndDisplay[4], IDC_COMBO1);
 
-	while (count < numTab )        //resizes dialog to window client
+	while (count < numTab)        //resizes dialog to window client
 	{
 		DialogResize(hwndTab, hwndDisplay[count]);
 		count++;
 	}
-	
-	count = 0; 
+
+	count = 0;
 	while (count < AuraCount)
 	{
 		size_t size = strlen(AuraID[count].skillName.c_str()) + 1;
@@ -204,7 +203,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		const TCHAR *ComboBoxItemSkill = { ComboBoxItemSkillTemp };
 		hTemp = GetDlgItem(hwndDisplay[1], IDC_COMBO12);
 		if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
- 		Err = SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)ComboBoxItemSkill));
+		Err = SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)ComboBoxItemSkill));
 		if ((Err = GetLastError()) != 0) { swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 		hTemp = GetDlgItem(hwndDisplay[1], IDC_COMBO13);
 		if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
@@ -248,7 +247,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 
 	count = 0;
-	TCHAR *Ki_Blast[] = {L"Paralyze", L"Power", L"Rush", L"Bomb", L"Homing"};
+	TCHAR *Ki_Blast[] = { L"Paralyze", L"Power", L"Rush", L"Bomb", L"Homing" };
 	while (count < 5)
 	{
 		hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO2);
@@ -275,7 +274,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		count++;
 	}
 	count = 0;
-	
+
 	while (count < SSEffectAmountCount)
 	{
 		size_t size = strlen(SSEAID[count].Amount.c_str()) + 1;
@@ -468,15 +467,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	UpdateWindow(hwndDisplay[0]);
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
-	
+
 	MSG msg;
-	
+
 	while (GetMessage(&msg, NULL, 0, 0) > 0)
 	{
 		if (!IsDialogMessage(hwndDisplay[TabCtrl_GetCurSel(hwndTab)], &msg))
 		{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
 		}
 	}
 
@@ -497,7 +496,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		}*/
 	case WM_CREATE:
 	{
-		
+
 		break;
 	}
 	case WM_DESTROY:
@@ -524,55 +523,56 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 	UpdateWindow(hwnd);
 	UpdateWindow(hwndDisplay[TabCtrl_GetCurSel(hwndTab)]);
-		break;
+	break;
 	default:
 		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}
 	return 0;
 }
 
+
 INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	
+
 	switch (message)
 	{
 	case WM_INITDIALOG:
 	{
-			int count = 0;
-			WCHAR WERR[100] = L"";
-			HWND hTemp;
-			TC_ITEMHEADER tabInfo;
-			TCHAR* TabLabel1[] = { L"Intial Effect", L"Effect 1", L"Effect 2" };
-			hTemp = GetDlgItem(hwndDisplay[2], IDC_TAB1);
-			TabCtrl_DeleteAllItems(hTemp);
-			
-			tabInfo.mask = TCIF_TEXT;
-			tabInfo.iImage = -1;
+		int count = 0;
+		WCHAR WERR[100] = L"";
+		HWND hTemp;
+		TC_ITEMHEADER tabInfo;
+		TCHAR* TabLabel1[] = { L"Intial Effect", L"Effect 1", L"Effect 2" };
+		hTemp = GetDlgItem(hwndDisplay[2], IDC_TAB1);
+		TabCtrl_DeleteAllItems(hTemp);
 
-			while (count < 3) //set super soul tab effects tabs name
-			{
-				//mbtowc(WTemp, Temp, strlen(Temp));// +1 is to include null character
-				tabInfo.pszText = TabLabel1[count];
-				SendMessage(hTemp, TCM_INSERTITEM, count, (LPARAM)&tabInfo);
-				count++;
-			}
+		tabInfo.mask = TCIF_TEXT;
+		tabInfo.iImage = -1;
 
-			count = 0;
+		while (count < 3) //set super soul tab effects tabs name
+		{
+			//mbtowc(WTemp, Temp, strlen(Temp));// +1 is to include null character
+			tabInfo.pszText = TabLabel1[count];
+			SendMessage(hTemp, TCM_INSERTITEM, count, (LPARAM)&tabInfo);
+			count++;
+		}
 
-			TCHAR* TabLabel2[] = { L"Top", L"Bottom", L"Gloves", L"Shoes" };
-			hTemp = GetDlgItem(hDlg, IDC_TAB1);
-			TabCtrl_DeleteAllItems(hTemp);
-			while (count < 4) //set super soul tab effects tabs name
-			{
-				//mbtowc(WTemp, Temp, strlen(Temp));// +1 is to include null character
-				tabInfo.pszText = TabLabel2[count];
-				SendMessage(hTemp, TCM_INSERTITEM, count, (LPARAM)&tabInfo);
-				count++;
-			}
+		count = 0;
+
+		TCHAR* TabLabel2[] = { L"Top", L"Bottom", L"Gloves", L"Shoes" };
+		hTemp = GetDlgItem(hDlg, IDC_TAB1);
+		TabCtrl_DeleteAllItems(hTemp);
+		while (count < 4) //set super soul tab effects tabs name
+		{
+			//mbtowc(WTemp, Temp, strlen(Temp));// +1 is to include null character
+			tabInfo.pszText = TabLabel2[count];
+			SendMessage(hTemp, TCM_INSERTITEM, count, (LPARAM)&tabInfo);
+			count++;
+		}
 	}
 	break;
 	case WM_COMMAND:
-		switch (LOWORD(wParam)) 
+		switch (LOWORD(wParam))
 		{
 		case IDB_SET_AURA_COLOR:
 		{
@@ -584,7 +584,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			ChangeAuraColor(Name, Aura, GetDlgItem(hDlg, IDC_EDITERROR1));
 			break;
 		}
-			break;
+		break;
 		case IDB_SET_CHAR_AURA_COLOR:
 		{
 			LRESULT Name = NULL, Costume, Color, InfiniteCheck;
@@ -602,7 +602,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 		case ID_FILE_OPEN_AURA:
 		{
 			COMDLG_FILTERSPEC Filter[] = { { L"aur file", L"*.aur" } };
-			getFileName(hwnd, AuraFile, Filter, 1);
+			getFileName(hwnd, AuraFile, L"Xenoverse aur file\0*.aur");
 			openFile(AuraFile, AuraData);
 			break;
 		}
@@ -633,11 +633,11 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			hTemp = GetDlgItem(hDlg, IDC_COMBO5);
 			SendMessage(hTemp, CB_SETCURSEL, GetAura(Name, Costume, GetDlgItem(hDlg, IDC_EDITERROR1)), 0);
 		}
-			break;
+		break;
 		case IDC_BUTTON3:
 		{
 			COMDLG_FILTERSPEC Filter[] = { { L"cus file", L"*.cus" } };
-			getFileName(hwnd, CusFile, Filter, 1);
+			getFileName(hwnd, CusFile, L"Xenoverse Cus file\0*.cus\0");
 			openFile(CusFile, CusData);
 			break;
 		}
@@ -656,7 +656,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			}
 			break;
 		case IDC_BUTTON5:
-	
+
 			break;
 		case IDC_BUTTON6:
 		{
@@ -682,7 +682,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			AwokenSkill = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
 			hTemp = GetDlgItem(hDlg, IDC_COMBO15);
 			EvasiveSkill = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-			ChangeSkill( Name, Costume, SuperSkill, UltimateSkill, AwokenSkill, EvasiveSkill, GetDlgItem(hDlg, IDC_EDITERROR2));
+			ChangeSkill(Name, Costume, SuperSkill, UltimateSkill, AwokenSkill, EvasiveSkill, GetDlgItem(hDlg, IDC_EDITERROR2));
 			break;
 		}
 		case IDC_BUTTON7:
@@ -699,7 +699,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			SendMessage(hTemp, CB_SETCURSEL, SuperSkill[1], 0);
 			hTemp = GetDlgItem(hDlg, IDC_COMBO9);
 			SendMessage(hTemp, CB_SETCURSEL, 0, 0);
-			 SendMessage(hTemp, CB_SETCURSEL, SuperSkill[0], 0);
+			SendMessage(hTemp, CB_SETCURSEL, SuperSkill[0], 0);
 			hTemp = GetDlgItem(hDlg, IDC_COMBO10);
 			SendMessage(hTemp, CB_SETCURSEL, 0, 0);
 			SendMessage(hTemp, CB_SETCURSEL, SuperSkill[2], 0);
@@ -719,54 +719,45 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			SendMessage(hTemp, CB_SETCURSEL, 0, 0);
 			SendMessage(hTemp, CB_SETCURSEL, EvasiveSkill, 0);
 		}
-			break;
+		break;
 		case IDC_OPENNAMEMSG:
 		{
-			COMDLG_FILTERSPEC Filter[] = { { L"Xenoverse MSG file", L"*.msg" } };
+			//COMDLG_FILTERSPEC Filter[] = { { L"Xenoverse MSG file", L"*.msg" } };
 			HWND hTemp;
 			DWORD Err = NULL;
 			WCHAR WERR[100] = L"";
 			int count = 0;
-			getFileName(hwnd, NameMsgFile, Filter, 1);
-			openFile(NameMsgFile, NameMSGData);
-			if (NameMSGData.empty()) break;
-			LoadMSG(NameMSGData, NameMSGID, &MSGCount);
+			getFileName(hwnd, NameMsgFile, L"Xenoverse MSG file\0*.msg\0");
+			if (NameMsgFile[0] == 0) break;
+			LoadMSGID(NameMsgFile, &MSGCount, 1);
+
 			hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO1);
 			if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 			SendMessage(hTemp, CB_RESETCONTENT, 0, 0);
 
 			while (count < MSGCount)
 			{
-				size_t size = strlen(NameMSGID[count].NameID.c_str()) + 1;
-				wchar_t *ComboBoxItemMSGTemp = new wchar_t[size];
-
-				size_t outSize;
-				mbstowcs_s(&outSize, ComboBoxItemMSGTemp, size, NameMSGID[count].NameID.c_str(), size - 1);
-				const TCHAR *ComboBoxItemMSG = { ComboBoxItemMSGTemp };
-				hTemp = GetDlgItem(hwndDisplay[2], IDC_COMBO1);
-				if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
-				SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)ComboBoxItemMSG));
+				SendMessageA(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> (GetNameID(count, 1)));
 				if ((Err = GetLastError()) != 0) { swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 				count++;
 			}
 		}
-			break;
+		break;
 
 		case IDC_OPENDESCMSG:
 		{
-			COMDLG_FILTERSPEC Filter[] = { { L"Xenoverse MSG file", L"*.msg" } };
+			//COMDLG_FILTERSPEC Filter[] = { { L"Xenoverse MSG file", L"*.msg" } };
 			WCHAR WERR[100] = L"";
-			getFileName(hwnd, DescMsgFile, Filter, 1);
-			openFile(DescMsgFile, DescMSGData);
-			if (DescMSGData.empty()) break;
-			LoadMSG(DescMSGData, DescMSGID, &MSGCount);
+			getFileName(hwnd, DescMsgFile, L"Xenoverse MSG file\0*.msg\0");;
+			if (DescMsgFile[0] == 0) break;
+			LoadMSGID(DescMsgFile, &MSGCount, 3);
 		}
-			break;
+		break;
 		case IDC_OPENIDB:
 		{
 			COMDLG_FILTERSPEC Filter[] = { { L"Tailsman idb file", L"*.idb" } };
 			WCHAR WERR[100] = L"";
-			getFileName(hwnd, SSIDBFile, Filter, 1);
+			getFileName(hwnd, SSIDBFile, L"Xenoverse Tailsman idb file\0*.idb\0");
 			openFile(SSIDBFile, SSIDBData);
 			//IDBSetup();
 		}
@@ -778,8 +769,8 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 				char CInput[10];
 				std::stringstream HexNum;
 
-				if(GetFocus() == GetDlgItem(hDlg, IDC_EDIT3))
-				{ 
+				if (GetFocus() == GetDlgItem(hDlg, IDC_EDIT3))
+				{
 					GetWindowTextA(GetDlgItem(hDlg, IDC_EDIT3), CInput, 4);
 					SetWindowTextA(GetDlgItem(hDlg, IDC_EDIT5), CInput);
 				}
@@ -797,32 +788,20 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 				HWND hTemp = GetDlgItem(hDlg, IDC_EDIT3);
 				HexNum << std::hex << CInput;
 				HexNum >> index;
-				if (!NameMSGData.empty())
+				if (isMSGLoaded(1))
 				{
 					SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_SETCURSEL, index, 0);
-					wsprintfW(Temp, L"%x", NameMSGID[index].ID);
+					wsprintfW(Temp, L"%x", GetID(index, 1));
 					Err = SetWindowText(hTemp, Temp);
 
-					size_t size = strlen(NameMSGID[index].Info.c_str()) + 1;
-					wchar_t *InfoTemp = new wchar_t[size];
-
-					size_t outSize;
-					mbstowcs_s(&outSize, InfoTemp, size, NameMSGID[index].Info.c_str(), size - 1);
-					const TCHAR *Info = { InfoTemp };
 					hTemp = GetDlgItem(hDlg, IDC_EDIT1);
-					SetWindowText(hTemp, Info);
+					SetWindowTextW(hTemp, GetLines(index, 1));
 				}
 
 				hTemp = GetDlgItem(hDlg, IDC_EDIT2);
-				if (!DescMSGData.empty())
+				if (!DescMsgFile[0] == 0)
 				{
-					size_t size = strlen(DescMSGID[index].Info.c_str()) + 1;
-					wchar_t *InfoTemp = new wchar_t[size];
-
-					size_t outSize;
-					mbstowcs_s(&outSize, InfoTemp, size, DescMSGID[index].Info.c_str(), size - 1);
-					const TCHAR *Info = { InfoTemp };
-					SetWindowText(hTemp, Info);
+					SetWindowText(hTemp, GetLines(index, 3));
 				}
 				else
 				{
@@ -846,7 +825,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					char CPrice[5];
 					int Price;
 					Price = ((uint8_t)SSIDBData[SSData.Price + 3] * 0x1000000) + ((uint8_t)SSIDBData[SSData.Price + 2] * 0x10000) +
-					((uint8_t)SSIDBData[SSData.Price + 1] * 0x100) + (uint8_t)SSIDBData[SSData.Price];
+						((uint8_t)SSIDBData[SSData.Price + 1] * 0x100) + (uint8_t)SSIDBData[SSData.Price];
 					sprintf(CPrice, "%d", Price);
 					SetWindowTextA(hTemp, CPrice);
 					SetAllCurEffect();
@@ -881,35 +860,20 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 				wchar_t Temp[10];
 				HWND hTemp = GetDlgItem(hDlg, IDC_EDIT3);;
 
-				if (!NameMSGData1.empty())
+				if (!NameMsgFile1[0] == 0)
 				{
 					SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_SETCURSEL, index, 0);
-					wsprintfW(Temp, L"%x", NameMSGID1[index].ID);
+					wsprintfW(Temp, L"%x", GetID(index, 2));
 					Err = SetWindowText(hTemp, Temp);
 
-					wsprintfW(Temp, L"%x", NameMSGID1[index].ID);
-					Err = SetWindowText(hTemp, Temp);
-
-					size_t size = strlen(NameMSGID1[index].Info.c_str()) + 1;
-					wchar_t *InfoTemp = new wchar_t[size];
-
-					size_t outSize;
-					mbstowcs_s(&outSize, InfoTemp, size, NameMSGID1[index].Info.c_str(), size - 1);
-					const TCHAR *Info = { InfoTemp };
 					hTemp = GetDlgItem(hDlg, IDC_EDIT1);
-					SetWindowText(hTemp, Info);
+					SetWindowText(hTemp, GetLines(index, 2));
 				}
 
 				hTemp = GetDlgItem(hDlg, IDC_EDIT2);
-				if (!DescMSGData1.empty())
+				if (!DescMsgFile1[0] == 0)
 				{
-					size_t size = strlen(DescMSGID1[index].Info.c_str()) + 1;
-					wchar_t *InfoTemp = new wchar_t[size];
-
-					size_t outSize;
-					mbstowcs_s(&outSize, InfoTemp, size, DescMSGID1[index].Info.c_str(), size - 1);
-					const TCHAR *Info = { InfoTemp };
-					SetWindowText(hTemp, Info);
+					Err = SetWindowText(hTemp, GetLines(index, 4));
 				}
 				else
 				{
@@ -922,8 +886,8 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					memset(&CSData, 0, sizeof(SUPERSOUL));
 					for (int i = 0; i < 4; i++)
 					{
-						if(!CSIDBData[i].empty())
-						CSData[i] = SearchIDB(index, CSIDBData[i]);
+						if (!CSIDBData[i].empty())
+							CSData[i] = SearchIDB(index, CSIDBData[i]);
 					}
 					int TabNum = TabCtrl_GetCurSel(GetDlgItem(hDlg, IDC_TAB1));
 					hTemp = GetDlgItem(hDlg, IDC_EDIT5);
@@ -937,47 +901,31 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 
 		case IDC_SAVESOUL:
 		{
-			if (saveFile(NameMsgFile, NameMSGData) == 0)
+			if (!NameMsgFile[0] == 0)
 			{
+				SaveMSG(NameMsgFile, 1);
 				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
 				SetWindowText(EditError, L"Name Msg Save Succcesful");
 				SetFocus(EditError);
 			}
 			else
 			{
-				if (!NameMSGData.empty())
-				{
-					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
-					SetWindowText(EditError, L"Error Failed to Save Name Msg");
-					SetFocus(EditError);
-				}
-				else
-				{
-					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
-					SetWindowText(EditError, L"No Name MSG Loaded");
-					SetFocus(EditError);
-				}
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
+				SetWindowText(EditError, L"No Name MSG Loaded");
+				SetFocus(EditError);
 			}
-			if (saveFile(DescMsgFile, DescMSGData) == 0)
+			if (!DescMsgFile[0] == 0)
 			{
+				SaveMSG(DescMsgFile, 3);
 				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
 				SetWindowText(EditError, L"Description Msg Save Succcesful");
 				SetFocus(EditError);
 			}
 			else
 			{
-				if (!DescMSGData.empty())
-				{
-					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
-					SetWindowText(EditError, L"Error Failed to Save Description Msg");
-					SetFocus(EditError);
-				}
-				else
-				{
-					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
-					SetWindowText(EditError, L"No Description MSG Loaded");
-					SetFocus(EditError);
-				}
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
+				SetWindowText(EditError, L"No Description MSG Loaded");
+				SetFocus(EditError);
 			}
 			if (saveFile(SSIDBFile, SSIDBData) == 0)
 			{
@@ -1001,7 +949,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 				}
 			}
 		}
-			break;
+		break;
 		case IDC_SETSOUL:
 		{
 			int TabNum = TabCtrl_GetCurSel(GetDlgItem(hDlg, IDC_TAB1));
@@ -1012,7 +960,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 		case IDC_OPENPSC:
 		{
 			COMDLG_FILTERSPEC Filter[] = { { L"psc file", L"*.psc" } };
-			getFileName(hwnd, PscFile, Filter, 1);
+			getFileName(hwnd, PscFile, L"Xenoverse psc file\0*.psc\0");
 			openFile(PscFile, PSCData);
 			LoadPSC(HStat, Stats, PSCData);
 		}
@@ -1031,7 +979,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 			hTemp = GetDlgItem(hDlg, IDC_COMBO2);
 			index += SendMessage(hTemp, CB_GETCURSEL, 0, 0);
 
-			if (index > -1 && index < 500 &&!PSCData.empty())
+			if (index > -1 && index < 500 && !PSCData.empty())
 			{
 				DisplayStat(index, hDlg, Stats);
 			}
@@ -1046,7 +994,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 		{
 			HWND hTemp = GetDlgItem(hDlg, IDC_COMBO1);
 			int count = 0, TempIndex = 0, index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-			
+
 			while (CharID[index].HexID != HStat[count].CharHexID)
 			{
 				TempIndex += HStat[count].CostumeAmount;
@@ -1073,7 +1021,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 
 			if (!PSCData.empty())
 			{
-				SetAllStat(hDlg, Stats); 
+				SetAllStat(hDlg, Stats);
 			}
 			else
 			{
@@ -1128,30 +1076,21 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 		break;
 		case IDC_OPENNAMEMSG1:
 		{
-			COMDLG_FILTERSPEC Filter[] = { { L"Xenoverse MSG file", L"*.msg" } };
+			//COMDLG_FILTERSPEC Filter[] = { { L"Xenoverse MSG file", L"*.msg" } };
 			HWND hTemp;
 			DWORD Err = NULL;
 			WCHAR WERR[100] = L"";
 			int count = 0;
-			getFileName(hwnd, NameMsgFile1, Filter, 1);
-			openFile(NameMsgFile1, NameMSGData1);
-			if (NameMSGData1.empty()) break;
-			LoadMSG(NameMSGData1, NameMSGID1, &MSGCount1);
+			getFileName(hwnd, NameMsgFile1, L"Xenoverse MSG file\0*.msg\0");;
+			if (NameMsgFile1[0] == 0) break;
+			LoadMSGID(NameMsgFile1, &MSGCount1, 2);
 			hTemp = GetDlgItem(hwndDisplay[4], IDC_COMBO1);
 			if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 			SendMessage(hTemp, CB_RESETCONTENT, 0, 0);
 
 			while (count < MSGCount1)
 			{
-				size_t size = strlen(NameMSGID1[count].NameID.c_str()) + 1;
-				wchar_t *ComboBoxItemMSGTemp = new wchar_t[size];
-
-				size_t outSize;
-				mbstowcs_s(&outSize, ComboBoxItemMSGTemp, size, NameMSGID1[count].NameID.c_str(), size - 1);
-				const TCHAR *ComboBoxItemMSG = { ComboBoxItemMSGTemp };
-				hTemp = GetDlgItem(hwndDisplay[4], IDC_COMBO1);
-				if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
-				SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)ComboBoxItemMSG));
+				SendMessageA(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((GetNameID(count, 2))));
 				if ((Err = GetLastError()) != 0) { swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 				count++;
 			}
@@ -1160,27 +1099,42 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 
 		case IDC_OPENDESCMSG1:
 		{
-			COMDLG_FILTERSPEC Filter[] = { { L"Xenoverse MSG file", L"*.msg" } };
+			//COMDLG_FILTERSPEC Filter[] = { { L"Xenoverse MSG file", L"*.msg" } };
 			WCHAR WERR[100] = L"";
 			int count = 0;
-			getFileName(hwnd, DescMsgFile1, Filter, 1);
-			openFile(DescMsgFile1, DescMSGData1);
-			if (DescMSGData1.empty()) break;
-			LoadMSG(DescMSGData1, DescMSGID1, &MSGCount1);
+			getFileName(hwnd, DescMsgFile1, L"Xenoverse MSG file\0*.msg\0");
+			if (DescMsgFile1[0] == 0) break;
+			LoadMSGID(DescMsgFile1, &MSGCount1, 4);
 		}
 		break;
 		case IDC_IDBFOLDER:
 		{
-			DWORD Err = NULL;
 			WCHAR WERR[100] = L"";
-			getFolderPath(hwnd, CSIDBFile[0]);
+
+			/*struct Thread
+			{
+				struct ThreadArgs { HWND hwnd; char* path; };
+				static DWORD WINAPI ThreadFunc(void* data)
+				{
+					//ThreadArgs *temp = static_cast<ThreadArgs*>(data);
+					getFolderPath(hwnd, CSIDBFile[0]);
+					return 0;
+				}
+			};
+			//Thread::ThreadArgs *args;
+			//args->hwnd = hwnd, args->path = CSIDBFile[0];
+			HANDLE thread = CreateThread(NULL, 0, Thread::ThreadFunc, NULL, 0, NULL);
+			if (thread) {
+				WaitForMultipleObjects(1, &thread, TRUE, INFINITE);
+			}*/
+			getFolderPath(CSIDBFile[0]);
 			for (int i = 0; i < 4; i++)
 				strcpy(CSIDBFile[i], CSIDBFile[0]);
 			strcat(CSIDBFile[0], "\\costume_top_item.idb");
 			strcat(CSIDBFile[1], "\\costume_bottom_item.idb");
 			strcat(CSIDBFile[2], "\\costume_gloves_item.idb");
 			strcat(CSIDBFile[3], "\\costume_shoes_item.idb");
-			for ( int i = 0; i < 4; i++)
+			for (int i = 0; i < 4; i++)
 				openFile(CSIDBFile[i], CSIDBData[i]);
 		}
 		break;
@@ -1191,47 +1145,31 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 		break;
 		case IDC_SAVECOSTUME:
 		{
-			if (saveFile(NameMsgFile1, NameMSGData1) == 0)
+			if (!NameMsgFile1[0] == 0)
 			{
+				SaveMSG(NameMsgFile1, 2);
 				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
 				SetWindowText(EditError, L"Name Msg Save Succcesful");
 				SetFocus(EditError);
 			}
 			else
 			{
-				if (!NameMSGData1.empty())
-				{
-					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
-					SetWindowText(EditError, L"Error Failed to Save Name Msg");
-					SetFocus(EditError);
-				}
-				else
-				{
-					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
-					SetWindowText(EditError, L"No Name MSG Loaded");
-					SetFocus(EditError);
-				}
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR1);
+				SetWindowText(EditError, L"No Name MSG Loaded");
+				SetFocus(EditError);
 			}
-			if (saveFile(DescMsgFile1, DescMSGData1) == 0)
+			if (!DescMsgFile1[0] == 0)
 			{
+				SaveMSG(DescMsgFile1, 4);
 				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
 				SetWindowText(EditError, L"Description Msg Save Succcesful");
 				SetFocus(EditError);
 			}
 			else
 			{
-				if (!DescMSGData1.empty())
-				{
-					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
-					SetWindowText(EditError, L"Error Failed to Save Description Msg");
-					SetFocus(EditError);
-				}
-				else
-				{
-					HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
-					SetWindowText(EditError, L"No Description MSG Loaded");
-					SetFocus(EditError);
-				}
+				HWND EditError = GetDlgItem(hDlg, IDC_EDITERROR2);
+				SetWindowText(EditError, L"No Description MSG Loaded");
+				SetFocus(EditError);
 			}
 			if (saveFile(CSIDBFile[0], CSIDBData[0]) == 0)
 			{
@@ -1320,10 +1258,10 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					SetFocus(EditError);
 				}
 			}
-			
+
 		}
 		break;
-		}		
+		}
 		switch (HIWORD(wParam))
 		{
 		case CBN_SELCHANGE:
@@ -1347,15 +1285,15 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 				SendMessage(hTemp, CB_RESETCONTENT, 0, 0);
 				while (TRUE)
 				{
-					 //if stat tab Custom Char skip first entry
-					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x64 ) count = 1;
-					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x65 ) count = 1;
-					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x66 ) count = 1;
-					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x67 ) count = 1;
-					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x68 ) count = 1;
-					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x69 ) count = 1;
-					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x6a ) count = 1;
-					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x6b ) count = 1;
+					//if stat tab Custom Char skip first entry
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x64) count = 1;
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x65) count = 1;
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x66) count = 1;
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x67) count = 1;
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x68) count = 1;
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x69) count = 1;
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x6a) count = 1;
+					if ((HWND)lParam == hComboCheck[3] && count == 0 && CharID[index].HexID == 0x6b) count = 1;
 					std::cout << CharID[index].List[count].Name << "\n";
 					if (CharID[index].List[count].Name[0] == '\0') break;
 					size_t size = strlen(CharID[index].List[count].Name.c_str()) + 1;
@@ -1366,7 +1304,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					const TCHAR *ComboBoxItemCostume = { ComboBoxItemCostumeTemp };
 					if (!hTemp) { Err = GetLastError(); swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 					SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)ComboBoxItemCostume));
-					if ((Err = GetLastError()) != 0) { swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }			
+					if ((Err = GetLastError()) != 0) { swprintf_s(WERR, 100, L"%d", Err); MessageBox(NULL, WERR, L"ERROR", MB_OK | MB_ICONERROR); }
 					if ((HWND)lParam != hComboCheck[3])//skip if not stats tab
 					{
 						if (CharID[index].HexID == 0x64 || CharID[index].HexID == 0x65) break;//used to limit Custom character costume unless
@@ -1385,28 +1323,16 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 				wchar_t Temp[10];
 				HWND hTemp = GetDlgItem(hDlg, IDC_EDIT3);
 				index = SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
-				
-				wsprintfW(Temp, L"%x", NameMSGID[index].ID);
+
+				wsprintfW(Temp, L"%x", GetID(index, 1));
 				Err = SetWindowText(hTemp, Temp);
-				
-				size_t size = strlen(NameMSGID[index].Info.c_str()) + 1;
-				wchar_t *InfoTemp = new wchar_t[size];
 
-				size_t outSize;
-				mbstowcs_s(&outSize, InfoTemp, size, NameMSGID[index].Info.c_str(), size - 1);
-				const TCHAR *Info = { InfoTemp };
 				hTemp = GetDlgItem(hDlg, IDC_EDIT1);
-				SetWindowText(hTemp, Info);
+				SetWindowTextW(hTemp, GetLines(index, 1));
 				hTemp = GetDlgItem(hDlg, IDC_EDIT2);
-				if (!DescMSGData.empty())
+				if (!DescMsgFile[0] == 0)
 				{
-					size_t sizeD = strlen(DescMSGID[index].Info.c_str()) + 1;
-					wchar_t *InfoTempD = new wchar_t[size];
-
-					size_t outSizeD;
-					mbstowcs_s(&outSizeD, InfoTemp, sizeD, DescMSGID[index].Info.c_str(), size - 1);
-					const TCHAR *InfoD = { InfoTempD };
-					SetWindowText(hTemp, InfoD);
+					SetWindowText(hTemp, GetLines(index, 3));
 				}
 				else
 				{
@@ -1422,7 +1348,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					wsprintfW(Temp, L"%x", SSIDBData[SSData.ID]);
 					SetWindowText(hTemp, Temp);
 					hTemp = GetDlgItem(hDlg, IDC_EDIT4);
-					wsprintfW(Temp, L"%d", SSIDBData[SSData.Rarity ]);
+					wsprintfW(Temp, L"%d", SSIDBData[SSData.Rarity]);
 					SetWindowText(hTemp, Temp);
 					hTemp = GetDlgItem(hDlg, IDC_COMBO2);
 					SendMessage(hTemp, CB_SETCURSEL, SSIDBData[SSData.Ki_BlastType], 0);
@@ -1430,7 +1356,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 					char CPrice[5];
 					int Price;
 					Price = ((uint8_t)SSIDBData[SSData.Price + 3] * 0x1000000) + ((uint8_t)SSIDBData[SSData.Price + 2] * 0x10000)
-					+ ((uint8_t)SSIDBData[SSData.Price + 1] * 0x100) + (uint8_t)SSIDBData[SSData.Price];
+						+ ((uint8_t)SSIDBData[SSData.Price + 1] * 0x100) + (uint8_t)SSIDBData[SSData.Price];
 					sprintf(CPrice, "%d", Price);
 					SetWindowTextA(hTemp, CPrice);
 					SetAllCurEffect();
@@ -1446,35 +1372,20 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 				HWND hTemp = GetDlgItem(hDlg, IDC_EDIT3);
 				index = SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
 
-				if (!NameMSGData1.empty())
+				if (!NameMsgFile1[0] == 0)
 				{
 					SendMessage(GetDlgItem(hDlg, IDC_COMBO1), CB_SETCURSEL, index, 0);
-					wsprintfW(Temp, L"%x", NameMSGID1[index].ID);
+					wsprintfW(Temp, L"%x", GetNameID(index, 2));
 					Err = SetWindowText(hTemp, Temp);
 
-					wsprintfW(Temp, L"%x", NameMSGID1[index].ID);
-					Err = SetWindowText(hTemp, Temp);
-
-					size_t size = strlen(NameMSGID1[index].Info.c_str()) + 1;
-					wchar_t *InfoTemp = new wchar_t[size];
-
-					size_t outSize;
-					mbstowcs_s(&outSize, InfoTemp, size, NameMSGID1[index].Info.c_str(), size - 1);
-					const TCHAR *Info = { InfoTemp };
 					hTemp = GetDlgItem(hDlg, IDC_EDIT1);
-					SetWindowText(hTemp, Info);
+					SetWindowText(hTemp, GetLines(index, 2));
 				}
 
 				hTemp = GetDlgItem(hDlg, IDC_EDIT2);
-				if (!DescMSGData1.empty())
+				if (!DescMsgFile1[0] == 0)
 				{
-					size_t size = strlen(DescMSGID1[index].Info.c_str()) + 1;
-					wchar_t *InfoTemp = new wchar_t[size];
-
-					size_t outSize;
-					mbstowcs_s(&outSize, InfoTemp, size, DescMSGID1[index].Info.c_str(), size - 1);
-					const TCHAR *Info = { InfoTemp };
-					SetWindowText(hTemp, Info);
+					SetWindowText(hTemp, GetLines(index, 4));
 				}
 				else
 				{
@@ -1497,7 +1408,7 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 						DisplayCostumeStat(hDlg, TabNum);
 				}
 			}
-		}		
+		}
 		}
 		return (INT_PTR)TRUE;
 	case WM_NOTIFY:

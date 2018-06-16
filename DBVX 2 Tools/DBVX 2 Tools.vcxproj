@@ -39,6 +39,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -127,9 +128,13 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <MinimalRebuild>true</MinimalRebuild>
-      <ExceptionHandling>false</ExceptionHandling>
+      <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>C:\SDK\icu\source\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <AdditionalUsingDirectories>
+      </AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,6 +166,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
+      <AdditionalIncludeDirectories>C:\SDK\icu\source\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -227,14 +233,26 @@
     <ClCompile Include="Hex.cpp" />
     <ClCompile Include="MSGCS.cpp">
       <AdditionalUsingDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Justin\Documents\Visual Studio 2015\Projects\DBVX 2 Tools\DBVX 2 Tools\DBXV2-Tool;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</CompileAsManaged>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ProgramDatabase</DebugInformationFormat>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</MinimalRebuild>
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Async</ExceptionHandling>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</CompileAsManaged>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</MinimalRebuild>
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Async</ExceptionHandling>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Win 7 Release|Win32'">true</CompileAsManaged>
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Win 7 Release|Win32'">Async</ExceptionHandling>
     </ClCompile>
     <ClCompile Include="Files.cpp" />
     <ClCompile Include="Global.cpp" />
-    <ClCompile Include="MSG.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="Source.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</CompileAsManaged>
+      <AdditionalUsingDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)</AdditionalUsingDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ProgramDatabase</DebugInformationFormat>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</MinimalRebuild>
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Async</ExceptionHandling>
     </ClCompile>
     <ClCompile Include="Stat.cpp" />
     <ClCompile Include="SuperSoul.cpp" />
@@ -251,7 +269,6 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Stat.h" />
     <ClInclude Include="SuperSoul.h" />
-    <ClInclude Include="MSG.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="Winapi.h" />
   </ItemGroup>

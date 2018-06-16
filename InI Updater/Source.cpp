@@ -30,6 +30,11 @@ struct MSGDATA
 	int stringStartID1;
 	int stringStartID2;
 };
+struct AURA
+{
+	int HexID;
+	std::string skillName;
+};
 
 HWND hwnd;
 char IniFileName[20][MAX_PATH], FileName[20][MAX_PATH], FolderPath[MAX_PATH];
@@ -37,6 +42,7 @@ std::string Data[20], IniData[20];
 
 void LoadMSG(std::string MSGData, MSGDATA *MSGInfo, int *MSGAmount);
 int LoadSkill(char File[MAX_PATH], std::string &Setting, SKILL *Skill);
+int LoadAura(char File[MAX_PATH], std::string &AuraSetting, AURA *AuraID);
 BOOL CALLBACK DialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -65,13 +71,15 @@ void UpdateIni()
 		EscStart = (uint8_t)Data[0][0x30] + ((uint8_t)Data[0][0x31] * 0x100), 
 		AwkStart = (uint8_t)Data[0][0x3c] + ((uint8_t)Data[0][0x3d] * 0x100),
 		c, check1, check2, found = 0, SMSGAmount, UMSGAmount, EMSGAmount, AMSGAmount;
-	SKILL SSkillID[500], USkillID[500], ESkillID[500], ASkillID[200];
-	MSGDATA SMSG[500], UMSG[500], EMSG[500], AMSG[200];
+	SKILL SSkillID[1000], USkillID[1000], ESkillID[1000], ASkillID[1000];
+	MSGDATA SMSG[1000], UMSG[1000], EMSG[1000], AMSG[1000];
+	AURA AuraID[500];
 	
 	int SSkillCount = LoadSkill("Data/Super Skill ID.ini", IniData[0], SSkillID);
 	int USkillCount = LoadSkill("Data/Ultimate Skill ID.ini", IniData[1], USkillID);
 	int ESkillCount = LoadSkill("Data/Evasive Skill ID.ini", IniData[2], ESkillID);
 	int ASkillCount = LoadSkill("Data/Awoken Skill ID.ini", IniData[3], ASkillID);
+	int AuraCount = LoadAura("Data/Aura ID.ini", IniData[4], AuraID);
 
 	LoadMSG(Data[1], SMSG, &SMSGAmount);
 	LoadMSG(Data[2], UMSG, &UMSGAmount);
@@ -231,7 +239,7 @@ void UpdateIni()
 		check1 = (uint8_t)Data[0][c + 0x08], check2 = (uint8_t)Data[0][c + 0x09];
 		for (int j = 0; j < ASkillCount; j++)
 		{
-			if (check1 == ASkillID[j].HexID1 && check2 == SSkillID[j].HexID2)
+			if (check1 == ASkillID[j].HexID1 && check2 == ASkillID[j].HexID2)
 				found = 1;
 		}
 
@@ -250,30 +258,45 @@ void UpdateIni()
 			sprintf(temp, "%.2x", check2);
 			ins.append(temp), ins.append(" - ");
 			ins.append(sname), ins.append(" - ");
-
-
-			for (int k = 0; k < AMSGAmount; k++)
-			{
-				char checkIDC[5];
-				int len = strlen(AMSG[k].NameID.c_str());
-				checkIDC[0] = AMSG[k].NameID.c_str()[len - 4], checkIDC[1] = AMSG[k].NameID.c_str()[len - 3],
-					checkIDC[2] = AMSG[k].NameID.c_str()[len - 2], checkIDC[3] = AMSG[k].NameID.c_str()[len - 1];
-				int checkID = atoi(checkIDC);
-				if (num == checkID)
-				{
-					ins.append(AMSG[k].Info);
-				}
-			}
-			ins.append(";");
+			ins.append(AMSG[i].Info);
+			//ins.append(";");
 			IniData[3].append("\r\n");
 			IniData[3].append(ins);
 		}
+
 
 		c += 68;
 	}
 
 	saveFile("Data/Awoken Skill ID.ini", IniData[3]);
 
+	for(int i = Data[5][0x0c]; i < Data[5][0x08] * 0x10; i = i + 0x10)
+	{
+		check1 = (uint8_t)Data[5][i];
+		for (int j = 0; j < AuraCount;j++)
+		{
+			if (check1 == AuraID[j].HexID)
+			{
+				found = 1;
+			}
+		}
+
+		if (found == 1)
+			found = 0;
+		else
+		{
+			std::string ins;
+			int num = check1;
+			char temp[20];
+			sprintf(temp, "%.2x", num);
+			ins.append(temp), ins.append(" - ");
+			ins.append("New Aura");
+			ins.append(";");
+			IniData[4].append("\r\n");
+			IniData[4].append(ins);
+		}
+	}
+	saveFile("Data/Aura ID.ini", IniData[4]);
 }
 
 void LoadMSG(std::string MSGData, MSGDATA *MSGInfo, int *MSGAmount)
@@ -440,11 +463,11 @@ int LoadSkill(char File[MAX_PATH], std::string &SkillSetting, SKILL *SkillID)
 				break;
 			}
 		}
-		SkillID[SkillCount].RefID = CTempRefID;
-		SkillID[SkillCount].HexID1 = CTempHexID1;
-		SkillID[SkillCount].HexID2 = CTempHexID2;
-		SkillID[SkillCount].RefCode = CTempRefCode;
-		SkillID[SkillCount].Name = CTempName;
+		SkillID[SkillCount - 1].RefID = CTempRefID;
+		SkillID[SkillCount - 1].HexID1 = CTempHexID1;
+		SkillID[SkillCount - 1].HexID2 = CTempHexID2;
+		SkillID[SkillCount - 1].RefCode = CTempRefCode;
+		SkillID[SkillCount - 1].Name = CTempName;
 #ifdef _DEBUG
 		std::cout << SkillID[SkillCount].RefID << " - " << std::hex << SkillID[SkillCount].HexID1 << std::hex << SkillID[SkillCount].HexID2 <<
 			" - " << SkillID[SkillCount].RefCode << " - " << SkillID[SkillCount].Name << std::endl;
@@ -455,6 +478,60 @@ int LoadSkill(char File[MAX_PATH], std::string &SkillSetting, SKILL *SkillID)
 	return SkillCount;
 }
 
+int LoadAura(char File[MAX_PATH], std::string &AuraSetting, AURA *AuraID)
+{
+	AuraSetting.clear();
+	openFile("Data/Aura ID.ini", AuraSetting);
+	std::istringstream TempStream(AuraSetting);
+	std::string TempString;
+	int CTempHexID, AuraCount = 0;
+	char CTempValue[105] = { NULL };
+
+	while (std::getline(TempStream, TempString))
+	{
+
+		int count = 0, posSet = 0, max = TempString.size();
+		std::stringstream HexID;
+		char CHexID[2] = { NULL };
+		while (count <= max)
+		{
+			if (TempString[count] != ' ')
+			{
+				CHexID[count] = TempString[count];
+				count++;
+			}
+			else
+			{
+				HexID << std::hex << CHexID;
+				HexID >> CTempHexID;
+				posSet = count;
+				count += 3;
+				posSet = count;
+				break;
+			}
+		}
+		while (count <= max)
+		{
+			if (TempString[count] != ';')
+			{
+				CTempValue[count - posSet] = TempString[count];
+				count++;
+			}
+			else
+			{
+				break;
+			}
+		}
+		AuraID[AuraCount].HexID = CTempHexID;
+		AuraID[AuraCount].skillName = CTempValue;
+#ifdef _DEBUG
+		std::cout << AuraID[AuraCount].HexID << " - " << AuraID[AuraCount].skillName << std::endl;
+#endif
+		memset(CTempValue, 0, strlen(CTempValue));
+		AuraCount++;
+	}
+	return AuraCount;
+}
 
 BOOL CALLBACK DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -478,9 +555,9 @@ BOOL CALLBACK DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 			char Name[10][100] = { "system\\custom_skill.cus", "msg\\proper_noun_skill_spa_name_en.msg", 
 				"msg\\proper_noun_skill_ult_name_en.msg", "msg\\proper_noun_skill_esc_name_en.msg", 
-				"msg\\proper_noun_skill_met_name_en.msg"};
+				"msg\\proper_noun_skill_met_name_en.msg", "system\\aura_setting.aur"};
 			memset(FileName, 0, sizeof(FileName[0][0]) * 20 * MAX_PATH);
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 6; i++)
 			{
 				Data[i].clear();
 				GetWindowTextA(GetDlgItem(hDlg, IDC_EDIT1), FileName[i], MAX_PATH);

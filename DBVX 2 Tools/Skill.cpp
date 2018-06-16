@@ -87,7 +87,7 @@ void GetSkill(LRESULT Name, LRESULT Costume, LRESULT SuperSkill[4], LRESULT Ulti
 
 	if (!CusData.empty())
 	{
-		max = (uint8_t) CusData[0x29] + (0x100 * (uint8_t) CusData[0x28]);
+		max = ((uint8_t) CusData[0x29] + (0x100 * (uint8_t) CusData[0x28])* 32);
 		while ((uint8_t)CusData[count] != check1)
 		{
 			if (count > max) { SetWindowText(EditError, L"Error Character Not Found"); return; }

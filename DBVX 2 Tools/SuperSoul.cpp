@@ -1,4 +1,5 @@
 #include "Header.h"
+#include "MSGCS.h"
 
 SUPERSOUL SearchIDB(int index, std::string IDBData)
 {
@@ -440,42 +441,38 @@ void SetSoul(HWND hDlg)
 	int index, count = 0;
 	HWND hTemp;
 	char CTemp[200];
-	std::string NTemp, OTemp;
+	wchar_t temp[500];
+	HRESULT hr;
 
 	hTemp = GetDlgItem(hDlg, IDC_EDIT1);
-	GetWindowTextA(hTemp, CTemp, GetWindowTextLength(hTemp) + 1);
+	hr = GetWindowTextW(hTemp, temp, GetWindowTextLength(hTemp) + 1);
 	hTemp = GetDlgItem(hDlg, IDC_COMBO1);
 	index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-	NTemp = CTemp;
+
 	if (index != -1)
 	{
-		OTemp = NameMSGID[index].Info;
-		SetMSG(OTemp, NTemp, index, NameMSGData, NameMSGID);
-		LoadMSG(NameMSGData, NameMSGID, &MSGCount);
+		SetMSG(index, temp, 1);
 	}
 	else
 	{
 		SetWindowText(GetDlgItem(hDlg, IDC_EDITERROR1), L"No Name MSG Loaded");
 	}
 
-	if (!DescMSGData.empty())
+	if (!DescMsgFile[0] == 0)
 	{
 		char CInput[10] = { 0 };
 		std::stringstream HexNum;
 
 		hTemp = GetDlgItem(hDlg, IDC_EDIT3);
 		GetWindowTextA(hTemp, CInput, 2);
-		 index = atoi(CInput);
+		index = atoi(CInput);
 
 		hTemp = GetDlgItem(hDlg, IDC_EDIT2);
-		GetWindowTextA(hTemp, CTemp, GetWindowTextLength(hTemp) + 1);
-		NTemp = CTemp;
+		GetWindowTextW(hTemp, temp, GetWindowTextLength(hTemp) + 1);
 
 		if (index != -1)
 		{
-			OTemp = DescMSGID[index].Info;
-			SetMSG(OTemp, NTemp, index, DescMSGData, DescMSGID);
-			LoadMSG(DescMSGData, DescMSGID, &MSGCount);
+			SetMSG(index, temp, 3);
 		}
 		else
 		{

@@ -33,9 +33,6 @@
     <ClCompile Include="Skill.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MSG.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SuperSoul.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -75,9 +72,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SuperSoul.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MSG.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Stat.h">
