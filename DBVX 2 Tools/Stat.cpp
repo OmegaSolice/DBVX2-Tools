@@ -5,7 +5,7 @@ void LoadSoulList()
 	openFile("Data/Super Soul ID.ini", SoulSetting);
 	std::istringstream TempStream(SoulSetting);
 	std::string TempString;
-	int CTempHexID;
+	int CTempHexID = 0;
 	char CTempValue[105] = { NULL };
 
 	while (std::getline(TempStream, TempString))
@@ -13,7 +13,7 @@ void LoadSoulList()
 
 		int count = 0, posSet = 0, max = TempString.size();
 		std::stringstream HexID;
-		char CHexID[2] = { NULL };
+		char CHexID[4] = { NULL };
 		while (count <= max)
 		{
 			if (TempString[count] != ' ')
@@ -55,26 +55,23 @@ void LoadSoulList()
 
 void LoadPSC(STATHEADER *HData, STAT *Data, std::string PSCData)
 {
-	int count = 0, offset = 0x10;
+	int count = 0, offset = 0x14;
 	std::string CHex;
 	CHex.resize(10);
 	PSCCosCount = 0;
 
-	HData[count].CharHexID = (uint8_t)PSCData[offset];
-	HData[count].CostumeAmount = (uint8_t)PSCData[offset + 4];
-	count += 1, offset += 12;
-
-	while (count < (uint8_t)PSCData[0x08])
+	uint8_t stop = (uint8_t)PSCData[0x08] * 0x2;
+	while ((count) < stop)
 	{
 		HData[count].CharHexID = (uint8_t)PSCData[offset];
 		HData[count].CostumeAmount = (uint8_t)PSCData[offset + 4];
 		PSCCosCount += HData[count].CostumeAmount;//(uint8_t)PSCData[offset + 4];
 
-		count += 1, offset += 12;
+		count += 1, offset += 0x0c;
 	}
 	count = 0;
 
-	while (count <= PSCCosCount + 0x11)
+	while (count <= (PSCCosCount))
 	{
 		Data[count].Offset = offset;
 		Data[count].CostumeID = PSCData[offset];
@@ -310,14 +307,26 @@ void SetAllStat(HWND hDlg, STAT *Data)
 	HWND hTemp;
 	LRESULT IncludeCAC, IncludeSS;
 	char Text[10];
-	int SSIndex = 0, CACIndexCheck = 0, count = 0, index = 0, maxChar = 0;
+	int SSIndex = 0, CACIndexCheck = 0, CACBattleIndexCheck = 0, count = 0, index = 0, maxChar = 0;
+	bool battleStats = true;
 
 	while (HStat[count].CharHexID != 0x64) //find human male offset, to allow easy excemption of all CaC from set all  
 	{
 		CACIndexCheck += HStat[count].CostumeAmount;
 		count++;
 	}
+	
 	count = 0;
+
+	while (HStat[count].CharHexID != 0x64) //find human male offset, to allow easy excemption of all CaC from set all  
+	{
+		CACBattleIndexCheck += HStat[count].CostumeAmount;
+		if (CharID[index].HexID == HStat[count].CharHexID) battleStats = false;
+		count++;
+	}
+
+	count = 0;
+	
 	while (count < CharCount) //calculate amount of char and costume; 
 	{
 		maxChar += HStat[count].CostumeAmount;
@@ -328,7 +337,8 @@ void SetAllStat(HWND hDlg, STAT *Data)
 
 	while (index < maxChar)
 	{
-		if (index >= CACIndexCheck && index <= (CACIndexCheck + 96) && IncludeCAC == BST_UNCHECKED) { index++; continue; }
+		if (index >= CACIndexCheck && index <= (CACIndexCheck + 96) && index >= CACIndexCheck && index <= (CACIndexCheck + 96)  && IncludeCAC == BST_UNCHECKED)
+		{ index++; continue; }
 
 		hTemp = GetDlgItem(hDlg, IDC_EDIT1);
 		GetWindowTextA(hTemp, Text, 10);
@@ -422,14 +432,26 @@ void SetAllCheckStat(HWND hDlg, STAT *Data)
 	HWND hTemp;
 	LRESULT IncludeCAC, IncludeSS;
 	char Text[10];
-	int SSIndex = 0, CACIndexCheck = 0, count = 0, index = 0, StatCheck[25], maxChar = 0;
+	int SSIndex = 0, CACIndexCheck = 0, CACBattleIndexCheck = 0, count = 0, index = 0, StatCheck[25], maxChar = 0;
+	bool battleStats = true;
 
 	while (HStat[count].CharHexID != 0x64) //find human male offset, to allow easy excemption of all CaC from set all  
 	{
 		CACIndexCheck += HStat[count].CostumeAmount;
 		count++;
 	}
+
 	count = 0;
+
+	while (HStat[count].CharHexID != 0x64 || battleStats) //find human male offset for battle stats , to allow easy excemption of all CaC from set all  
+	{
+		CACIndexCheck += HStat[count].CostumeAmount;
+		if (CharID[index].HexID == HStat[count].CharHexID) battleStats = false;
+		count++;
+	}
+
+	count = 0;
+
 	while (count < CharCount) //calculate amount of char and costume; 
 	{
 		maxChar += HStat[count].CostumeAmount;
@@ -445,7 +467,8 @@ void SetAllCheckStat(HWND hDlg, STAT *Data)
 
 	while (index < maxChar)
 	{
-		if (index >= CACIndexCheck && index <= (CACIndexCheck + 96) && IncludeCAC == BST_UNCHECKED) { index++; continue; }
+		if (index >= CACIndexCheck && index <= (CACIndexCheck + 96) && index >= CACBattleIndexCheck && index <= (CACBattleIndexCheck + 96) && IncludeCAC == BST_UNCHECKED)
+		{ index++; continue; }
 
 		if (StatCheck[0] == BST_CHECKED)
 		{

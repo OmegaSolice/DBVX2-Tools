@@ -84,6 +84,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	LoadTrigger();
 	LoadTC();
 	LoadSoulList();
+	openFile("Data/AuraSetup.ini", AuraSetupData);
 
 	TCHAR *TabLabel[] = { L"Aura", L"Skill", L"Super Soul", L"Stat", L"Costume" };
 	count = 0;
@@ -109,6 +110,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	hComboCheck[2] = GetDlgItem(hwndDisplay[2], IDC_COMBO1);
 	hComboCheck[3] = GetDlgItem(hwndDisplay[3], IDC_COMBO1);
 	hComboCheck[4] = GetDlgItem(hwndDisplay[4], IDC_COMBO1);
+
+	hTemp = GetDlgItem(hwndDisplay[3], IDC_COMBO4);
+	SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)L"PQ"));
+	SendMessage(hTemp, CB_ADDSTRING, 0, reinterpret_cast <LPARAM> ((LPCTSTR)L"Battle"));
 
 	while (count < numTab)        //resizes dialog to window client
 	{
@@ -969,17 +974,25 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 		{
 			HWND hTemp = GetDlgItem(hDlg, IDC_COMBO1);
 			int count = 0, TempIndex = 0, index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
+			bool battleStats = false;
 
-			while (CharID[index].HexID != HStat[count].CharHexID)
+			if (SendMessage(GetDlgItem(hDlg, IDC_COMBO4), CB_GETCURSEL, 0, 0) == 1)
+			{
+				battleStats = true;
+			}
+
+			while (CharID[index].HexID != HStat[count].CharHexID || battleStats)
 			{
 				TempIndex += HStat[count].CostumeAmount;
+				if (CharID[index].HexID == HStat[count].CharHexID) battleStats = false;
 				count++;
 			}
+			
 			index = TempIndex;
 			hTemp = GetDlgItem(hDlg, IDC_COMBO2);
 			index += SendMessage(hTemp, CB_GETCURSEL, 0, 0);
-
-			if (index > -1 && index < 500 && !PSCData.empty())
+			
+			if (index > -1 && index < (sizeof(Stats) / sizeof STAT) && !PSCData.empty())
 			{
 				DisplayStat(index, hDlg, Stats);
 			}
@@ -994,17 +1007,24 @@ INT_PTR CALLBACK MainDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 		{
 			HWND hTemp = GetDlgItem(hDlg, IDC_COMBO1);
 			int count = 0, TempIndex = 0, index = SendMessage(hTemp, CB_GETCURSEL, 0, 0);
+			bool battleStats = false;
 
-			while (CharID[index].HexID != HStat[count].CharHexID)
+			if (SendMessage(GetDlgItem(hDlg, IDC_COMBO4), CB_GETCURSEL, 0, 0) == 1)
+			{
+				battleStats = true;
+			}
+
+			while (CharID[index].HexID != HStat[count].CharHexID || battleStats)
 			{
 				TempIndex += HStat[count].CostumeAmount;
+				if (CharID[index].HexID == HStat[count].CharHexID) battleStats = false;
 				count++;
 			}
 			index = TempIndex;
 			hTemp = GetDlgItem(hDlg, IDC_COMBO2);
 			index += SendMessage(hTemp, CB_GETCURSEL, 0, 0);
 
-			if (index > -1 && index < 500 && !PSCData.empty())
+			if (index > -1 && (sizeof(Stats) / sizeof STAT) && !PSCData.empty())
 			{
 				SetStat(hDlg, index, Stats);
 			}

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DBXV 2 Tool", "DBVX 2 Tools\DBVX 2 Tools.vcxproj", "{1774FBB1-F5E8-4D5E-81A1-68CA712ABF54}"
 EndProject
@@ -87,5 +87,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {832665CB-829A-4864-9DC6-E66C35DA1414}
 	EndGlobalSection
 EndGlobal

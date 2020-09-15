@@ -1,6 +1,6 @@
 #pragma once
 #include "Header.h"
-extern std::string AuraData, CusData, AuraSetting, CharSetting, CostumeSetting, SSkillSetting, USkillSetting, ASkillSetting, ESkillSetting;
+extern std::string AuraData, AuraSetupData, CusData, AuraSetting, CharSetting, CostumeSetting, SSkillSetting, USkillSetting, ASkillSetting, ESkillSetting;
 extern std::string SSIDBData, PSCData, SSEffectSetting, SSEffectAmountSetting, SSTriggerSetting, SSTCSetting;
 extern std::string SoulSetting, CSIDBData[4];
 extern char AuraFile[MAX_PATH], CusFile[MAX_PATH], NameMsgFile[MAX_PATH], DescMsgFile[MAX_PATH], SSIDBFile[MAX_PATH], PscFile[MAX_PATH];
@@ -14,8 +14,8 @@ extern HWND hwndTab ,hwndDisplay[5];
 extern HWND hComboCheck[5]; //Used to check combo box so when character change costime box can be set appropriatley
 extern int PrevEffectTab, PrevCostumeTab;
 extern AURA AuraID[100];
-extern CHARACTER CharID[200];
-extern SKILL SSkillID[400], USkillID[400], ASkillID[50], ESkillID[200]; //Super, Ultimate, Awokenn Eavasive Skill variable made from skill struct;
+extern CHARACTER CharID[1000];
+extern SKILL SSkillID[1000], USkillID[1000], ASkillID[500], ESkillID[800]; //Super, Ultimate, Awokenn Eavasive Skill variable made from skill struct;
 extern SUPERSOUL SSData, CSData[4]; //Stores offset of each elements first value
 extern SUPERSOUL SSCurEffect; // the index value from the list of each effect value
 extern SUPERSOULSETTING SSSetting;
@@ -23,6 +23,6 @@ extern SSEFFECT SSEffectID[50];
 extern SSEFFECTAMOUNT SSEAID[50];
 extern SSTRIGGER SSTriggerID[50];
 extern SSTC SSTCID[50];
-extern STATHEADER HStat[200];
-extern STAT Stats[500];
-extern SOULLIST SuperSoulID[215];
+extern STATHEADER HStat[500];
+extern STAT Stats[1000];
+extern SOULLIST SuperSoulID[500];

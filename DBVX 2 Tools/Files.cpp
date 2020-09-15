@@ -175,7 +175,7 @@ int openFile(char szFileName[MAX_PATH], std::string &Output)
 	}
 	else
 	{
-		return 1;
+		return -1;
 	}
 	return 1;
 }

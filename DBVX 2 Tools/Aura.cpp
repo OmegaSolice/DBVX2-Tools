@@ -128,7 +128,7 @@ void LoadAura()
 	openFile("Data/Aura ID.ini", AuraSetting);
 	std::istringstream TempStream(AuraSetting);
 	std::string TempString;
-	int CTempHexID;
+	int CTempHexID = 0;
 	char CTempValue[105] = { NULL };
 
 	while (std::getline(TempStream, TempString))
@@ -188,7 +188,7 @@ void LoadCharacter()
 	{
 
 		int count = 0, posSet = 0, max = TempString.size();
-		int CTempHexID;
+		int CTempHexID = 0;
 		std::stringstream HexID;
 		char CHexID[2] = { NULL };
 		while (count <= max)
@@ -319,8 +319,7 @@ void LoadCostume()
 
 void AuraSetup(HWND ErrorDisplay)
 {
-	std::string AuraSetupData, TempString;
-	openFile("Data/AuraSetup.ini", AuraSetupData);
+	std::string TempString;
 	std::istringstream Setup (AuraSetupData);
 
 	if (!AuraSetupData.empty() && !AuraData.empty())
