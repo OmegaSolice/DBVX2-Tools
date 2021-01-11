@@ -85,6 +85,7 @@ void UpdateIni()
 	for (int i = UltStart; i < EscStart; i += 0x44)
 	{
 		std::string ins, tempString;
+		String^ prefix = "ult_";
 		char sname[4], temp[20];
 		int ID1 = (uint8_t)CusData[i + 0x08], ID2 = (uint8_t)CusData[i + 0x09], num = ID1 + (ID2 * 0x100);
 
@@ -96,7 +97,15 @@ void UpdateIni()
 		sprintf(temp, "%.2x", ID2);
 		ins.append(temp), ins.append(" - ");
 		ins.append(sname), ins.append(" - ");
-		tempString = MarshalString(MSGList::UltimateMSG->FindByPart((num - 5000).ToString()));
+		if ((num - 5000) < 10)
+			prefix += "000";
+		else
+			if ((num - 5000) >= 10 && (num - 5000 < 100))
+				prefix += "00";
+			else
+				if ((num - 5000) >= 100 && (num - 5000 < 1000))
+					prefix += "0";
+		tempString = MarshalString(MSGList::UltimateMSG->Find(prefix+(num - 5000).ToString()));
 		ins.append(tempString);
 		ins.append(";");
 
@@ -350,7 +359,7 @@ BOOL CALLBACK DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 			bool fileNotFound = false;
 			for (int i = 0; i < 10; i++)
 			{
-				if(	!std::experimental::filesystem::exists(FileName[i]))
+				if(	!std::filesystem::exists(FileName[i]))
 				{ 
 					fileNotFound = true;
 					errorMessage.append(std::string(FileName[i]) + " not found\n");
