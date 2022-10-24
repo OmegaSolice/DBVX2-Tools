@@ -375,7 +375,7 @@ void GetStat(int ID)
 	{
 		CHex[0] = PUPData[index + 16 + (i * 4)], CHex[1] = PUPData[index + 17 + (i * 4)], CHex[2] = PUPData[index + 18 + (i * 4)], 
 			CHex[3] = PUPData[index + 19 + (i * 4)];
-		sprintf_s(tempInfo, "%f", HextoFloat(CHex));
+		sprintf_s(tempInfo, "%f", HexToFloat(CHex));
 		SetDlgItemTextA(hwndDisplayPUP, IDC_EDIT5 + i, tempInfo);
 	}
 }
@@ -489,6 +489,6 @@ void SetStat(int ID)
 	{
 		GetDlgItemTextA(hwndDisplayPUP, IDC_EDIT5 + i, tempInfo, 8);
 		PUPData.erase(index + 16 + (i * 4), 4);
-		PUPData.insert(index + 16 + (i * 4), FloattoHex(atof(tempInfo)));
+		PUPData.insert(index + 16 + (i * 4), FloatToHex(atof(tempInfo)));
 	}
 }

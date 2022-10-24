@@ -8,3 +8,4 @@
 #include <shobjidl.h>
 #include "../DBVX 2 Tools/Files.h"
 #include "../DBVX 2 Tools/Stat.h"
+#include "../DBVX 2 Tools/Hex.h"

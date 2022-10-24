@@ -77,53 +77,53 @@ void LoadPSC(STATHEADER *HData, STAT *Data, std::string PSCData)
 		Data[count].CostumeID = PSCData[offset];
 		Data[count].Camera_Position = PSCData[offset + 8];
 		CHex[0] = PSCData[offset + 20], CHex[1] = PSCData[offset + 21], CHex[2] = PSCData[offset + 22], CHex[3] = PSCData[offset + 23];
-		Data[count].Health = HextoFloat(CHex);//20
+		Data[count].Health = HexToFloat(CHex);//20
 		CHex[0] = PSCData[offset + 28], CHex[1] = PSCData[offset + 29], CHex[2] = PSCData[offset + 30], CHex[3] = PSCData[offset + 31];
-		Data[count].Ki = HextoFloat(CHex); //28
+		Data[count].Ki = HexToFloat(CHex); //28
 		CHex[0] = PSCData[offset + 32], CHex[1] = PSCData[offset + 33], CHex[2] = PSCData[offset + 34], CHex[3] = PSCData[offset + 35];
-		Data[count].Ki_Recharge = HextoFloat(CHex); //32
+		Data[count].Ki_Recharge = HexToFloat(CHex); //32
 		CHex[0] = PSCData[offset + 48], CHex[1] = PSCData[offset + 49], CHex[2] = PSCData[offset + 50], CHex[3] = PSCData[offset + 51];
-		Data[count].Stamina = HextoFloat(CHex); //48
+		Data[count].Stamina = HexToFloat(CHex); //48
 		CHex[0] = PSCData[offset + 52], CHex[1] = PSCData[offset + 53], CHex[2] = PSCData[offset + 54], CHex[3] = PSCData[offset + 55];
-		Data[count].Stamina_RechargeM = HextoFloat(CHex); //52
+		Data[count].Stamina_RechargeM = HexToFloat(CHex); //52
 		CHex[0] = PSCData[offset + 56], CHex[1] = PSCData[offset + 57], CHex[2] = PSCData[offset + 58], CHex[3] = PSCData[offset + 59];
-		Data[count].Stamina_RechargeA = HextoFloat(CHex); //56
+		Data[count].Stamina_RechargeA = HexToFloat(CHex); //56
 		CHex[0] = PSCData[offset + 60], CHex[1] = PSCData[offset + 61], CHex[2] = PSCData[offset + 62], CHex[3] = PSCData[offset + 63];
-		Data[count].Stamina_RechargeG = HextoFloat(CHex); //60
+		Data[count].Stamina_RechargeG = HexToFloat(CHex); //60
 		CHex[0] = PSCData[offset + 64], CHex[1] = PSCData[offset + 65], CHex[2] = PSCData[offset + 66], CHex[3] = PSCData[offset + 67];
-		Data[count].Stamina_Drain1 = HextoFloat(CHex); //64
+		Data[count].Stamina_Drain1 = HexToFloat(CHex); //64
 		CHex[0] = PSCData[offset + 68], CHex[1] = PSCData[offset + 69], CHex[2] = PSCData[offset + 70], CHex[3] = PSCData[offset + 71];
-		Data[count].Stamina_Drain2 = HextoFloat(CHex); //68
+		Data[count].Stamina_Drain2 = HexToFloat(CHex); //68
 		CHex[0] = PSCData[offset + 76], CHex[1] = PSCData[offset + 77], CHex[2] = PSCData[offset + 78], CHex[3] = PSCData[offset + 79];
-		Data[count].Basic_Attack = HextoFloat(CHex); //76
+		Data[count].Basic_Attack = HexToFloat(CHex); //76
 		CHex[0] = PSCData[offset + 80], CHex[1] = PSCData[offset + 81], CHex[2] = PSCData[offset + 82], CHex[3] = PSCData[offset + 83];
-		Data[count].Ki_Blast = HextoFloat(CHex); //80
+		Data[count].Ki_Blast = HexToFloat(CHex); //80
 		CHex[0] = PSCData[offset + 84], CHex[1] = PSCData[offset + 85], CHex[2] = PSCData[offset + 86], CHex[3] = PSCData[offset + 87];
-		Data[count].Strike_Super = HextoFloat(CHex); //84
+		Data[count].Strike_Super = HexToFloat(CHex); //84
 		CHex[0] = PSCData[offset + 88], CHex[1] = PSCData[offset + 89], CHex[2] = PSCData[offset + 90], CHex[3] = PSCData[offset + 91];
-		Data[count].Ki_BlastSuper = HextoFloat(CHex); //88
+		Data[count].Ki_BlastSuper = HexToFloat(CHex); //88
 		CHex[0] = PSCData[offset + 92], CHex[1] = PSCData[offset + 93], CHex[2] = PSCData[offset + 94], CHex[3] = PSCData[offset + 95];
-		Data[count].Basic_Def = HextoFloat(CHex); //92
+		Data[count].Basic_Def = HexToFloat(CHex); //92
 		CHex[0] = PSCData[offset + 96], CHex[1] = PSCData[offset + 97], CHex[2] = PSCData[offset + 98], CHex[3] = PSCData[offset + 99];
-		Data[count].Ki_Blast_Def = HextoFloat(CHex); //96
+		Data[count].Ki_Blast_Def = HexToFloat(CHex); //96
 		CHex[0] = PSCData[offset + 100], CHex[1] = PSCData[offset + 101], CHex[2] = PSCData[offset + 102], CHex[3] = PSCData[offset + 103];
-		Data[count].Strike_Super_Def = HextoFloat(CHex); //100
+		Data[count].Strike_Super_Def = HexToFloat(CHex); //100
 		CHex[0] = PSCData[offset + 104], CHex[1] = PSCData[offset + 105], CHex[2] = PSCData[offset + 106], CHex[3] = PSCData[offset + 107];
-		Data[count].Ki_BlastSuper_Def = HextoFloat(CHex); //104
+		Data[count].Ki_BlastSuper_Def = HexToFloat(CHex); //104
 		CHex[0] = PSCData[offset + 108], CHex[1] = PSCData[offset + 109], CHex[2] = PSCData[offset + 110], CHex[3] = PSCData[offset + 111];
-		Data[count].Ground_Speed = HextoFloat(CHex); //108
+		Data[count].Ground_Speed = HexToFloat(CHex); //108
 		CHex[0] = PSCData[offset + 112], CHex[1] = PSCData[offset + 113], CHex[2] = PSCData[offset + 114], CHex[3] = PSCData[offset + 115];
-		Data[count].Air_Speed = HextoFloat(CHex); //112
+		Data[count].Air_Speed = HexToFloat(CHex); //112
 		CHex[0] = PSCData[offset + 116], CHex[1] = PSCData[offset + 117], CHex[2] = PSCData[offset + 118], CHex[3] = PSCData[offset + 119];
-		Data[count].Boost_Speed = HextoFloat(CHex); //116
+		Data[count].Boost_Speed = HexToFloat(CHex); //116
 		CHex[0] = PSCData[offset + 120], CHex[1] = PSCData[offset + 121], CHex[2] = PSCData[offset + 122], CHex[3] = PSCData[offset + 123];
-		Data[count].Dash_Distance = HextoFloat(CHex); //120
+		Data[count].Dash_Distance = HexToFloat(CHex); //120
 		CHex[0] = PSCData[offset + 128], CHex[1] = PSCData[offset + 129], CHex[2] = PSCData[offset + 130], CHex[3] = PSCData[offset + 131];
-		Data[count].Reinforcement_Skill_Duration = HextoFloat(CHex); //128
+		Data[count].Reinforcement_Skill_Duration = HexToFloat(CHex); //128
 		CHex[0] = PSCData[offset + 136], CHex[1] = PSCData[offset + 137], CHex[2] = PSCData[offset + 138], CHex[3] = PSCData[offset + 139];
-		Data[count].RevivalHP = HextoFloat(CHex); //136
+		Data[count].RevivalHP = HexToFloat(CHex); //136
 		CHex[0] = PSCData[offset + 144], CHex[1] = PSCData[offset + 145], CHex[2] = PSCData[offset + 146], CHex[3] = PSCData[offset + 147];
-		Data[count].Reviving_Speed = HextoFloat(CHex); //144
+		Data[count].Reviving_Speed = HexToFloat(CHex); //144
 		Data[count].Super_Soul = PSCData[offset + 180]; //180
 
 		count++, offset += 0xc4;
@@ -641,53 +641,53 @@ void SetPSCData(STAT *Data)
 		Offset = Data[index].Offset;
 		PSCData[Offset + 8] = Data[index].Camera_Position;
 		PSCData.erase(Offset + 20, 4);
-		PSCData.insert(Offset + 20, FloattoHex(Data[index].Health));
+		PSCData.insert(Offset + 20, FloatToHex(Data[index].Health));
 		PSCData.erase(Offset + 28, 4);
-		PSCData.insert(Offset + 28, FloattoHex(Data[index].Ki));
+		PSCData.insert(Offset + 28, FloatToHex(Data[index].Ki));
 		PSCData.erase(Offset + 32, 4);
-		PSCData.insert(Offset + 32, FloattoHex(Data[index].Ki_Recharge));
+		PSCData.insert(Offset + 32, FloatToHex(Data[index].Ki_Recharge));
 		PSCData.erase(Offset + 48, 4);
-		PSCData.insert(Offset + 48, FloattoHex(Data[index].Stamina));
+		PSCData.insert(Offset + 48, FloatToHex(Data[index].Stamina));
 		PSCData.erase(Offset + 52, 4);
-		PSCData.insert(Offset + 52, FloattoHex(Data[index].Stamina_RechargeM));
+		PSCData.insert(Offset + 52, FloatToHex(Data[index].Stamina_RechargeM));
 		PSCData.erase(Offset + 56, 4);
-		PSCData.insert(Offset + 56, FloattoHex(Data[index].Stamina_RechargeA));
+		PSCData.insert(Offset + 56, FloatToHex(Data[index].Stamina_RechargeA));
 		PSCData.erase(Offset + 60, 4);
-		PSCData.insert(Offset + 60, FloattoHex(Data[index].Stamina_RechargeG));
+		PSCData.insert(Offset + 60, FloatToHex(Data[index].Stamina_RechargeG));
 		PSCData.erase(Offset + 64, 4);
-		PSCData.insert(Offset + 64, FloattoHex(Data[index].Stamina_Drain1));
+		PSCData.insert(Offset + 64, FloatToHex(Data[index].Stamina_Drain1));
 		PSCData.erase(Offset + 68, 4);
-		PSCData.insert(Offset + 68, FloattoHex(Data[index].Stamina_Drain2));
+		PSCData.insert(Offset + 68, FloatToHex(Data[index].Stamina_Drain2));
 		PSCData.erase(Offset + 76, 4);
-		PSCData.insert(Offset + 76, FloattoHex(Data[index].Basic_Attack));
+		PSCData.insert(Offset + 76, FloatToHex(Data[index].Basic_Attack));
 		PSCData.erase(Offset + 80, 4);
-		PSCData.insert(Offset + 80, FloattoHex(Data[index].Ki_Blast));
+		PSCData.insert(Offset + 80, FloatToHex(Data[index].Ki_Blast));
 		PSCData.erase(Offset + 84, 4);
-		PSCData.insert(Offset + 84, FloattoHex(Data[index].Strike_Super));
+		PSCData.insert(Offset + 84, FloatToHex(Data[index].Strike_Super));
 		PSCData.erase(Offset + 88, 4);
-		PSCData.insert(Offset + 88, FloattoHex(Data[index].Ki_BlastSuper));
+		PSCData.insert(Offset + 88, FloatToHex(Data[index].Ki_BlastSuper));
 		PSCData.erase(Offset + 92, 4);
-		PSCData.insert(Offset + 92, FloattoHex(Data[index].Basic_Def));
+		PSCData.insert(Offset + 92, FloatToHex(Data[index].Basic_Def));
 		PSCData.erase(Offset + 96, 4);
-		PSCData.insert(Offset + 96, FloattoHex(Data[index].Ki_Blast_Def));
+		PSCData.insert(Offset + 96, FloatToHex(Data[index].Ki_Blast_Def));
 		PSCData.erase(Offset + 100, 4);
-		PSCData.insert(Offset + 100, FloattoHex(Data[index].Strike_Super_Def));
+		PSCData.insert(Offset + 100, FloatToHex(Data[index].Strike_Super_Def));
 		PSCData.erase(Offset + 104, 4);
-		PSCData.insert(Offset + 104, FloattoHex(Data[index].Ki_BlastSuper_Def));
+		PSCData.insert(Offset + 104, FloatToHex(Data[index].Ki_BlastSuper_Def));
 		PSCData.erase(Offset + 108, 4);
-		PSCData.insert(Offset + 108, FloattoHex(Data[index].Ground_Speed));
+		PSCData.insert(Offset + 108, FloatToHex(Data[index].Ground_Speed));
 		PSCData.erase(Offset + 112, 4);
-		PSCData.insert(Offset + 112, FloattoHex(Data[index].Air_Speed));
+		PSCData.insert(Offset + 112, FloatToHex(Data[index].Air_Speed));
 		PSCData.erase(Offset + 116, 4);
-		PSCData.insert(Offset + 116, FloattoHex(Data[index].Boost_Speed));
+		PSCData.insert(Offset + 116, FloatToHex(Data[index].Boost_Speed));
 		PSCData.erase(Offset + 120, 4);
-		PSCData.insert(Offset + 120, FloattoHex(Data[index].Dash_Distance));
+		PSCData.insert(Offset + 120, FloatToHex(Data[index].Dash_Distance));
 		PSCData.erase(Offset + 128, 4);
-		PSCData.insert(Offset + 128, FloattoHex(Data[index].Reinforcement_Skill_Duration));
+		PSCData.insert(Offset + 128, FloatToHex(Data[index].Reinforcement_Skill_Duration));
 		PSCData.erase(Offset + 136, 4);
-		PSCData.insert(Offset + 136, FloattoHex(Data[index].RevivalHP));
+		PSCData.insert(Offset + 136, FloatToHex(Data[index].RevivalHP));
 		PSCData.erase(Offset + 144, 4);
-		PSCData.insert(Offset + 144, FloattoHex(Data[index].Reviving_Speed));
+		PSCData.insert(Offset + 144, FloatToHex(Data[index].Reviving_Speed));
 		PSCData[Offset + 180] = Data[index].Super_Soul;
 		index++;
 	}

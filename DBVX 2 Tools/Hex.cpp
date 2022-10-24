@@ -1,6 +1,6 @@
 #include "Hex.h"
 
-float HextoFloat(std::string SHex)
+float HexToFloat(std::string SHex)
 {
 	union {
 		char c[4];
@@ -17,7 +17,7 @@ float HextoFloat(std::string SHex)
 	return u.f;
 }
 
-std::string FloattoHex(float floatNum)
+std::string FloatToHex(float floatNum)
 {
 	union {
 		char c[4];

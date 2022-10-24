@@ -1,4 +1,4 @@
 #pragma once
 #include <iostream>
-float HextoFloat(std::string Hex);
-std::string FloattoHex(float floatNum);
+float HexToFloat(std::string Hex);
+std::string FloatToHex(float floatNum);

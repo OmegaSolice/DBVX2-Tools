@@ -28,7 +28,7 @@ public:
 };
 
 
-BOOL CALLBACK DialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK DialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 void LoadAura(AURA* AuraID, int& AuraCount, std::string& AuraSetting);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -324,7 +324,7 @@ void UpdateIni()
 	saveFile("Data/Costume ID.ini", CostumeIniData);
 }
 
-BOOL CALLBACK DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg) {
 	case WM_INITDIALOG:
@@ -345,8 +345,8 @@ BOOL CALLBACK DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 		case IDC_BUTTON2:
 		{
-			char Name[10][100] = { "system/custom_skill.cus", "system/aura_setting.aur", "system/char_model_spec.cms", "msg/proper_noun_skill_spa_name_en.msg", "msg/proper_noun_skill_ult_name_en.msg", 
-				"msg/proper_noun_skill_esc_name_en.msg", "msg/proper_noun_skill_met_name_en.msg", "msg/proper_noun_character_name_en.msg", "msg/proper_noun_variation_name_en.msg", "msg/proper_noun_talisman_name_en.msg" };
+			char Name[10][100] = { "system/custom_skill.cus", "system/aura_setting.aur", "system/char_model_spec.cms", "msg/proper_noun_skill_spa_name_en.msg", "msg/proper_noun_skill_ult_name_en.msg",
+				"msg/proper_noun_skill_esc_name_en.msg", "msg/proper_noun_skill_met_name_en.msg", "msg/proper_noun_character_name_en.msg", "msg/proper_noun_variation_name_en.msg" };//, "msg/proper_noun_talisman_name_en.msg" };
 			memset(FileName, 0, sizeof(FileName[0][0]) * 20 * MAX_PATH);
 			for (int i = 0; i < 10; i++)
 			{
@@ -383,7 +383,7 @@ BOOL CALLBACK DialogProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 			MSGList::AwakenMSG = MSG_Read(FileName[6], &AMSGAmount);
 			MSGList::CharacterNameMSG = MSG_Read(FileName[7], &CNMSGAmount);
 			MSGList::CharacterCostumeMSG = MSG_Read(FileName[8], &CCMSGAmount);
-			MSGList::SuperSoulMSG = MSG_Read(FileName[9], &SSMSGAmount);
+			//::SuperSoulMSG = MSG_Read(FileName[9], &SSMSGAmount);
 
 			UpdateIni();
 

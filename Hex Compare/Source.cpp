@@ -48,8 +48,8 @@ int main()
 	std::string s;
 	std::cout << std::hex << f << std::endl;
 	std::cout << std::hexfloat << f << std::endl;
-	std::string g(FloattoHex(f).data(), 4);
-	s.insert(0, FloattoHex(f));
+	std::string g(FloatToHex(f).data(), 4);
+	s.insert(0, FloatToHex(f));
 	std::cout << s << std::endl;
 	system("PAUSE");
 	return 0;
